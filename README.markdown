@@ -1,7 +1,7 @@
 Prerequisites
 -------------
 
-The typesetting of this article requires the [iucr.cls](ftp://ftp.iucr.org/templates/latex/iucr.cls) style class and the [iucr.bst](ftp://ftp.iucr.org/templates/latex/iucr.bst) bibliography style that shall first be installed in a place visible by the LaTeX system. For TeXLive on MacOS, those files should go in the directories `~/Library/texmf/tex/latex` and `~/Library/texmf/bibtbx/bst` respectively. 
+The typesetting of this article requires the [iucr.cls](ftp://ftp.iucr.org/templates/latex/iucr.cls) style class and the [iucr.bst](ftp://ftp.iucr.org/templates/latex/iucr.bst) bibliography style that shall first be installed in a place visible by the LaTeX system. For TeXLive on MacOS, those files should go in the directories `~/Library/texmf/tex/latex` and `~/Library/texmf/bibtbx/bst` respectively. In order to typeset without the preprint option, if using TeXLive, package texlive-fonts-recommended shall be installed because the Adobe font zptmcmr is then required.
 
 Moreover, authors wishing to contribute to this article are advised to read the [IUCr recommendations](http://journals.iucr.org/d/services/latexstyle.html).
 
