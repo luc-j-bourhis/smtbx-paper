@@ -36,7 +36,7 @@ refcmd=(\ref{#1})
 
 \newcommand{\olexrefine}{Olex2 refine}
 
-\title{The Olex 2 refinement engine}
+\title{The Olex2 refinement engine}
 \shorttitle{\olexrefine}  % Abbreviated title for use in running heads
 
      % Authors' names and addresses. Use \cauthor for the main (contact) author.
@@ -49,10 +49,10 @@ refcmd=(\ref{#1})
 \newcommand{\olexsys}{OlexSys Ltd, \durhamchem}
 \newcommand{\cci}{CCI, Lawrence Berkeley Laboratory, 1 Cyclotron Road, BLDG 64R0121, Berkeley, CA 94720-8235, \country{USA}}
 
-\cauthor{Luc}{Bourhis}{luc\_j\_bourhis@mac.com}{\brukerfr}
-\author{Oleg}{Dolomanov}
-\author{Richard}{Gildea}
-\author{Judith A K}{Howard}
+\cauthor{Luc J.}{Bourhis}{luc\_j\_bourhis@mac.com}{\brukerfr}
+\author{Oleg V.}{Dolomanov}
+\author{Richard J.}{Gildea}
+\author{Judith A. K.}{Howard}
 \author{Horst}{Puschmann}
 
 \aff{\durhamchem}
@@ -239,7 +239,7 @@ L(x, \tilde{K}) &= \norm{Y_o}^2 - \tilde{K}^2 \norm{Y_c(x)}^2.
 \end{align}
 We could then simply use $\tilde{K}$ as a starting value for a combined refinement of $x$ and $K$, i.e. the minimisation of $L(x, K)$ with the independent vector $(x, K)$ of parameters.
 
-However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \cite[, and references therein]{Nielsen:2000fr} that  convergences to the same minimum as previously but with less iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
+However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \cite[, and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
 \begin{align}
 \partialder{L(x, \tilde{K})}{x_j} &= \partialder{L}{x_j}(x, \tilde{K}),\ 1 \le j \le n, \\
 \intertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{K}{x_j}$ but it is zero because of the definition of $\tilde{K}$. In this expression,$}
@@ -278,7 +278,7 @@ It should be noted that the first term of $B$ would appear in exactly the same f
 
 \ack{Acknowledgements}
 
-This work has been founded by the EPSRC grant ``Age Concern: Crystallographic Software for the Future" (EP/C536274/1) from the British government. We wish to thank David Watkin with whom we shared this grant for his immense contribution to our understanding of crystallographic refinement. We also wish to thank all the contributors to the CCTBX library which served as a foundation and model for our work, especially its main author Ralf W. Grosse-Kunstleve whose support has been invaluable. Finally we wish to thanks Pr. George Sheldrick for many a fruitful discussion.
+This work has been funded by the EPSRC grant ``Age Concern: Crystallographic Software for the Future" (EP/C536274/1) from the British government. We wish to thank David Watkin with whom we shared this grant for his immense contribution to our understanding of crystallographic refinement. We also wish to thank all the contributors to the CCTBX library which served as a foundation and model for our work, especially its main author Ralf W. Grosse-Kunstleve whose support has been invaluable. Finally we wish to thanks Pr. George Sheldrick for many a fruitful discussion.
 
 \referencelist[smtbx] % References using the BibTeX database smtbx.bib
 
