@@ -73,9 +73,9 @@ Abstract goes here.
 
 \section{Constraints}
 
-Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic Hydrogen, $C' \equiv C - H$. The position of the Hydrogen must be such that the distance CH is equal to some ideal bond length $d$ and such that the angle $\widehat{C'CH}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (CH - d)^2 + w_2 (\cos \widehat{C'CH} - 1)^2 + w_3 (\sin  \widehat{C'CH})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
+Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic hydrogen, $C' \equiv C - H$. The position of the hydrogen must be such that the distance CH is equal to some ideal bond length $d$ and such that the angle $\widehat{C'CH}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (CH - d)^2 + w_2 (\cos \widehat{C'CH} - 1)^2 + w_3 (\sin  \widehat{C'CH})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
 
-It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of $H$ as a function of the positions of the two Carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
+It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of $H$ as a function of the positions of the two carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
 \begin{equation}
 x_H = x_C + d \frac{x_C - x_{C'}}{\norm{x_C - x_{C'}}},
 \end{equation} 
@@ -102,7 +102,7 @@ x_1 = u,\ x_2 = v,\ x_3 = u,
 \end{align}
 the observable $Y_c$ becoming now a function of the refinable parameters $(u,v)$.
 
-In other cases, a reparametrisation will make some crystallographic parameters disappear while introducing new refinable parameters. A typical example is that of a tetrahedral $C' - CH_3$ as the geometrical constraints leave one degree of freedom, a rotation about the axis $C' - C$. Thus the reparametrisation expresses the coordinates of the Hydrogen atoms $H_0$, $H_1$ and $H_2$ as functions of the coordinates of the Carbon atoms, and of an angle $\phi$ modelling that rotation,
+In other cases, a reparametrisation will make some crystallographic parameters disappear while introducing new refinable parameters. A typical example is that of a tetrahedral $C' - CH_3$ as the geometrical constraints leave one degree of freedom, a rotation about the axis $C' - C$. Thus the reparametrisation expresses the coordinates of the hydrogen atoms $H_0$, $H_1$ and $H_2$ as functions of the coordinates of the carbon atoms, and of an angle $\phi$ modelling that rotation,
 \newcommand{\hydrogenphiarg}{\!\left(\phi\!+\!n \frac{2\pi}{3}\right)}
 \begin{equation}
 \begin{split}
@@ -121,7 +121,7 @@ d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\
 \end{align}
 Thus a new derivative with respect to the new refinable parameter $\phi$ is introduced by this reparametrisation.
 
-The last important concept is that of the chaining or composition of reparametrisations, that we will again illustrate with a combination of the examples above. In the $CH_3$ case, the atoms $C$ and $C'$ could be on the special position studied in the next-to-last example. One way to model the Hydrogen atoms in that case would be to first apply the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_C$ and $x_{C'}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
+The last important concept is that of the chaining or composition of reparametrisations, that we will again illustrate with a combination of the examples above. In the $CH_3$ case, the atoms $C$ and $C'$ could be on the special position studied in the next-to-last example. One way to model the hydrogen atoms in that case would be to first apply the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_C$ and $x_{C'}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
 \begin{equation}
 \partialder{x_{H_0}}{u} = \partialder{x_{H_0}}{x_C}\partialder{x_C}{u} = 2
 \end{equation}
