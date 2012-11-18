@@ -242,7 +242,7 @@ We could then simply use $\tilde{K}$ as a starting value for a combined refineme
 However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \cite[, and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
 \begin{align}
 \partialder{L(x, \tilde{K})}{x_j} &= \partialder{L}{x_j}(x, \tilde{K}),\ 1 \le j \le n, \\
-\intertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{K}{x_j}$ but it is zero because of the definition of $\tilde{K}$. In this expression,$}
+\intertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{K}{x_j}$ but it is zero because of the definition of $\tilde{K}$. In this expression,}
 \partialder{L}{x_j} &= 2 r \dotprod \partialder{r}{x_j}.
 \end{align}
 Thus the first-order derivative is exactly the same as it would have been with an independent parameter $K$. We then need the second-order derivatives
@@ -262,17 +262,15 @@ for the shift $s$ of the parameter vector $x$ where $B$ is the Hessian matrix, $
 \partialder{\tilde{K}}{x_i} &= \frac{1}{\norm{Y_c}^2}\partialder{Y_c}{x_i} \dotprod \left(Y_o - 2 \tilde{K}Y_c \right).
 \end{align}
 and therefore the normal matrix $B$ and the right-hand side of the normal equations $g$ reads
-\begin{equation}
-\begin{aligned}
-&\begin{split}
-B = \tilde{K}^2\partialder{Y_c}{x_i} \dotprod \partialder{Y_c}{x_j} 
+\begin{align}
+B &= \begin{aligned}[t] \tilde{K}^2\partialder{Y_c}{x_i} \dotprod \partialder{Y_c}{x_j} 
 &+ \tilde{K} \left( \partialder{\tilde{K}}{x_j}Y_c \dotprod \partialder{Y_c}{x_i}
-+ \partialder{\tilde{K}}{x_i}Y_c \dotprod \partialder{Y_c}{x_j} \right) \\
++ \partialder{\tilde{K}}{x_i}Y_c \dotprod \partialder{Y_c}{x_j} \right) \nonumber\\
 &+ \partialder{\tilde{K}}{x_i}\partialder{\tilde{K}}{x_j} \norm{Y_c}
-\end{split}, \\
-&g = - (Y_o - \tilde{K}Y_c) \dotprod \left( \tilde{K}\partialder{Y_c}{x_i} + \partialder{\tilde{K}}{x_i} Y_c \right).
 \end{aligned}
-\end{equation}
+\\
+g &= - (Y_o - \tilde{K}Y_c) \dotprod \left( \tilde{K}\partialder{Y_c}{x_i} + \partialder{\tilde{K}}{x_i} Y_c \right).
+\end{align}
 
 It should be noted that the first term of $B$ would appear in exactly the same form if we had kept the scale factor $K$ as an independent parameter. Moreover terms very similar to the second and third term of $B$ would need to be computed in that case, as the normal matrix B would then have one more column and one more row which would feature those similar terms. Thus the computation cost of our unorthodox method is the same as that of the more traditional refinement of the overall scale factor along with the other crystallographic parameters. In any case, for all methods based on the normal equations, the computation time is dominated by the first term of $B$, as it scales as $O(mn^2)$ where $m$ is the number of reflections.
 
