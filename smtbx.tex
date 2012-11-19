@@ -338,8 +338,9 @@ x_{H_n} = x_C
 where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond $C' \rightarrow C$. The riding approximation in this case consists in neglecting the derivatives of those base vectors, leading to
 \begin{align}
 \partialder{\tilde{Y}_c}{x_C} &= \partialder{Y_c}{x_C} + \partialder{Y_c}{x_H},\\
+\partialder{\tilde{Y}_c}{x_{C'}} &= \partialder{Y_c}{x_{C'}}, \nonumber \\
 \partialder{\tilde{Y}_c}{\phi} &= \partialder{Y_c}{x_H} 
-d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\}.
+d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\}. \nonumber
 \end{align}
 Thus a new derivative with respect to the new refinable parameter $\phi$ is introduced by this reparametrisation.
 
@@ -602,7 +603,7 @@ which shows that the centred case and the primitive case only differ by an overa
 Thus we will only consider a primitive unit cell in the following. Three cases are to be considered.
 \begin{enumerate}
 \item The space group is non-centric. Then there is no further simplification.
-\item The space group is centric and the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\cal{O}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
+\item The space group is centric but the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\cal{O}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
 \begin{align}
 \sum_{\sym{R}{t} \in \cal{O}} G^{\sym{R}{t}} &= 
 \underbrace{\sum_{\sym{R}{t} \in \cal{O^+}} G^{\sym{R}{t}} }_{\Sigma} 
@@ -658,7 +659,7 @@ Y \dotprod Y' &= \sum_h w(h) Y(h) Y'(h), \\
 \intertext{and the associated norm $\norm{Y}$,}
 \norm{Y}^2 &= \sum_h w(h) Y(h)^2, \\
 \intertext{as well as the residual vector}
-r(x, K) &= Y_o - Y_c(x).
+r(x, K) &= Y_o - K Y_c(x).
 \label{eqn:lsresidualdef}
 \end{align}
 With those notations, $L(x, K)$ which reads
