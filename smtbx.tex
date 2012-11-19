@@ -19,6 +19,24 @@ rngtxt={\ to~},
 lsttxt={\ and~},
 refcmd=(\ref{#1})
 }
+\newref{fig}{%
+name={fig~},
+names={figs~},
+Name={Fig~},
+Names={Figs~},
+rngtxt={\ to~},
+lsttxt={\ and~},
+refcmd=(\ref{#1})
+}
+\newref{sec}{%
+name={section~},
+names={sections~},
+Name={Section~},
+Names={Sections~},
+rngtxt={\ to~},
+lsttxt={\ and~},
+refcmd=\ref{#1}
+}
 \usepackage{cctbx_notations}
 
 
@@ -72,6 +90,7 @@ Abstract goes here.
 \end{abstract}
 
 \section{Constraints}
+\label{sec:constraints}
 
 Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic hydrogen, $C' \equiv C - H$. The position of the hydrogen must be such that the distance CH is equal to some ideal bond length $d$ and such that the angle $\widehat{C'CH}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (CH - d)^2 + w_2 (\cos \widehat{C'CH} - 1)^2 + w_3 (\sin  \widehat{C'CH})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
 
