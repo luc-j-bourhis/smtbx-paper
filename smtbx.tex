@@ -6,10 +6,12 @@
 %------------------------------------------------------------------------------
 
 \documentclass[pdf]{iucr}
+%\documentclass[preprint]{iucr}
 
 \usepackage{bbold}
 \usepackage{amsmath}
 \usepackage{refstyle}
+\usepackage{nomencl}
 \newref{eqn}{%
 name={eqn~},
 names={eqns~},
@@ -98,6 +100,196 @@ Almost all crystallographic computing routinely routinely carried out in Small-M
 From a certain point of view, the field of small-molecule crystallography has reached maturity and no longer in need of further development. The fact that further development has happened, both within ShelX as well as in the many other groups that are actively developing software in this area is telling, though. Not all needs of the Small-Molecule crystallographer are adequately addressed by ShelX, and many small programs exist carrying out highly specialised taks. A retro-fit integration of many of these tasks into ShelX may well be desirable, but is unlikely to ever happen. Firstly, the code-base of ShelX is truly excellent in its brevity, but impenetrable to most. Secondly -- and more importantly -- the whole `philosophy' of ShelX is that of a `One-Man-Show'.  It is simply inconceivable that the stability and success of ShelX should be threatened by the whimsical addition of functionality by outsiders.
 
 When we first embarked on the project reported herein, we were very clear about one point: We wanted to create a new and flexible refinement engine in a collaborative effort, based on a trusted and mature pre-existing code-base. This refinement engine would be open-source and open for inspection as well as modification by anyone. Modern programming paradigms unheard of when most crystallographic software was born, would be adhered to with the effect that extensions will always be possible and will not endanger the underlying functionality.
+
+
+\section{Restrained Least Squares Refinement}
+\label{sec:restraints}
+
+A small molecule structure refinement typically minimises the weighted least squares function
+\begin{equation}
+L = \sum_h w(h) (Y_o(h) - k Y_c(h))^2.
+\label{eqn:L:def}
+\end{equation}
+where $Y$ denotes, either $F$ or $F^2$, and $k$ is an overall scale factor that places $Y_c$ on the same scale as $Y_o$. Each observation is given an appropriate weight, $w(h)$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, although more complex weighting schemes are usually used.
+%\nomenclature[]{$F_{calc}$}{Calculated structure factor}
+\nomenclature[g]{$\sigma$}{Standard deviation or uncertainty}%
+
+For a small molecule structure with a high data to parameter ratio, such unconstrained minimisation as defined by equation \ref{eqn:L:def} may well be sufficient. However, as the structure becomes larger, or the data to parameter ratio worsens, unconstrained minimisation may not be well-behaved, or result in some questionable parameter values. These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This now gives the minimisation function
+\begin{equation}
+L = \sum_h{ w_h} (Y_o(h) - k Y_c(h))^2 + \sum_\text{restraints} w (T_o- T_c)^2}
+\label{eq:L_restraints_def}
+\end{equation}
+where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). With the use of appropriate weighting of the restraints the minimisation is gently pushed towards giving a chemically sensible and hopefully correct structure.
+
+The observational least squares equations can be written
+\begin{equation}
+\mat{W} \cdot \mat{J} \cdot \delta x = \mat{W} \cdot \Delta \mat{Y}
+\label{eq:},
+\end{equation}
+with the weight matrix and the vector of residuals, $\Delta \mat{Y}$, where each row is given by $Y_o(h) - k Y_c(h)$. The elements of the matrix of derivatives, known as the Jacobian, $\mat{J}$, are given by
+\begin{equation}
+J_{ij} = \frac{\partial Y_c(h_i)}{\partial x_i}.
+\label{eq:}
+\end{equation}
+
+The shifts, $\delta x$, in the values of the refined parameters are obtained \emph{via} the solution of the normal equations,
+\begin{equation}
+\mat{J^T} \cdot \mat{W} \cdot \mat{J} \cdot \delta x = \mat{J^T} \cdot \mat{W} \cdot \Delta \mat{Y}
+\label{eq:}.
+\end{equation}
+
+If we allow the repameterisation of the model by use of constraints (see \textsection\ref{sec:constraints}), the vector of parameters, $x$ is expressed as a function of a smaller vector of parameters, $y$, in a non-linear fashion. The linearisation of that relationship reads
+\begin{equation}
+\delta x = \mat{M} \delta y
+\label{eq:}
+\end{equation}
+where $\mat{M}$ is the matrix of constraint, known as the Jacobian matrix of the transformation $y \rightarrow x$.
+We obtain the solution to the normal equations as
+\begin{equation}
+\delta y = \left( \mat{M^T} \mat{J^T} \cdot \mat{W} \cdot \mat{J} \mat{M} \right)^{-1} \cdot \left( \mat{M^T} \mat{J^T} \right) \cdot \mat{W} \cdot \Delta \mat{Y}
+\label{eq:},
+\end{equation}
+where $\mat{M}$ is the matrix of constraint, and $\mat{M^T}$ its transpose.
+
+A na\"{\i}ve approach to solving these equations would start by first of all constructing Jacobian, $\mat{J}$. This is not feasible, since the Jacobian is of size $m \times n_x$, for $m$ observations, and $n_x$ crystallographic parameters. In a typical small molecule crystal structure determination, the data to parameter ratio, $m / n_x$ is typically in the range $10-30$. In contrast, the normal matrix, $\mat{J^T} \cdot \mat{W} \cdot \mat{J}$ is symmetric, with dimensions $n_x \times n_x$. With the common use of constraints, particularly with respect to those on the parameters of hydrogen atoms, the ratio $n_x/n_y$ can be as large as 2, meaning that the most efficient, both in terms of storage and floating point operations, would in fact be to construct directly the normal matrix for the independent parameters, $\mat{M^T} \mat{J^T} \cdot \mat{W} \cdot \mat{J} \mat{M}$.
+
+Whilst the part of the Jacobian derived from the observations is relatively dense, that coming from the equations of restraint is sparse, with each restraint typically
+only involving a few crystallographic parameters. Therefore, it is now feasible to compute and store the Jacobian for the restraints independently, and then use sparse matrix techniques to compute the contribution of the restraints to the overall normal equations.
+
+It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002} suggest the normalization factor
+\begin{equation}
+w_\text{restraints} = \sum_{h}{ w_h (Y_o(h) - k Y_c(h))^2} / \left(m - n_y \right)
+\label{eq:giacovazzo_normalisation},
+\end{equation}
+where for $m$ observations and $n_y$ independent parameters. This is better known as the square of the \emph{goodness of fit}, $\chi^2$. Ths normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{SHELX:man97}.
+
+
+\subsection{Geometry Restraints}
+
+Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:ba5180}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865}, similarity restraints and isotropic ADP restraints.
+
+%------------------------------------------------------------------------------
+
+
+\subsubsection{Restraints involving symmetry}
+
+Given a restraint, $f(x)$, involving a site $x$ which is outside the asymmetric unit and which is related to the site $y$ within the asymmetric unit by some symmetry transformation $R$, such that $x=Ry$, the gradient is transformed as
+\begin{align}
+\nabla_y f\left(x \right)  &= R^T \nabla_x f\left(x\right) \nonumber\\
+&= R^{-1} \nabla_x f\left(R y\right)
+\label{eq:}
+\end{align}
+since $R$ is a space group symmetry operation and is therefore an orthogonal transformation (\emph{i.e.} one which preserves distances and angles), which means that, $R^T = R^{-1}$.
+
+%------------------------------------------------------------------------------
+
+
+\subsubsection{Bond similarity restraint}
+
+The distances between two or more atom pairs are restrained to be equal by minimising the weighted variance of the distances, where the least squares residual, $L$, is defined as the population variance biased estimator
+\begin{equation}
+\label{eq:bond_similarity}
+L(r_1,...,r_n) = \frac{\sum_{i = 1}^n {w_i(r_i - \mean{r})^2}}
+                      {\sum_{i = 1}^n {w_i}},
+\end{equation}
+with
+\begin{equation*}
+r_j = u^\frac{1}{2},
+\end{equation*}
+where for a pair of atoms, $a$ and $b$,
+\begin{equation*}
+u = (x_a - x_b)^2 + (y_a - y_b)^2 + (z_a - z_b)^2,
+\end{equation*}
+
+%>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+\subsection{Restraints on Atomic Displacement Parameters}
+
+Three types of restraints on anisotropic displacement parameters, similar to restraints implemented in SHELXL \cite{Sheldrick:sc5010} and REFMAC \cite{Murshudov:li0304}.
+
+\subsubsection{Rigid-bond restraint}
+
+In a `rigid-bond' restraint the components of the anisotropic displacement parameters of two atoms in the direction of the vector connecting those two atoms are restrained to be equal. This corresponds to Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865} for testing whether anisotropic displacement parameters are physically reasonable \cite{SHELX:man97} and is in general appropriate for bonded and 1,3-separated pairs of atoms and should hold true for most covalently bonded systems.
+
+We therefore minimise the mean square displacement of the atoms in the direction of the bond. The weighted least squares residual is then
+\begin{equation}
+\label{eq:rigid_bond}
+L = w(z^2_{A,B} - z^2_{B,A})^2,
+\end{equation}
+where in the Cartesian coordinate system the mean square displacement of atom A
+along the vector $\overrightarrow{AB}$, $z^2_{A,B}$, is given by
+\begin{equation}
+z^2_{A,B} = \frac{r^T\mat{U}_{cart,A}r}{\norm{r}^2},
+\end{equation}
+where
+\begin{equation}
+r = \begin{pmatrix} x_A - x_B\\y_A - y_B\\z_A - z_B \end{pmatrix}
+= \begin{pmatrix} x\\y\\z \end{pmatrix},
+\end{equation}
+$r^T$ is the transpose of $r$ (\textit{i.e.} a row vector) and
+$\norm{r}$ is the length of the vector $\overrightarrow{AB}$.
+
+%------------------------------------------------------------------------------
+
+
+\subsubsection{ADP similarity restraint}
+\label{ADP:similarity}
+The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain \cite{SHELX:man97}. This is equivalent to a SHELXL SIMU restraint \cite{SHELX:man97}.
+The weighted least squares residual is defined as
+\begin{equation}
+\label{eq:adp_similarity}
+L = w \sum_{i=1}^3 \sum_{j=1}^3 (U_{A,ij} - U_{B,ij})^2,
+\end{equation}
+which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Delta U \Delta U^T$. This expression\footnote{This is known to mathematicians as the square of the Frobenius norm of the matrix $\Delta U$.} makes it clear that it is invariant under any rotation $R$, since it transforms $\Delta U$ into $R\Delta U R^T$. 
+
+%------------------------------------------------------------------------------
+
+
+\subsubsection{Isotropic ADP restraint}
+Here we minimise the difference between the Cartesian ADPs, $\mat{U}_{cart}$, and the isotropic equivalent, $\mat{U}_{eq}$. Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{SHELX:man97}. As in \textsection \ref{ADP:similarity}, we must remember that we are dealing with symmetric matrices, and we can therefore define the weighted least squares residual as
+\begin{equation}
+\label{eq:isotropic_adp}
+L = w \left( \sum_{i=1}^3 (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij} - U_{eq,ij})^2 \right) ,
+\end{equation}
+where
+\begin{equation}
+\mat{U}_{eq} = 
+\begin{pmatrix} U_{iso} & 0 & 0\\
+  0 & U_{iso} & 0\\
+  0 & 0 & U_{iso}\end{pmatrix},
+\end{equation}
+and
+\begin{equation}
+U_{iso} = \tfrac{1}{3} \mathrm{tr}(\mat{U}_{cart}).
+\end{equation}
+
+
+\subsection{Implementation}
+
+A generalisation of the target function (\ref{eq:L_restraints_def}) can be given as
+\begin{equation}
+L = L_\text{data} + w L_\text{restraints}
+\label{eq:mm_target},
+\end{equation}
+where using a least squares minimiser
+\begin{equation}
+L_\text{data} = \sum_{h}{ w_h \left(Y_o(h) - k Y_c(h)}\right)^2},
+\label{eqn:mm_target_data:def}
+\end{equation}
+and
+\begin{equation}
+L_\text{restraints} = \sum_\text{restraints}{ w (T_o - T_c)^2}.
+\label{eqn:mm_target_restraint:def}
+\end{equation}
+In the case of macromolecular crystallography the part $L_{\text{data}}$ may frequently be a maximum-likelihood based target function in place of the traditional least squares function written above. A generic minimiser such the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\text{data}$ and $\nabla L_\text{restraints}$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where by the chain rule
+\begin{align}
+\partialder{L}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \\
+                             &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}
+\label{eq:}.
+\end{align}
+
+The route taken to add restraints into this framework was to build independently those rows of the Jacobian associated with the equations of restraint. Since the restraints largely involve relatively few of the crystallographic parameters, it can be efficient to store this part of the Jacobian as a sparse matrix. This allows the restraints to be built up without any knowledge of the constraint matrix, and only after the contribution of the data to the normal matrix has been computed, the contribution of the restraints can be added efficiently with the use of sparse matrix techniques. The restraints framework was designed in such a way that it would be easy to add further restraints. Each restraint must provide the array of partial derivatives of the restraint with respect to the parameters (one row of the Jacobian), the restraint delta, $T_o - T_c$, and the weight, $w$, of the restraint.
 
 
 \section{Constraints}
@@ -312,6 +504,103 @@ g &= - (Y_o - \tilde{K}Y_c) \dotprod \left( \tilde{K}\partialder{Y_c}{x_i} + \pa
 \end{align}
 
 It should be noted that the first term of $B$ would appear in exactly the same form if we had kept the scale factor $K$ as an independent parameter. Moreover terms very similar to the second and third term of $B$ would need to be computed in that case, as the normal matrix B would then have one more column and one more row which would feature those similar terms. Thus the computation cost of our unorthodox method is the same as that of the more traditional refinement of the overall scale factor along with the other crystallographic parameters. In any case, for all methods based on the normal equations, the computation time is dominated by the first term of $B$, as it scales as $O(mn^2)$ where $m$ is the number of reflections.
+
+\section{Restraints and their derivatives}
+
+\subsection{Bond similarity restraint}
+We use an alternative form of (\ref{eq:bond_similarity}) to aid our calculation of the derivatives:
+\begin{align}
+L &= \mean{r^2} - \mean{r}^2 \nonumber\\
+&= \frac{\sum_{i = 1}^n {w_i r_i^2}}{\sum_{i = 1}^n {w_i}} - 
+    \left(\frac{\sum_{i = 1}^n {w_i r_i}}{\sum_{i = 1}^n {w_i}}\right)^2.
+\end{align}
+The derivative of $L$ with respect to a distance $r_j$ is then
+\begin{align}
+\partialder{L}{r_j} &=
+  \frac{2 w_j r_j}{\sum_{i=1}^n{w_i}}
+  - \frac{2 w_j \sum_{i=1}^n w_i r_i}{(\sum_{i=1}^n w_i)^2}\nonumber\\
+&= \frac{2 w_j}{\sum_{i=1}^n{w_i}}(r_j - \mean{r}).
+\end{align}
+
+The derivative of $r_j$ with respect to the Cartesian coordinate $x_a$ is given by
+\begin{equation}
+\partialder{r_j}{x_a} = \partialder{r_j}{u} \partialder{u}{x_a}= \frac{(x_a - x_b)}{r_j}.
+\end{equation}
+Therefore, the derivative of the residual with respect to $x_a$ is
+\begin{align}
+\partialder{L}{x_a} &= \partialder{L}{r_j} \partialder{r_j}{x_a}\nonumber\\
+&= \frac{2 w_j (r_j - \mean{r})(x_a - x_b)}{r_j \sum_{i=1}^n {w_i}}.
+\end{align}
+
+\subsection{Rigid-bond restraint}
+
+The derivative of the (\ref{eq:rigid_bond}) with respect to an element of $U_{cart,A}$,
+$U_{A,ij}$ is given by (using the chain rule)
+\begin{align}
+\partialder{L}{U_{A,ij}} &= \partialder{L}{z^2_{A,B}} \partialder{z^2_{A,B}}{U_{A,ij}}\\
+&=2w(z^2_{A,B} - z^2_{B,A}) \partialder{z^2_{A,B}}{U_{A,ij}}\label{eqn:u_derivative}
+\end{align}
+
+The matrix multiplication in obtaining $z^2_{A,B}$ can be evaluated as follows
+(remembering $\mat{U}_{\text{cart}}$ is symmetric):
+\begin{align}
+r^T\mat{U}_{\text{cart},A}r &= 
+\begin{pmatrix} x & y & z \end{pmatrix}
+\begin{pmatrix} U_{11} & U_{12} & U_{13}\\
+  U_{12} & U_{22} & U_{23}\\
+  U_{13} & U_{23} & U_{33}\end{pmatrix}
+\begin{pmatrix} x\\y\\z\end{pmatrix}\\
+&= U_{11}\: x^2 + U_{22}\: y^2 + U_{33}\: z^2 \nonumber \\
+&\qquad  + 2U_{12}\: xy + 2U_{13}\: xz + 2U_{23}\: yz
+\end{align}
+It then follows that
+\begin{equation}
+\partialder{z^2_{A,B}}{U_{11}} = \frac{x^2}{\norm{r}^2} ,\qquad
+\partialder{z^2_{A,B}}{U_{22}} = \frac{y^2}{\norm{r}^2} ,\qquad
+\partialder{z^2_{A,B}}{U_{33}} = \frac{z^2}{\norm{r}^2} ,
+\end{equation}
+and
+\begin{equation}
+\partialder{z^2_{A,B}}{U_{12}} = \frac{2xy}{\norm{r}^2} ,\qquad
+\partialder{z^2_{A,B}}{U_{13}} = \frac{2xz}{\norm{r}^2} ,\qquad
+\partialder{z^2_{A,B}}{U_{23}} = \frac{2yz}{\norm{r}^2} .
+\end{equation}
+These can be combined with \eqnref{u_derivative} to give us the derivatives
+with respect to each $U_{ij}$ component.
+
+
+\subsection{ADP similarity restraint}
+
+Since $\mat{U}$ is symmetric, \emph{i.e.} $U_{ij} = U_{ji}$, (\ref{eq:adp_similarity} can be rewritten as
+\begin{equation}
+L = w \left( \sum_{i=1}^3 (U_{A,ii} - U_{B,ii})^2 + 2 \sum_{i < j} (U_{A,ij} - U_{B,ij})^2 \right) .
+\end{equation}
+Therefore the gradient of the residual with respect to the diagonal element $U_{A,ii}$ is then
+\begin{equation}
+\partialder{L}{U_{A,ii}} = 2w(U_{A,ii} - U_{B,ii}).
+\end{equation}
+Similarly the gradient with respect to the off-diagonal element $U_{A,ij}$ is
+\begin{equation}
+\partialder{L}{U_{A,ij}} = 4w(U_{A,ij} - U_{B,ij}).
+\end{equation}
+
+\subsection{Isotropic ADP restraint}
+
+We expand the summation of the residual (\ref{eq:isotropic_adp}) as follows
+\begin{align}
+L &= w \left( (U_{11} - U_{iso})^2 + (U_{22} - U_{iso})^2 + (U_{33} - U_{iso})^2 \nonumber \\
+&\qquad + 2 U_{12}^2 + 2 U_{13}^2 + 2 U_{23}^2 \right) .
+\end{align}
+We can now see by inspection that the derivatives of the residual with respect to the off-diagonal elements are
+\begin{equation}
+\partialder{L}{U_{ij,i<j}} = 4 w U_{ij}.
+\end{equation}
+The derivatives of the residual with respect to the diagonal elements can be generalised as
+\begin{equation}
+\partialder{L}{U_{ii}} = 2 w (U_{ii} - U_{iso}) .
+\end{equation}
+
+
 
 \ack{Acknowledgements}
 
