@@ -39,6 +39,16 @@ rngtxt={\ to~},
 lsttxt={\ and~},
 refcmd=\ref{#1}
 }
+\newref{appendix}{%
+name={appendix~},
+names={appendices~},
+Name={Appendix~},
+Names={Appendices~},
+rngtxt={\ to~},
+lsttxt={\ and~},
+refcmd=\ref{#1}
+}
+
 \usepackage{tikz}
 \usepackage{cctbx_notations}
 
@@ -369,7 +379,25 @@ A crystallographic refinement may involve many such reparametrisations. By pieci
 
 \subsection{Constraint matrix}
 
+There is a wealth of algorithms designed to minimise least squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex 2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (ShelXL).  The macro-molecular community later introduced the LBFGS method (Phenix) and sparse normal matrix algorithms (REFMAC). They all have in common the fact that they require  only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we will denote by $Y_c$ in the following. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
 
+Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section, and then piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $x = (x_1, \cdots, x_n)$ as a function of the vector $u=(u_1, \cdots, u_p)$ of the parameters that are actually refined. It should be noted that any component $x_k$ of $x$ that is not reparametrised -- either because it is not involved in any constraints, or because it is only the arguments of a reparametrisation (e.g. a coordinate of the pivot atom on which another atom rides) --  is also a component $u_l$ of $u$, i.e. 
+\begin{equation}
+\partialder{x_k}{u_j} = \begin{cases} 
+   1& \text{if $j=l$},\\
+   0& \text{if $j \neq l$}.
+   \end{cases}
+\end{equation}
+
+ From the known analytical expression of $Y_c(x)$, one computes the derivatives of $\partialder{Y_c}{x_i}$ (the reader is referred to \appendixref{structurefactorlinearisation} for a detailed presentation of those computations). The minimisation algorithm then only needs the derivatives of
+\begin{align}
+\tilde{Y}_c(u) &= Y_c(x(u)) \\
+ \intertext{with respect to each $u_i$, which are easily obtained by a simple application of the chain rule,}
+\partialder{\tilde{Y}_c}{u} &= \partialder{Y_c}{x} \partialder{x}{u}.
+\end{align}
+The matrix $\partialder{x}{u}$ is known as the constraint matrix in crystallographic circles. In standard mathematical nomenclatures, it is called the Jacobian of the transformation $u \mapsto x$} and we will therefore denote it $J$.
+
+The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $x_i$ depends on very few refined parameters $u_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, the both of these costs scale as $O(n)$ instead of $O(n^2)$ if $J$ was treated as a dense matrix, where n is the number of parameters.
 
 
 
@@ -576,6 +604,7 @@ The transformation matrix needed to transform the entire variance-covariance mat
 
 \appendix
 \section{Computation of structure factors and their gradient}
+\label{appendix:structurefactorlinearisation}
 
 The formulae discussed in this appendix have been known for nearly a century and have been implemented in all known refinement programs. However it seems to the authors that, during the last decades, the computation for a given Miller index~$h$ of $F_c(h)$ and its gradient $\grad{F_c(h)}$ with respect to crystallographic parameters has very rarely been presented in all the minute details necessary to implement those formulae in a program, which justifies this appendix in our humble opinion.
 
@@ -635,8 +664,7 @@ G^{\inversion\sym{R}{t}} &= G(-hR) e^{-i2\pi ht} e^{i2\pi h t_{\bar{1}}}, \nonum
 The total sum over symmetries is therefore real, and its derivative will be so too, the former involving a cosine and the latter involving a sine for the derivatives with respect to $x$. 
 \end{enumerate}
 
-In order to avoid redundant computations, our code distinguishes these three cases. One piece of code handles the case of centrosymmetric space groups using only real numbers to compute $\Sigma$. Another piece of code handles the other two cases, first computing $\Sigma$ using complex number algebra and then using \eqnref{sumofGforcentricgroups} if the space group is centric and $h t_{\bar{1}} \neq 0$. Another optimisation we applied is to precompute the terms $hR$ and $e^{i2\pi t}$ appearing in \eqnref{transformofG} as well as the test for the condition $h t_{\bar{1}}=0$ before the loop over all scatterers in the asymmetric unit. In all three cases, the computation of $\cos(hRx + t)$ and $\sin(hRx + t)$ is the most costly operation. This is mitigated\footnote{Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a cctbx function that interpolates between tabulated values of sines and cosines.
-} by computing the structure factor and its derivatives together, as the cosine and sine then only need to be computed once for each reflection and scatterer.
+In order to avoid redundant computations, our code distinguishes these three cases. One piece of code handles the case of centrosymmetric space groups using only real numbers to compute $\Sigma$. Another piece of code handles the other two cases, first computing $\Sigma$ using complex number algebra and then using \eqnref{sumofGforcentricgroups} if the space group is centric and $h t_{\bar{1}} \neq 0$. Another optimisation we applied is to precompute the terms $hR$ and $e^{i2\pi t}$ appearing in \eqnref{transformofG} as well as the test for the condition $h t_{\bar{1}}=0$ before the loop over all scatterers in the asymmetric unit. In all three cases, the computation of $\cos(hRx + t)$ and $\sin(hRx + t)$ is the most costly operation. This is mitigated\footnote{Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a cctbx function that interpolates between tabulated values of sines and cosines. The latter is much faster but less precise. Olex 2 uses the former.} by computing the structure factor and its derivatives together, as the cosine and sine then only need to be computed once for each reflection and scatterer.
 This optimisation is the reason why we have written our own new code into the smtbx instead of reusing the original code in the cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines to be computed twice. This is rather well suited to the optimisation algorithm used in the mmtbx (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares, that is prevalent in small molecule crystallography.  
 
 \subsection{Derivatives of $\modulus{F}^2$ and $\modulus{F}$}
@@ -655,6 +683,7 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 The smtbx provides code to compute derivatives for the both of these observables. However Olex 2 only offers the choice to refine against $F^2$.
 
 \section{Minimisation of least-squares with an overall scale factor}
+\label{appendix:leastsquaresminimisation}
 
 The least-squares objective function used in crystallographic refinement features an overall scale factor $K$ because we do not know on which scales are the observables $Y_o(h)$ where $Y$ denotes either $F$ or $F^2$,
 \begin{equation}
