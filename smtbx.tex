@@ -404,6 +404,23 @@ The matrix $\partialder{x}{u}$ is known as the constraint matrix in crystallogra
 The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $x_i$ depends on very few refined parameters $u_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, the both of these costs scale as $O(n)$ instead of $O(n^2)$ if $J$ was treated as a dense matrix, where n is the number of parameters.
 
 
+\subsection{Variance matrix}
+In this section, we will discuss the rigorous computation of standard uncertainties of and correlation between the parameters of a constrained model. As pointed out in \appendixref{leastsquaresminimisation} in the comment about \eqnref{gaussnewtonaslinearls}, the variance matrix for the refined parameters $u$ is
+\begin{align}
+\var{u} &= B^{-1}\\
+\intertext{where}
+B_{ij} &= \partialder{r}{u_i} \dotprod \partialder{r}{u_j}
+\end{align}
+is the normal matrix for the constrained least squares minimisation. However we are interested in the variance matrix $\var{x}$ for the crystallographic parameters of the model, not in $\var{u}$. For small variations, we have the linear relation
+\begin{align}
+\delta x &\approx J \delta u\\
+\intertext{and therefore, remembering the heuristic definition of the variance matrix of $x$ as the mean value of $\delta x \delta x^T$ in the linear approximation within which we are working in this section,}
+\var{x} &= J\, \var{u} J^T.
+\end{align} 
+
+We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. Consequently, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of $(R_1, R_2, R_3)-C-H$, for which the constraints does not fix the angles $\widehat{R_iCH}$, those angles have a non-zero s.u. Because many refinement programs print only the s.u. of each refined parameter, but not the covariances between the refined parameters, many tools used to analyse the structure after refinement (e.g. PLATON) computes the s.u. of derived quantities such as those discussed in this paragraph by assuming that the covariances are zero. For riding hydrogen, this computation always gives terribly incorrect results, as the coordinates of the hydrogen atoms are totally correlated to those of the the pivot atoms. To make the matter worse, PLATON assumes that any atomic coordinates quoted with s.u. are freely refined. As a result, as Olex 2 reports the s.u. for riding hydrogen coordinates, PLATON assumes that the bond length $C-H$ in the example above should be quoted with a s.u. too, which it is not, as it is exactly zero. Then PLATON wrongly computes the s.u. of the angles $\widehat{R_iCH}$ above and often finds a discrepancy with the correct one quoted by Olex 2. This results in a long list of serious warnings for any structure refined with Olex 2. It should be noted that the current CIF dictionary specifies a flag for each atom that should be used to report whether its coordinates were freely refined, or refined with a riding model, and that Olex 2 correctly sets that flag.
+
+
 
 
 \section{Twinning}
