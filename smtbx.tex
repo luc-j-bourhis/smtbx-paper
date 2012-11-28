@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{refstyle}
 \usepackage{nomencl}
+\usepackage[version=3]{mhchem}
 \newref{eqn}{%
 name={eqn~},
 names={eqns~},
@@ -307,25 +308,25 @@ The route taken to add restraints into this framework was to build independently
 \subsection{Synopsis}
 \label{sec:constraints}
 
-Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic hydrogen, $C' \equiv C - H$. The position of the hydrogen must be such that the distance CH is equal to some ideal bond length $d$ and such that the angle $\widehat{C'CH}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (CH - d)^2 + w_2 (\cos \widehat{C'CH} - 1)^2 + w_3 (\sin  \widehat{C'CH})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
+Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic hydrogen, \ce{X#C-H}. The position of the hydrogen must be such that the distance \ce{CH} is equal to some ideal bond length $d$ and such that the angle $\widehat{\ce{XCH}}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (\ce{CH} - d)^2 + w_2 (\cos \widehat{\ce{XCH}} - 1)^2 + w_3 (\sin  \widehat{\ce{XCH}})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
 
-It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of $H$ as a function of the positions of the two carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
+It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of \ce{H} as a function of the positions of the two carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
 \begin{equation}
-x_H = x_C + d \frac{x_C - x_{C'}}{\norm{x_C - x_{C'}}},
+x_\ce{H} = x_\ce{C} + d \frac{x_\ce{C} - x_\ce{X}}{\norm{x_\ce{C} - x_\ce{X}}},
 \end{equation} 
-where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_C$, $x_{C'}$ and $x_H$ is replaced by a function $\tilde{Y}_c$ of $x_C$ and $x_{C'}$ but not of $x_H$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_C, x_{C'}) = Y_c(x_C, x_{C'}, x_H(x_C, x_{C'}))$ and we will say that $x_H(x_C, x_{C'})$ is a reparametrisation of $x_H$, whose arguments are $x_C$ and $x_{C'}$. The derivatives for the remaining variables are then obtained with the chain rule\footnote{For a column vector $x=(x_1, x_2, x_3)$, $\partialder{F}{x}$ will always denote the row vector $\left(\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\right)$. Given another column vector $y=(y_1, y_2, y_3)$, $\partialder{y}{x}$ will always denote the matrix $\left(\partialder{y_i}{x_j}\right)_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.},
+where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_\ce{C}$, $x_\ce{X}$ and $x_\ce{H}$ is replaced by a function $\tilde{Y}_c$ of $x_\ce{C}$ and $x_\ce{X}$ but not of $x_\ce{H}$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_\ce{C}, x_\ce{X}) = Y_c(x_\ce{C}, x_\ce{X}, x_\ce{H}(x_\ce{C}, x_\ce{X}))$ and we will say that $x_\ce{H}(x_\ce{C}, x_\ce{X})$ is a reparametrisation of $x_\ce{H}$, whose arguments are $x_\ce{C}$ and $x_\ce{X}$. The derivatives for the remaining variables are then obtained with the chain rule\footnote{For a column vector $x=(x_1, x_2, x_3)$, $\partialder{F}{x}$ will always denote the row vector $\left(\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\right)$. Given another column vector $y=(y_1, y_2, y_3)$, $\partialder{y}{x}$ will always denote the matrix $\left(\partialder{y_i}{x_j}\right)_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.},
 \begin{align}
-\partialder{\tilde{Y_c}}{x_C} &= \partialder{Y_c}{x_C} + \partialder{Y_c}{x_H} \partialder{x_H}{x_C}, \\
-\partialder{\tilde{Y_c}}{x_{C'}} &= \partialder{Y_c}{x_{C'}} + \partialder{Y_c}{x_H} \partialder{x_H}{x_{C'}}. \nonumber
+\partialder{\tilde{Y_c}}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{C}}, \\
+\partialder{\tilde{Y_c}}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{X}}. \nonumber
 \end{align}
 It should be noted that it is customary to work within the ``riding" approximation,
 \begin{align}
-\partialder{x_H}{x_{C'}} = 0,\ \partialder{x_H}{x_C} = \identity,
+\partialder{x_\ce{H}}{x_\ce{X}} = 0,\ \partialder{x_\ce{H}}{x_\ce{C}} = \identity,
 \end{align} 
 which results in the much simplified chain rule
 \begin{align}
-\partialder{\tilde{Y}_c}{x_C} &= \partialder{Y_c}{x_C} + \partialder{Y}{x_H}, \\
-\partialder{\tilde{Y}_c}{x_{C'}} &= \partialder{Y_c}{x_{C'}}, \nonumber
+\partialder{\tilde{Y}_c}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y}{x_\ce{H}}, \\
+\partialder{\tilde{Y}_c}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}}, \nonumber
 \end{align}
 implemented in all refinement programs, including Olex2.
 
@@ -340,36 +341,36 @@ x = Z u + z
 \end{align}
 where $Z$ is a $3 \times 2$ or $3 \times 1$ matrix and $z$ is a 3-vector. This algorithm does therefore not try to determine which components of $u$, if any, are also components of $x$. This is why we have presented the reparametrisation for our example in this general form instead of keeping $x_1$ and $x_2$ as refinable parameters, which would sound more intuitive in the first place.
 
-In other cases, a reparametrisation will make some crystallographic parameters disappear while introducing new refinable parameters. A typical example is that of a tetrahedral $C' - CH_3$ as the geometrical constraints leave one degree of freedom, a rotation about the axis $C' - C$. Thus the reparametrisation expresses the coordinates of the hydrogen atoms $H_0$, $H_1$ and $H_2$ as functions of the coordinates of the carbon atoms, and of an angle $\phi$ modelling that rotation,
+In other cases, a reparametrisation will make some crystallographic parameters disappear while introducing new refinable parameters. A typical example is that of a tetrahedral \ce{X-CH3} as the geometrical constraints leave one degree of freedom, a rotation about the axis \ce{X-C}. Thus the reparametrisation expresses the coordinates of the hydrogen atoms $H_0$, $H_1$ and $H_2$ as functions of the coordinates of the carbon atoms, and of an angle $\phi$ modelling that rotation,
 \newcommand{\hydrogenphiarg}{\!\left(\phi\!+\!n \frac{2\pi}{3}\right)}
 \begin{equation}
 \begin{split}
-x_{H_n} = x_C 
+x_\ce{H$_n$} = x_\ce{C} 
 + d \Biggl[ &\sin \alpha \left\{ \cos\hydrogenphiarg e_1 + \sin\hydrogenphiarg e_2 \right\}\\
 - &\cos\alpha e_0
 \Biggr],
 \end{split}
 \label{eqn:rotatingch3reparam}
 \end{equation}
-where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond $C' \rightarrow C$. The riding approximation in this case consists in neglecting the derivatives of those base vectors, leading to
+where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond \ce{X\bond{->}C}. The riding approximation in this case consists in neglecting the derivatives of those base vectors, leading to
 \begin{align}
-\partialder{\tilde{Y}_c}{x_C} &= \partialder{Y_c}{x_C} + \partialder{Y_c}{x_H},\\
-\partialder{\tilde{Y}_c}{x_{C'}} &= \partialder{Y_c}{x_{C'}}, \nonumber \\
-\partialder{\tilde{Y}_c}{\phi} &= \partialder{Y_c}{x_H} 
+\partialder{\tilde{Y}_c}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}},\\
+\partialder{\tilde{Y}_c}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}}, \nonumber \\
+\partialder{\tilde{Y}_c}{\phi} &= \partialder{Y_c}{x_\ce{H}} 
 d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\}. \nonumber
 \end{align}
 Thus a new derivative with respect to the new refinable parameter $\phi$ is introduced by this reparametrisation.
 
-The last important concept is that of the chaining or composition of reparametrisations, that we will again illustrate with a combination of the examples above. In the $CH_3$ case, the atoms $C$ and $C'$ could be on the special position studied in the next-to-last example. One way to model the hydrogen atoms in that case would be to first apply the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_C$ and $x_{C'}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
+The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above. In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One way to model the hydrogen atoms in that case would be to first apply the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_\ce{C}$ and $x_\ce{X}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
 \begin{equation}
-\partialder{x_{H_0}}{u} = \partialder{x_{H_0}}{x_C}\partialder{x_C}{u} = 2
+\partialder{x_\ce{H0}}{u} = \partialder{x_\ce{H0}}{x_\ce{C}}\partialder{x_\ce{C}}{u} = 2
 \end{equation}
-in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_{H_0}$, $x_{H_1}$, $x_{H_2}$, $x_C$, $x_{C'}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, i.e. the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_C$ has only one argument, $u$, whereas $x_{H_0}$ has three arguments, $x_C$, $x_{C'}$ and $\phi$. The smtbx implements reparametrisations by explicitly building such a graph.
+in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_\ce{H0}$, $x_\ce{H1}$, $x_\ce{H2}$, $x_\ce{C}$, $x_\ce{X}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, i.e. the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_\ce{C}$ has only one argument, $u$, whereas $x_\ce{H0}$ has three arguments, $x_\ce{C}$, $x_\ce{X}$ and $\phi$. The smtbx implements reparametrisations by explicitly building such a graph.
 
 \begin{figure}
 \begin{tikzpicture}[grow=left, every node/.style={circle,draw}, edge from parent/.style={-latex,draw}]
-\node{$x_{H_0}$} child { node{$x_C$}    child { node{$u$}  } }
-                           child { node{$x_{C'}$} child { node{$u'$} } }
+\node{$x_\ce{H0}$} child { node{$x_\ce{C}$}    child { node{$u$}  } }
+                           child { node{$x_\ce{X}$} child { node{$u'$} } }
                            child { node{$\phi$} };
 \end{tikzpicture}
 \label{fig:dependencegraphexample}
@@ -399,7 +400,7 @@ Indeed, after transforming every constraint on the model into a reparametrisatio
  \intertext{with respect to each $u_i$, which are easily obtained by a simple application of the chain rule,}
 \partialder{\tilde{Y}_c}{u} &= \partialder{Y_c}{x} \partialder{x}{u}.
 \end{align}
-The matrix $\partialder{x}{u}$ is known as the constraint matrix in crystallographic circles. In standard mathematical nomenclatures, it is called the Jacobian of the transformation $u \mapsto x$} and we will therefore denote it $J$.
+The matrix $\partialder{x}{u}$ is known as the constraint matrix in crystallographic circles. In standard mathematical nomenclatures, it is called the Jacobian of the transformation $u \mapsto x$ and we will therefore denote it $J$.
 
 The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $x_i$ depends on very few refined parameters $u_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, the both of these costs scale as $O(n)$ instead of $O(n^2)$ if $J$ was treated as a dense matrix, where n is the number of parameters.
 
@@ -418,7 +419,7 @@ is the normal matrix for the constrained least squares minimisation. However we 
 \var{x} &= J\, \var{u} J^T.
 \end{align} 
 
-We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. Consequently, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of $(R_1, R_2, R_3)-C-H$, for which the constraints does not fix the angles $\widehat{R_iCH}$, those angles have a non-zero s.u. Because many refinement programs print only the s.u. of each refined parameter, but not the covariances between the refined parameters, many tools used to analyse the structure after refinement (e.g. PLATON) computes the s.u. of derived quantities such as those discussed in this paragraph by assuming that the covariances are zero. For riding hydrogen, this computation always gives terribly incorrect results, as the coordinates of the hydrogen atoms are totally correlated to those of the the pivot atoms. To make the matter worse, PLATON assumes that any atomic coordinates quoted with s.u. are freely refined. As a result, as Olex 2 reports the s.u. for riding hydrogen coordinates, PLATON assumes that the bond length $C-H$ in the example above should be quoted with a s.u. too, which it is not, as it is exactly zero. Then PLATON wrongly computes the s.u. of the angles $\widehat{R_iCH}$ above and often finds a discrepancy with the correct one quoted by Olex 2. This results in a long list of serious warnings for any structure refined with Olex 2. It should be noted that the current CIF dictionary specifies a flag for each atom that should be used to report whether its coordinates were freely refined, or refined with a riding model, and that Olex 2 correctly sets that flag.
+We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. Consequently, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. Because many refinement programs print only the s.u. of each refined parameter, but not the covariances between the refined parameters, many tools used to analyse the structure after refinement (e.g. PLATON) computes the s.u. of derived quantities such as those discussed in this paragraph by assuming that the covariances are zero. For riding hydrogen, this computation always gives terribly incorrect results, as the coordinates of the hydrogen atoms are totally correlated to those of the the pivot atoms. To make the matter worse, PLATON assumes that any atomic coordinates quoted with s.u. are freely refined. As a result, as Olex 2 reports the s.u. for riding hydrogen coordinates, PLATON assumes that the bond length \ce{C-H} in the example above should be quoted with a s.u. too, which it is not, as it is exactly zero. Then PLATON wrongly computes the s.u. of the angles $\widehat{\ce{R$_i$CH}}$ above and often finds a discrepancy with the correct one quoted by Olex 2. This results in a long list of serious warnings for any structure refined with Olex 2. It should be noted that the current CIF dictionary specifies a flag for each atom that should be used to report whether its coordinates were freely refined, or refined with a riding model, and that Olex 2 correctly sets that flag.
 
 
 
