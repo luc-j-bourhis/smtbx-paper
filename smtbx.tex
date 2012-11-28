@@ -692,16 +692,24 @@ However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of 
 \end{align}
 Thus the first-order derivative is exactly the same as it would have been with an independent parameter $K$. We then need the second-order derivatives
 \begin{align}
-\partialderxy{L}{x_i}{x_j} &= \partialder{r}{x_i} \dotprod \partialder{r}{x_j},\ 1 \le i,j \le n
+\partialderxy{L(x, \tilde{K})}{x_i}{x_j} &\approx \partialder{r(x, \tilde{K})}{x_i} \dotprod \partialder{r(x, \tilde{K})}{x_j},\ 1 \le i,j \le n
 \label{eqn:gaussleastsquares}
 \end{align}
-where we have neglected the term $\partialderxy{r}{x_i}{x_j} \dotprod r$ because, for a well-behaved fit, the residual $r$ and its curvature are small enough that this term can safely be neglected.
+where we have neglected the term $\partialderxy{r(x, \tilde{K})}{x_i}{x_j} \dotprod r(x, \tilde{K})$ because, for a well-behaved fit, the residual $r$ and its curvature are small enough that this term can safely be neglected.
 
 Let us now build the normal equations, which are just the Newton equations 
 \begin{equation}
+\label{eqn:gaussnewtoneq}
 Bs = -g
 \end{equation}
-for the shift $s$ of the parameter vector $x$ where $B$ is the Hessian matrix, $B_{ij} = \partialderxy{L(x, \tilde{K})}{x_i}{x_j}$ computed using the approximation of \eqnref{gaussleastsquares} and $g$ is the gradient of $L(x, \tilde{K})$. Using the definition~\eqnref[name=]{lsresidualdef} of $r$ and the expression~\eqnref[name=]{tildeK} of $\tilde{K}$, we have
+for the shift $s$ of the parameter vector $x$ where $B$ is the Hessian matrix, $B_{ij} = \partialderxy{L(x, \tilde{K})}{x_i}{x_j}$, computed using the approximation of \eqnref{gaussleastsquares} and $g$ is the gradient of $L(x, \tilde{K})$. It should be noted that the solution $s$ of \eqnref{gaussnewtoneq} is then also the solution of the linear least-squares problem
+\begin{equation}
+\label{eqn:gaussnewtonaslinearls}
+\min_s \norm{r(x, \tilde{K}) + \partialder{r(x, \tilde{K})}{x} s}^2.
+\end{equation}
+The inverse of the normal matrix $B$ when the least-squares minimum has been reached by $L(x, \tilde{K})$ can therefore be viewed as the variance matrix of $x$, which should be contrasted to the more classic combined refinement of $x$ and $K$, for which the variance matrix is the sub-matrix of inverse of the normal matrix obtained by removing the column and the row corresponding to $K$. 
+
+Using the definition~\eqnref[name=]{lsresidualdef} of $r$ and the expression~\eqnref[name=]{tildeK} of $\tilde{K}$, we have
 \begin{align}
 \partialder{r(x, \tilde{K})}{x_i} &= -\left( \tilde{K}\partialder{Y_c}{x_i} + \partialder{\tilde{K}}{x_i} Y_c \right) \\
 \partialder{\tilde{K}}{x_i} &= \frac{1}{\norm{Y_c}^2}\partialder{Y_c}{x_i} \dotprod \left(Y_o - 2 \tilde{K}Y_c \right).
