@@ -128,37 +128,37 @@ where $Y$ denotes, either $F$ or $F^2$, and $k$ is an overall scale factor that 
 For a small molecule structure with a high data to parameter ratio, such unconstrained minimisation as defined by equation \ref{eqn:L:def} may well be sufficient. However, as the structure becomes larger, or the data to parameter ratio worsens, unconstrained minimisation may not be well-behaved, or result in some questionable parameter values. These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This now gives the minimisation function
 \begin{equation}
 L = \sum_h{ w_h} (Y_o(h) - k Y_c(h))^2 + \sum_\text{restraints} w (T_o- T_c)^2}
-\label{eq:L_restraints_def}
+\label{eqn:L_restraints_def}
 \end{equation}
 where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). With the use of appropriate weighting of the restraints the minimisation is gently pushed towards giving a chemically sensible and hopefully correct structure.
 
 The observational least squares equations can be written
 \begin{equation}
 \mat{W} \cdot \mat{J} \cdot \delta x = \mat{W} \cdot \Delta \mat{Y}
-\label{eq:},
+\label{eqn:},
 \end{equation}
 with the weight matrix and the vector of residuals, $\Delta \mat{Y}$, where each row is given by $Y_o(h) - k Y_c(h)$. The elements of the matrix of derivatives, known as the Jacobian, $\mat{J}$, are given by
 \begin{equation}
 J_{ij} = \frac{\partial Y_c(h_i)}{\partial x_i}.
-\label{eq:}
+\label{eqn:}
 \end{equation}
 
 The shifts, $\delta x$, in the values of the refined parameters are obtained \emph{via} the solution of the normal equations,
 \begin{equation}
 \mat{J^T} \cdot \mat{W} \cdot \mat{J} \cdot \delta x = \mat{J^T} \cdot \mat{W} \cdot \Delta \mat{Y}
-\label{eq:}.
+\label{eqn:}.
 \end{equation}
 
 If we allow the repameterisation of the model by use of constraints (see \textsection\ref{sec:constraints}), the vector of parameters, $x$ is expressed as a function of a smaller vector of parameters, $y$, in a non-linear fashion. The linearisation of that relationship reads
 \begin{equation}
 \delta x = \mat{M} \delta y
-\label{eq:}
+\label{eqn:}
 \end{equation}
 where $\mat{M}$ is the matrix of constraint, known as the Jacobian matrix of the transformation $y \rightarrow x$.
 We obtain the solution to the normal equations as
 \begin{equation}
 \delta y = \left( \mat{M^T} \mat{J^T} \cdot \mat{W} \cdot \mat{J} \mat{M} \right)^{-1} \cdot \left( \mat{M^T} \mat{J^T} \right) \cdot \mat{W} \cdot \Delta \mat{Y}
-\label{eq:},
+\label{eqn:},
 \end{equation}
 where $\mat{M}$ is the matrix of constraint, and $\mat{M^T}$ its transpose.
 
@@ -170,7 +170,7 @@ only involving a few crystallographic parameters. Therefore, it is now feasible 
 It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002} suggest the normalization factor
 \begin{equation}
 w_\text{restraints} = \sum_{h}{ w_h (Y_o(h) - k Y_c(h))^2} / \left(m - n_y \right)
-\label{eq:giacovazzo_normalisation},
+\label{eqn:giacovazzo_normalisation},
 \end{equation}
 where for $m$ observations and $n_y$ independent parameters. This is better known as the square of the \emph{goodness of fit}, $\chi^2$. Ths normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{SHELX:man97}.
 
@@ -188,7 +188,7 @@ Given a restraint, $f(x)$, involving a site $x$ which is outside the asymmetric 
 \begin{align}
 \nabla_y f\left(x \right)  &= R^T \nabla_x f\left(x\right) \nonumber\\
 &= R^{-1} \nabla_x f\left(R y\right)
-\label{eq:}
+\label{eqn:}
 \end{align}
 since $R$ is a space group symmetry operation and is therefore an orthogonal transformation (\emph{i.e.} one which preserves distances and angles), which means that, $R^T = R^{-1}$.
 
@@ -199,7 +199,7 @@ since $R$ is a space group symmetry operation and is therefore an orthogonal tra
 
 The distances between two or more atom pairs are restrained to be equal by minimising the weighted variance of the distances, where the least squares residual, $L$, is defined as the population variance biased estimator
 \begin{equation}
-\label{eq:bond_similarity}
+\label{eqn:bond_similarity}
 L(r_1,...,r_n) = \frac{\sum_{i = 1}^n {w_i(r_i - \mean{r})^2}}
                       {\sum_{i = 1}^n {w_i}},
 \end{equation}
@@ -225,7 +225,7 @@ In a `rigid-bond' restraint the components of the anisotropic displacement param
 
 We therefore minimise the mean square displacement of the atoms in the direction of the bond. The weighted least squares residual is then
 \begin{equation}
-\label{eq:rigid_bond}
+\label{eqn:rigid_bond}
 L = w(z^2_{A,B} - z^2_{B,A})^2,
 \end{equation}
 where in the Cartesian coordinate system the mean square displacement of atom A
@@ -249,7 +249,7 @@ $\norm{r}$ is the length of the vector $\overrightarrow{AB}$.
 The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain \cite{SHELX:man97}. This is equivalent to a SHELXL SIMU restraint \cite{SHELX:man97}.
 The weighted least squares residual is defined as
 \begin{equation}
-\label{eq:adp_similarity}
+\label{eqn:adp_similarity}
 L = w \sum_{i=1}^3 \sum_{j=1}^3 (U_{A,ij} - U_{B,ij})^2,
 \end{equation}
 which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Delta U \Delta U^T$. This expression\footnote{This is known to mathematicians as the square of the Frobenius norm of the matrix $\Delta U$.} makes it clear that it is invariant under any rotation $R$, since it transforms $\Delta U$ into $R\Delta U R^T$. 
@@ -260,7 +260,7 @@ which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Del
 \subsubsection{Isotropic ADP restraint}
 Here we minimise the difference between the Cartesian ADPs, $\mat{U}_{cart}$, and the isotropic equivalent, $\mat{U}_{eq}$. Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{SHELX:man97}. As in \textsection \ref{ADP:similarity}, we must remember that we are dealing with symmetric matrices, and we can therefore define the weighted least squares residual as
 \begin{equation}
-\label{eq:isotropic_adp}
+\label{eqn:isotropic_adp}
 L = w \left( \sum_{i=1}^3 (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij} - U_{eq,ij})^2 \right) ,
 \end{equation}
 where
@@ -278,10 +278,10 @@ U_{iso} = \tfrac{1}{3} \mathrm{tr}(\mat{U}_{cart}).
 
 \subsection{Implementation}
 
-A generalisation of the target function (\ref{eq:L_restraints_def}) can be given as
+A generalisation of the target function (\eqnref{L_restraints_def}) can be given as
 \begin{equation}
 L = L_\text{data} + w L_\text{restraints}
-\label{eq:mm_target},
+\label{eqn:mm_target},
 \end{equation}
 where using a least squares minimiser
 \begin{equation}
@@ -297,7 +297,7 @@ In the case of macromolecular crystallography the part $L_{\text{data}}$ may fre
 \begin{align}
 \partialder{L}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}
-\label{eq:}.
+\label{eqn:}.
 \end{align}
 
 The route taken to add restraints into this framework was to build independently those rows of the Jacobian associated with the equations of restraint. Since the restraints largely involve relatively few of the crystallographic parameters, it can be efficient to store this part of the Jacobian as a sparse matrix. This allows the restraints to be built up without any knowledge of the constraint matrix, and only after the contribution of the data to the normal matrix has been computed, the contribution of the restraints can be added efficiently with the use of sparse matrix techniques. The restraints framework was designed in such a way that it would be easy to add further restraints. Each restraint must provide the array of partial derivatives of the restraint with respect to the parameters (one row of the Jacobian), the restraint delta, $T_o - T_c$, and the weight, $w$, of the restraint.
@@ -426,6 +426,7 @@ We would like to stress an important consequence of this formula: constrained pa
 
 \section{Twinning}
 \label{sec:ls_twinning}
+
 A twinned crystal consist of two or more distinct domains of the same species that are joined together and related by some symmetry operation (other than the identity operator). The resulting observed diffraction pattern is a superposition of the diffraction pattern of each component after application of the appropriate symmetry operation for each twin component. Problems can sometimes arise in solving structures in the presence of twinning, and it is essential to include the contribution of any twin components in the refinement of the structural parameters in order to get the best possible result.
 
 Each twin component is defined by a rotation matrix (\emph{twin law}) which defines the relative orientation of the twin component to the major component, and the fractional contribution of that component to the total crystal volume.
@@ -443,12 +444,12 @@ Twinned crystals can be grouped into four distinct types \cite{Herbst-Irmer:jz00
 For the first three cases outlined above, where the reciprocal lattices are exactly superimposed, the observed diffracted intensity can be given as the sum over the intensities for all miller indices that contribute to a particular point in the diffraction pattern:
 \begin{equation}
 F_o^2 = \sum_i^{n}{\alpha_i F_{o_i}^2}
-\label{eq:twin_eq},
+\label{eqn:twin_eq},
 \end{equation}
 where $\alpha_i$ is the fractional contribution of twin component $i$ to the crystal. Since the sum over all the fractional contribution must be equal to one, $n-1$ of them can be refined, whereas the last one is expressed as a function of those $n-1$ independent parameters,
 \begin{equation}
 \alpha_n = 1 - \sum_i^{n-1}{\alpha}
-\label{eq:twin_fractions}.
+\label{eqn:twin_fractions}.
 \end{equation}
 
 For certain applications it may be necessary to obtain a set of observations that contain only the contribution from the major component. This is essential when calculating an electron density map, and may occasionally be necessary in order to solve a structure successfully. In addition, many early twinned structures were refined against such \emph{detwinned} datasets \cite{Grainger:a06498,Murray-Rust:a10328,Britton:a08682}.
@@ -457,7 +458,7 @@ In the simplified case of hemihedral twinning, two reflections combine in the fo
 \begin{align}
 I_1 &= (1 - \alpha) J_1 + \alpha J_2 \\
 I_2 &= \alpha J_1 + (1- \alpha) J_2
-\label{eq:twin_frac}
+\label{eqn:twin_frac}
 ,
 \end{align}
 where $I_1$ and $I_2$ are the observed intensities produced by the superposition of the untwinned intensities, $J_1$ and $J_2$ with twin fraction $\alpha$.
@@ -467,37 +468,37 @@ This can be solved algebraically \cite{Britton:a08682,Grainger:a06498,Zachariase
 J_1 &= I_1 + \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2) \\
 J_2 &= I_2 - \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2)
 .
-\label{eq:detwin_alg}
+\label{eqn:detwin_alg}
 \end{align}
 
 These equations become singular as the value of $\alpha$ approaches $0.5$, however it is possible to \emph{detwin} the data using the proportionality of related intensities as calculated from the model
 \begin{equation}
 J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha} + I_2 \frac{F_a^2 \alpha}{F_a^2 \alpha + F_b^2 (1 - \alpha)}
-\label{eq:detwin_prop}
+\label{eqn:detwin_prop}
 \end{equation}
 where $F_a^2$ and $F_b^2$ are the calculated intensities of reflections related by the twin law. This method has the drawback of being more biased towards the model, and it may be better to use the algebraic method if possible.
 
 Alternatively the data can be reduced to the `prime' twin component by
 \begin{equation}
 J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha}
-\label{eq:detwin_prime}
+\label{eqn:detwin_prime}
 \end{equation}
 which is the equation used for Fourier map calculations for twinned structures in JANA \cite{JANA:man98,Dusek:hn0119} and SHELXL \cite{SHELX:man97}. This formula is more trivially extended to multiply twinned crystals.
 %shelx manual page 6-5.
 
-Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:a08682,Murray-Rust:a10328}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on equation \ref{eq:detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least squares parameters is ignored.
+Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:a08682,Murray-Rust:a10328}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on equation \eqnref{detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least squares parameters is ignored.
 
-Most commonly used crystallographic refinement software \cite{Sheldrick:sc5010,Betteridge:os5005} use the twin refinement method of \cite{Jameson:a20747} and \cite{J19710002146}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \ref{eq:twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
+Most commonly used crystallographic refinement software \cite{Sheldrick:sc5010,Betteridge:os5005} use the twin refinement method of \cite{Jameson:a20747} and \cite{J19710002146}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \eqnref{twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
 
 The derivatives of the squared structure factors with respect to the model parameters are calculated as
 \begin{equation}
 \partialder{F_c^2}{p_j} = \left(1-\sum_i^{n-1}{\alpha_i}\right) \partialder{F_{c_n}^2}{p_j} + \sum_i^{n-1}{\alpha_i \partialder{F_{c_i}^2}{p_j}}
-\label{eq:twin_grads},
+\label{eqn:twin_grads},
 \end{equation}
 and the derivatives with respect to the twin fractions, $\alpha_i$, given by
 \begin{equation}
 \partialder{F_c^2}{\alpha_i} = F_{c_i}^2 - F_{c_n}^2
-\label{eq:twin_fraction_grads}.
+\label{eqn:twin_fraction_grads}.
 \end{equation}
 
 
@@ -510,19 +511,19 @@ and the derivatives with respect to the twin fractions, $\alpha_i$, given by
 For a function, $f$, of a set of atomic parameters, $p_i$, its variance is given by \cite{Sands:a05356}
 \begin{equation}
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}
-\label{eq:sigma_f}
+\label{eqn:sigma_f}
 \end{equation}
 
 Derived parameters such as bond lengths and angles are a function of both the least squares atomic parameters and the unit cell parameters. As such, the error in a derived parameter is likewise a function of both the atomic and unit cell parameters. If the errors in atomic parameters are considered to be totally uncorrelated with the errors in the cell parameters (\emph{i.e.} their covariance is zero), then the error in a derived parameter can be considered as comprising two independent sources of errors:
 
 \begin{equation}
 \sigma^2(f) = \sigma^2_{cell}(f) + \sigma^2_{xyz}(f)
-\label{eq:sigma_d},
+\label{eqn:sigma_d},
 \end{equation}
 where $\sigma_{xyz}(f)$ is the part coming from the errors in the least square estimates of the positional parameters, and $\sigma_{cell}(f)$ comes from the errors in the unit cell parameters,
 \begin{equation}
 \sigma^2_{cell}(f) = \sum_{i,j}{{\partialder{f}{i}\partialder{f}{j} cov\left(i,j\right)}}
-\label{eq:sigma_cell},
+\label{eqn:sigma_cell},
 \end{equation}
 where $i,j=\lbrace{a,b,c,\alpha,\beta,\gamma\rbrace}$.
 
@@ -531,17 +532,17 @@ This necessitates the calculation of the derivatives of the function with respec
 \begin{equation}
 %\partialder{f}{i=a,b,c,\alpha,\beta,\gamma} = \partialder{f}{g_{jk}} \partialder{g_{jk}}{i=a,b,c,\alpha,\beta,\gamma}`
 \partialder{f}{i} = \partialder{f}{g_{jk}}\partialder{g_{jk}}{i},\ i=a, b, c, \alpha, \beta, \gamma
-\label{eq:df_dcell}
+\label{eqn:df_dcell}
 \end{equation}
 
-Now we consider the application of equation \ref{eq:sigma_f} to determine the estimated error in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
+Now we consider the application of equation \eqnref{sigma_f} to determine the estimated error in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
 %\begin{equation}
 %\vec{u} = (x_1,y_1,z_1)-(x_2,y_2,z_2)
-%\label{eq:}
+%\label{eqn:}
 %\end{equation}
 \begin{equation}
 D = (u^T \mat{G} u)^\frac{1}{2}
-\label{eq:bond_length},
+\label{eqn:bond_length},
 \end{equation}
 where $\mat{G}$ is the metrical matrix.
 
@@ -549,39 +550,39 @@ The derivative of the distance, $D$, with respect to the elements of the metrica
 %
 %\begin{equation}
 %\partialder{D}{x_i} = (g_{i1} u_{1} + g_{i2} u_2 + g_{i3} u_3)/D
-%\label{eq:d_distance_d_x}
+%\label{eqn:d_distance_d_x}
 %\end{equation}
 
 \begin{equation}
 \partialder{D}{g_{ii}} = \frac{1}{2} \frac{u_i^2}{D}
-\label{eq:d_distance_d_gii}
+\label{eqn:d_distance_d_gii}
 \end{equation}
 and (given the metrical matrix is symmetric)
 \begin{equation}
 \partialder{D}{g_{ij}} = \frac{u_i u_j}{D},\ \text{for all $i<j$}.
-\label{eq:d_distance_d_gij}
+\label{eqn:d_distance_d_gij}
 \end{equation}
 
 Similarly, for the angle between two vectors in fractional coordinates, $u}$ and $v$, where the angle is defined as
 \begin{align}
 \theta &= \arccos \frac{u^T\mat{G}v}{\norm{u^T\mat{G}u}\norm{v^T\mat{G}v}} \\
-%\label{eq:angle_frac}
+%\label{eqn:angle_frac}
 \intertext{or}
 \theta &= \arccos \frac{r_{A}\cdot r_{B}}{\norm{r_{A}}\norm{r_{B}}}
-\label{eq:angle_cart},
+\label{eqn:angle_cart},
 \end{align}
 where $r_{A}$ and $r_{B}$ are the Cartesian equivalents of $u$ and $v$. The derivative of the angle, $\theta$, with respect to the elements of the metrical matrix, $\mat{G}$, is given by
 \begin{equation}
 \partialder{\theta}{g_{ii}} = \frac{1}{2 \sin\theta} \left(\frac{u_i^2 \cos{\theta}}{\norm{r_{A}}^2} - \frac{2 u_i v_i }{\norm{r_{A}}\norm{r_{B}}} +\frac{v_i^2 \cos{\theta}}{\norm{r_{B}}^2}\right)
-\label{eq:d_angle_d_gii}
+\label{eqn:d_angle_d_gii}
 \end{equation}
 and
 \begin{equation}
 \partialder{\theta}{g_{ij}} = \frac{1}{\sin\theta} \left(\frac{u_i u_j \cos{\theta}}{\norm{r_{A}}^2} - \frac{u_i v_j + u_j v_i }{\norm{r_{A}}\norm{r_{B}}} +\frac{v_i v_j \cos{\theta}}{\norm{r_{B}}^2}\right),\ \text{for all $i<j$}.
-\label{eq:d_angle_d_gij}
+\label{eqn:d_angle_d_gij}
 \end{equation}
 
-The derivative of the metrical matrix with respect to the unit cell parameters, needed in order to apply equation \ref{eq:df_dcell}, are given below:
+The derivative of the metrical matrix with respect to the unit cell parameters, needed in order to apply equation \eqnref{df_dcell}, are given below:
 \begin{align}
 \partialder{g_{11}}{cell} =& \left(2 a,0,0,0,0,0\right) \\ \nonumber
 \partialder{g_{22}}{cell} =& \left(0,2 b,0,0,0,0\right) \\ \nonumber
@@ -592,13 +593,13 @@ The derivative of the metrical matrix with respect to the unit cell parameters, 
 \end{align}
 
 \subsection{Symmetry}
-The variance-covariance matrix that is obtained from the inversion of the least squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \cite{Sands:a05356} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \ref{eq:sigma_f} are mapped back to the original parameters.
+The variance-covariance matrix that is obtained from the inversion of the least squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \cite{Sands:a05356} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \eqnref{sigma_f} are mapped back to the original parameters.
 
 Let the function $f$ depend on the Cartesian site $y_c$ that is generated by the symmetry operator $\mat{R}_c$ from the original Cartesian site $x_c$, \emph{i.e.}
 \begin{align}
 y_c &= \mat{R}_c x_c \\ \nonumber
     &= \mat{O} \mat{R}_f \mat{F} x_c
-\label{eq:},
+\label{eqn:},
 \end{align}
 where $\mat{F}$ and $\mat{O}$ are the fractionalisation and orthogonalisation matrices respectively, with $\mat{R}_c$ and $\mat{R}_f$ the symmetry operator in Cartesian and fractional coordinates respectively.
 
@@ -606,19 +607,19 @@ Then the gradient with respect to the original site can be obtained by
 \begin{align}
 \grad_{x_c}{f(y_c)} &= \mat{R}_c^T \grad_{y_c}{f(y_c)} \\ \nonumber
                                 &= \mat{O}^{-T}\mat{R}_f^{-1}\mat{O}^T \grad_{y_c}{f(y_c)}
-\label{eq:symmetry_derivative}.
+\label{eqn:symmetry_derivative}.
 \end{align}
 
 The variance-covariance matrix that is used in this case should be the one that is transformed to Cartesian coordinates. The variance-covariance matrix for Cartesian coordinates can be obtained from that for fractional coordinates by the transformation
 
 \begin{equation}
 \mat{V}_{c} = \mat{O} \mat{V}_{f} \mat{O}^{T}
-\label{eq:vcv_cart},
+\label{eqn:vcv_cart},
 \end{equation}
 where $\mat{O}$ is the orthogonalisation matrix, such that
 \begin{equation}
 x_{c} = \mat{O} x_{f}
-\label{eq:}
+\label{eqn:}
 \end{equation}
 
 The transformation matrix needed to transform the entire variance-covariance matrix in one operation would be block diagonal, with the $3 \times 3$ orthogonalisation matrix, $O$, repeated at the appropriate positions along the diagonal. This transformation can be computed efficiently using sparse matrix techniques.
@@ -781,7 +782,7 @@ It should be noted that the first term of $B$ would appear in exactly the same f
 \section{Restraints and their derivatives}
 
 \subsection{Bond similarity restraint}
-We use an alternative form of (\ref{eq:bond_similarity}) to aid our calculation of the derivatives:
+We use an alternative form of (\eqnref{bond_similarity}) to aid our calculation of the derivatives:
 \begin{align}
 L &= \mean{r^2} - \mean{r}^2 \nonumber\\
 &= \frac{\sum_{i = 1}^n {w_i r_i^2}}{\sum_{i = 1}^n {w_i}} - 
@@ -807,7 +808,7 @@ Therefore, the derivative of the residual with respect to $x_a$ is
 
 \subsection{Rigid-bond restraint}
 
-The derivative of the (\ref{eq:rigid_bond}) with respect to an element of $U_{cart,A}$,
+The derivative of the (\eqnref{rigid_bond}) with respect to an element of $U_{cart,A}$,
 $U_{A,ij}$ is given by (using the chain rule)
 \begin{align}
 \partialder{L}{U_{A,ij}} &= \partialder{L}{z^2_{A,B}} \partialder{z^2_{A,B}}{U_{A,ij}}\\
@@ -844,7 +845,7 @@ with respect to each $U_{ij}$ component.
 
 \subsection{ADP similarity restraint}
 
-Since $\mat{U}$ is symmetric, \emph{i.e.} $U_{ij} = U_{ji}$, (\ref{eq:adp_similarity} can be rewritten as
+Since $\mat{U}$ is symmetric, \emph{i.e.} $U_{ij} = U_{ji}$, (\eqnref{adp_similarity} can be rewritten as
 \begin{equation}
 L = w \left( \sum_{i=1}^3 (U_{A,ii} - U_{B,ii})^2 + 2 \sum_{i < j} (U_{A,ij} - U_{B,ij})^2 \right) .
 \end{equation}
@@ -859,7 +860,7 @@ Similarly the gradient with respect to the off-diagonal element $U_{A,ij}$ is
 
 \subsection{Isotropic ADP restraint}
 
-We expand the summation of the residual (\ref{eq:isotropic_adp}) as follows
+We expand the summation of the residual (\eqnref{isotropic_adp}) as follows
 \begin{align}
 L &= w \left( (U_{11} - U_{iso})^2 + (U_{22} - U_{iso})^2 + (U_{33} - U_{iso})^2 \nonumber \\
 &\qquad + 2 U_{12}^2 + 2 U_{13}^2 + 2 U_{23}^2 \right) .
