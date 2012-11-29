@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{refstyle}
 \usepackage{nomencl}
+\usepackage[version=3]{mhchem}
 \newref{eqn}{%
 name={eqn~},
 names={eqns~},
@@ -39,6 +40,16 @@ rngtxt={\ to~},
 lsttxt={\ and~},
 refcmd=\ref{#1}
 }
+\newref{appendix}{%
+name={appendix~},
+names={appendices~},
+Name={Appendix~},
+Names={Appendices~},
+rngtxt={\ to~},
+lsttxt={\ and~},
+refcmd=\ref{#1}
+}
+
 \usepackage{tikz}
 \usepackage{cctbx_notations}
 
@@ -116,38 +127,38 @@ where $Y$ denotes, either $F$ or $F^2$, and $k$ is an overall scale factor that 
 
 For a small molecule structure with a high data to parameter ratio, such unconstrained minimisation as defined by equation \ref{eqn:L:def} may well be sufficient. However, as the structure becomes larger, or the data to parameter ratio worsens, unconstrained minimisation may not be well-behaved, or result in some questionable parameter values. These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This now gives the minimisation function
 \begin{equation}
-L = \sum_h{ w_h} (Y_o(h) - k Y_c(h))^2 + \sum_\text{restraints} w (T_o- T_c)^2}
-\label{eq:L_restraints_def}
+L = \sum_h{ w_h} (Y_o(h) - k Y_c(h))^2 + \sum_\text{restraints} w (T_o- T_c)^2
+\label{eqn:L_restraints_def}
 \end{equation}
 where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). With the use of appropriate weighting of the restraints the minimisation is gently pushed towards giving a chemically sensible and hopefully correct structure.
 
 The observational least squares equations can be written
 \begin{equation}
 \mat{W} \cdot \mat{J} \cdot \delta x = \mat{W} \cdot \Delta \mat{Y}
-\label{eq:},
+\label{eqn:},
 \end{equation}
 with the weight matrix and the vector of residuals, $\Delta \mat{Y}$, where each row is given by $Y_o(h) - k Y_c(h)$. The elements of the matrix of derivatives, known as the Jacobian, $\mat{J}$, are given by
 \begin{equation}
 J_{ij} = \frac{\partial Y_c(h_i)}{\partial x_i}.
-\label{eq:}
+\label{eqn:}
 \end{equation}
 
 The shifts, $\delta x$, in the values of the refined parameters are obtained \emph{via} the solution of the normal equations,
 \begin{equation}
 \mat{J^T} \cdot \mat{W} \cdot \mat{J} \cdot \delta x = \mat{J^T} \cdot \mat{W} \cdot \Delta \mat{Y}
-\label{eq:}.
+\label{eqn:}.
 \end{equation}
 
 If we allow the repameterisation of the model by use of constraints (see \textsection\ref{sec:constraints}), the vector of parameters, $x$ is expressed as a function of a smaller vector of parameters, $y$, in a non-linear fashion. The linearisation of that relationship reads
 \begin{equation}
 \delta x = \mat{M} \delta y
-\label{eq:}
+\label{eqn:}
 \end{equation}
 where $\mat{M}$ is the matrix of constraint, known as the Jacobian matrix of the transformation $y \rightarrow x$.
 We obtain the solution to the normal equations as
 \begin{equation}
 \delta y = \left( \mat{M^T} \mat{J^T} \cdot \mat{W} \cdot \mat{J} \mat{M} \right)^{-1} \cdot \left( \mat{M^T} \mat{J^T} \right) \cdot \mat{W} \cdot \Delta \mat{Y}
-\label{eq:},
+\label{eqn:},
 \end{equation}
 where $\mat{M}$ is the matrix of constraint, and $\mat{M^T}$ its transpose.
 
@@ -159,7 +170,7 @@ only involving a few crystallographic parameters. Therefore, it is now feasible 
 It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002} suggest the normalization factor
 \begin{equation}
 w_\text{restraints} = \sum_{h}{ w_h (Y_o(h) - k Y_c(h))^2} / \left(m - n_y \right)
-\label{eq:giacovazzo_normalisation},
+\label{eqn:giacovazzo_normalisation},
 \end{equation}
 where for $m$ observations and $n_y$ independent parameters. This is better known as the square of the \emph{goodness of fit}, $\chi^2$. Ths normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{SHELX:man97}.
 
@@ -177,7 +188,7 @@ Given a restraint, $f(x)$, involving a site $x$ which is outside the asymmetric 
 \begin{align}
 \nabla_y f\left(x \right)  &= R^T \nabla_x f\left(x\right) \nonumber\\
 &= R^{-1} \nabla_x f\left(R y\right)
-\label{eq:}
+\label{eqn:}
 \end{align}
 since $R$ is a space group symmetry operation and is therefore an orthogonal transformation (\emph{i.e.} one which preserves distances and angles), which means that, $R^T = R^{-1}$.
 
@@ -188,7 +199,7 @@ since $R$ is a space group symmetry operation and is therefore an orthogonal tra
 
 The distances between two or more atom pairs are restrained to be equal by minimising the weighted variance of the distances, where the least squares residual, $L$, is defined as the population variance biased estimator
 \begin{equation}
-\label{eq:bond_similarity}
+\label{eqn:bond_similarity}
 L(r_1,...,r_n) = \frac{\sum_{i = 1}^n {w_i(r_i - \mean{r})^2}}
                       {\sum_{i = 1}^n {w_i}},
 \end{equation}
@@ -214,7 +225,7 @@ In a `rigid-bond' restraint the components of the anisotropic displacement param
 
 We therefore minimise the mean square displacement of the atoms in the direction of the bond. The weighted least squares residual is then
 \begin{equation}
-\label{eq:rigid_bond}
+\label{eqn:rigid_bond}
 L = w(z^2_{A,B} - z^2_{B,A})^2,
 \end{equation}
 where in the Cartesian coordinate system the mean square displacement of atom A
@@ -238,7 +249,7 @@ $\norm{r}$ is the length of the vector $\overrightarrow{AB}$.
 The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain \cite{SHELX:man97}. This is equivalent to a SHELXL SIMU restraint \cite{SHELX:man97}.
 The weighted least squares residual is defined as
 \begin{equation}
-\label{eq:adp_similarity}
+\label{eqn:adp_similarity}
 L = w \sum_{i=1}^3 \sum_{j=1}^3 (U_{A,ij} - U_{B,ij})^2,
 \end{equation}
 which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Delta U \Delta U^T$. This expression\footnote{This is known to mathematicians as the square of the Frobenius norm of the matrix $\Delta U$.} makes it clear that it is invariant under any rotation $R$, since it transforms $\Delta U$ into $R\Delta U R^T$. 
@@ -249,7 +260,7 @@ which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Del
 \subsubsection{Isotropic ADP restraint}
 Here we minimise the difference between the Cartesian ADPs, $\mat{U}_{cart}$, and the isotropic equivalent, $\mat{U}_{eq}$. Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{SHELX:man97}. As in \textsection \ref{ADP:similarity}, we must remember that we are dealing with symmetric matrices, and we can therefore define the weighted least squares residual as
 \begin{equation}
-\label{eq:isotropic_adp}
+\label{eqn:isotropic_adp}
 L = w \left( \sum_{i=1}^3 (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij} - U_{eq,ij})^2 \right) ,
 \end{equation}
 where
@@ -267,14 +278,14 @@ U_{iso} = \tfrac{1}{3} \mathrm{tr}(\mat{U}_{cart}).
 
 \subsection{Implementation}
 
-A generalisation of the target function (\ref{eq:L_restraints_def}) can be given as
+A generalisation of the target function (\eqnref{L_restraints_def}) can be given as
 \begin{equation}
 L = L_\text{data} + w L_\text{restraints}
-\label{eq:mm_target},
+\label{eqn:mm_target},
 \end{equation}
 where using a least squares minimiser
 \begin{equation}
-L_\text{data} = \sum_{h}{ w_h \left(Y_o(h) - k Y_c(h)}\right)^2},
+L_\text{data} = \sum_{h} w_h \left(Y_o(h) - k Y_c(h)\right)^2,
 \label{eqn:mm_target_data:def}
 \end{equation}
 and
@@ -286,85 +297,136 @@ In the case of macromolecular crystallography the part $L_{\text{data}}$ may fre
 \begin{align}
 \partialder{L}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}
-\label{eq:}.
+\label{eqn:}.
 \end{align}
 
 The route taken to add restraints into this framework was to build independently those rows of the Jacobian associated with the equations of restraint. Since the restraints largely involve relatively few of the crystallographic parameters, it can be efficient to store this part of the Jacobian as a sparse matrix. This allows the restraints to be built up without any knowledge of the constraint matrix, and only after the contribution of the data to the normal matrix has been computed, the contribution of the restraints can be added efficiently with the use of sparse matrix techniques. The restraints framework was designed in such a way that it would be easy to add further restraints. Each restraint must provide the array of partial derivatives of the restraint with respect to the parameters (one row of the Jacobian), the restraint delta, $T_o - T_c$, and the weight, $w$, of the restraint.
 
 
 \section{Constraints}
+
+\subsection{Synopsis}
 \label{sec:constraints}
 
-Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic hydrogen, $C' \equiv C - H$. The position of the hydrogen must be such that the distance CH is equal to some ideal bond length $d$ and such that the angle $\widehat{C'CH}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (CH - d)^2 + w_2 (\cos \widehat{C'CH} - 1)^2 + w_3 (\sin  \widehat{C'CH})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
+Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic hydrogen, \ce{X#C-H}. The position of the hydrogen must be such that the distance \ce{CH} is equal to some ideal bond length $d$ and such that the angle $\widehat{\ce{XCH}}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (\ce{CH} - d)^2 + w_2 (\cos \widehat{\ce{XCH}} - 1)^2 + w_3 (\sin  \widehat{\ce{XCH}})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
 
-It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of $H$ as a function of the positions of the two carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
+It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of \ce{H} as a function of the positions of the two carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
 \begin{equation}
-x_H = x_C + d \frac{x_C - x_{C'}}{\norm{x_C - x_{C'}}},
+x_\ce{H} = x_\ce{C} + d \frac{x_\ce{C} - x_\ce{X}}{\norm{x_\ce{C} - x_\ce{X}}},
 \end{equation} 
-where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_C$, $x_{C'}$ and $x_H$ is replaced by a function $\tilde{Y}_c$ of $x_C$ and $x_{C'}$ but not of $x_H$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_C, x_{C'}) = Y_c(x_C, x_{C'}, x_H(x_C, x_{C'}))$. The derivatives for the remaining variables are then obtained with the chain rule\footnote{For a column vector $x=(x_1, x_2, x_3)$, $\partialder{F}{x}$ will always denote the row vector $\left(\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\right)$. Given another column vector $y=(y_1, y_2, y_3)$, $\partialder{y}{x}$ will always denote the matrix $\left(\partialder{y_i}{x_j}\right)_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.},
+where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_\ce{C}$, $x_\ce{X}$ and $x_\ce{H}$ is replaced by a function $\tilde{Y}_c$ of $x_\ce{C}$ and $x_\ce{X}$ but not of $x_\ce{H}$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_\ce{C}, x_\ce{X}) = Y_c(x_\ce{C}, x_\ce{X}, x_\ce{H}(x_\ce{C}, x_\ce{X}))$ and we will say that $x_\ce{H}(x_\ce{C}, x_\ce{X})$ is a reparametrisation of $x_\ce{H}$, whose arguments are $x_\ce{C}$ and $x_\ce{X}$. The derivatives for the remaining variables are then obtained with the chain rule\footnote{For a column vector $x=(x_1, x_2, x_3)$, $\partialder{F}{x}$ will always denote the row vector $\left(\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\right)$. Given another column vector $y=(y_1, y_2, y_3)$, $\partialder{y}{x}$ will always denote the matrix $\left(\partialder{y_i}{x_j}\right)_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.},
 \begin{align}
-\partialder{\tilde{Y_c}}{x_C} &= \partialder{Y_c}{x_C} + \partialder{Y_c}{x_H} \partialder{x_H}{x_C}, \\
-\partialder{\tilde{Y_c}}{x_{C'}} &= \partialder{Y_c}{x_{C'}} + \partialder{Y_c}{x_H} \partialder{x_H}{x_{C'}}. \nonumber
+\partialder{\tilde{Y_c}}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{C}}, \\
+\partialder{\tilde{Y_c}}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{X}}. \nonumber
 \end{align}
 It should be noted that it is customary to work within the ``riding" approximation,
 \begin{align}
-\partialder{x_H}{x_{C'}} = 0,\ \partialder{x_H}{x_C} = \identity,
+\partialder{x_\ce{H}}{x_\ce{X}} = 0,\ \partialder{x_\ce{H}}{x_\ce{C}} = \identity,
 \end{align} 
 which results in the much simplified chain rule
 \begin{align}
-\partialder{\tilde{Y}_c}{x_C} &= \partialder{Y_c}{x_C} + \partialder{Y}{x_H}, \\
-\partialder{\tilde{Y}_c}{x_{C'}} &= \partialder{Y_c}{x_{C'}}, \nonumber
+\partialder{\tilde{Y}_c}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y}{x_\ce{H}}, \\
+\partialder{\tilde{Y}_c}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}}, \nonumber
 \end{align}
 implemented in all refinement programs, including Olex2.
 
-It is not always the case that all three coordinates of an atom are removed from the refinement by constraints. For example, an atom on the plane of the mirror $z,y,x$ has its coordinates $(x_1, x_2, x_3)$ constrained by the relation $x_1 = x_3$. The corresponding reparametrisation reads
+It is not always the case that all three coordinates of an atom are removed from the refinement by constraints. For example, an atom on the plane of the mirror $z,y,x$ has its coordinates $(x_1, x_2, x_3)$ constrained by the relation $x_1 = x_3$. The corresponding reparametrisation may be written
 \begin{align}
-x_1 = u,\ x_2 = v,\ x_3 = u,
+x_1 = u_1,\ x_2 = u_2,\ x_3 = u_1,
 \label{eqn:specialposexamplereparam}
 \end{align}
-the observable $Y_c$ becoming now a function of the refinable parameters $(u,v)$.
+the observable $Y_c$ becoming now a function of the vector of newly introduced refinable parameters $u = (u_1, u_2)$. There is a general algorithm implemented in the cctbx that for any special position returns a matrix $Z$ so that the reparametrisation takes this form,\footnote{This algorithm first determines the space group symmetries that leaves invariant the site. The resulting system of linear equations is then reduced to a triangular form from which the matrix $Z$ and the vector $z$ are then readily obtained.}
+\begin{align}
+x = Z u + z
+\end{align}
+where $Z$ is a $3 \times 2$ or $3 \times 1$ matrix and $z$ is a 3-vector. This algorithm does therefore not try to determine which components of $u$, if any, are also components of $x$. This is why we have presented the reparametrisation for our example in this general form instead of keeping $x_1$ and $x_2$ as refinable parameters, which would sound more intuitive in the first place.
 
-In other cases, a reparametrisation will make some crystallographic parameters disappear while introducing new refinable parameters. A typical example is that of a tetrahedral $C' - CH_3$ as the geometrical constraints leave one degree of freedom, a rotation about the axis $C' - C$. Thus the reparametrisation expresses the coordinates of the hydrogen atoms $H_0$, $H_1$ and $H_2$ as functions of the coordinates of the carbon atoms, and of an angle $\phi$ modelling that rotation,
+In other cases, a reparametrisation will make some crystallographic parameters disappear while introducing new refinable parameters. A typical example is that of a tetrahedral \ce{X-CH3} as the geometrical constraints leave one degree of freedom, a rotation about the axis \ce{X-C}. Thus the reparametrisation expresses the coordinates of the hydrogen atoms $H_0$, $H_1$ and $H_2$ as functions of the coordinates of the carbon atoms, and of an angle $\phi$ modelling that rotation,
 \newcommand{\hydrogenphiarg}{\!\left(\phi\!+\!n \frac{2\pi}{3}\right)}
 \begin{equation}
 \begin{split}
-x_{H_n} = x_C 
+x_\ce{H$_n$} = x_\ce{C} 
 + d \Biggl[ &\sin \alpha \left\{ \cos\hydrogenphiarg e_1 + \sin\hydrogenphiarg e_2 \right\}\\
 - &\cos\alpha e_0
 \Biggr],
 \end{split}
 \label{eqn:rotatingch3reparam}
 \end{equation}
-where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond $C' \rightarrow C$. The riding approximation in this case consists in neglecting the derivatives of those base vectors, leading to
+where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond \ce{X\bond{->}C}. The riding approximation in this case consists in neglecting the derivatives of those base vectors, leading to
 \begin{align}
-\partialder{\tilde{Y}_c}{x_C} &= \partialder{Y_c}{x_C} + \partialder{Y_c}{x_H},\\
-\partialder{\tilde{Y}_c}{\phi} &= \partialder{Y_c}{x_H} 
-d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\}.
+\partialder{\tilde{Y}_c}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}},\\
+\partialder{\tilde{Y}_c}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}}, \nonumber \\
+\partialder{\tilde{Y}_c}{\phi} &= \partialder{Y_c}{x_\ce{H}} 
+d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\}. \nonumber
 \end{align}
 Thus a new derivative with respect to the new refinable parameter $\phi$ is introduced by this reparametrisation.
 
-The last important concept is that of the chaining or composition of reparametrisations, that we will again illustrate with a combination of the examples above. In the $CH_3$ case, the atoms $C$ and $C'$ could be on the special position studied in the next-to-last example. One way to model the hydrogen atoms in that case would be to first apply the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_C$ and $x_{C'}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
+The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above. In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One way to model the hydrogen atoms in that case would be to first apply the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_\ce{C}$ and $x_\ce{X}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
 \begin{equation}
-\partialder{x_{H_0}}{u} = \partialder{x_{H_0}}{x_C}\partialder{x_C}{u} = 2
+\partialder{x_\ce{H0}}{u} = \partialder{x_\ce{H0}}{x_\ce{C}}\partialder{x_\ce{C}}{u} = 2
 \end{equation}
-in the riding approximation. This composition of reparametrisation is represented as a graph in the smtbx code: each parameter (some of them are triples of coordinates, others are scalars), $x_{H_0}$, $x_{H_1}$, $x_{H_2}$, $x_C$, $x_{C'}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to the nodes it depends upon, as shown on \figref{dependencegraphexample}. 
+in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_\ce{H0}$, $x_\ce{H1}$, $x_\ce{H2}$, $x_\ce{C}$, $x_\ce{X}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, i.e. the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_\ce{C}$ has only one argument, $u$, whereas $x_\ce{H0}$ has three arguments, $x_\ce{C}$, $x_\ce{X}$ and $\phi$. The smtbx implements reparametrisations by explicitly building such a graph.
 
 \begin{figure}
 \begin{tikzpicture}[grow=left, every node/.style={circle,draw}, edge from parent/.style={-latex,draw}]
-\node{$x_{H_0}$} child { node{$x_C$}    child { node{$u$}  } }
-                           child { node{$x_{C'}$} child { node{$u'$} } };
+\node{$x_\ce{H0}$} child { node{$x_\ce{C}$}    child { node{$u$}  } }
+                           child { node{$x_\ce{X}$} child { node{$u'$} } }
+                           child { node{$\phi$} };
 \end{tikzpicture}
 \label{fig:dependencegraphexample}
 \caption{Example of dependency graph for the chain of reparametrisation discussed in \secref{constraints}. Only the part for hydrogen atom $H_0$ is shown.}
 \end{figure}
 
-A crystallographic refinement may involve many such reparametrisations. By piecing them all together, we obtain one reparametrisation that expresses all refinable crystallographic parameters as a smaller vector of independent parameters that shall then be refined. This piecewise construction
+
+As models become more complex, e.g. hydrogen atoms riding on the atoms of a rigid body whose rotation centre is tied to an atom whose coordinates are refined, the reparametrisation graph becomes deeper. We decided not to put arbitrary limits on that graph. Indeed we could have made a closed list of reparametrisations and of reparametrisation combinations  that our framework would accept but instead we decided to write our code so that it could correctly handle the computation of parameter values and of partial derivatives for arbitrary reparametrisations, furthermore combined in arbitrary ways. This framework is therefore open as new type of reparametrisations can be added, without the need to change the basic infrastructure in any way, and therefore without the risk of breaking existing reparametrisations. This has proven very useful to the authors as this enabled them to incrementally add the wealth of constraints that is now available, some of them unique to Olex2.refine, as discussed later. But it also enables third parties to develop their own constraints without the need for the authors to get involved beyond documenting how the reparametrisation framework works.
+
+A crystallographic refinement may involve many such reparametrisations. By piecing them all together, we obtain one reparametrisation that expresses all refinable crystallographic parameters as a smaller vector of independent parameters that shall then be refined. Our framework safeguards that piecewise construction by preventing the same reparametrisation (i.e. same type, applied to the same parameters) to be added twice and by bailing out with an error if it detects a cycle in the graph, as that would mean that at least one parameter, through a series of reparametrisation combinations, depends upon itself. This last case would clearly result from either a bug in the code of ours constructing the combinations of reparametrisations or from a bogus user input.
+
+\subsection{Constraint matrix}
+
+There is a wealth of algorithms designed to minimise least squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex 2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (ShelXL).  The macro-molecular community later introduced the LBFGS method (Phenix) and sparse normal matrix algorithms (REFMAC). They all have in common the fact that they require  only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we will denote by $Y_c$ in the following. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
+
+Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section, and then piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $x = (x_1, \cdots, x_n)$ as a function of the vector $u=(u_1, \cdots, u_p)$ of the parameters that are actually refined. It should be noted that any component $x_k$ of $x$ that is not reparametrised -- either because it is not involved in any constraints, or because it is only the arguments of a reparametrisation (e.g. a coordinate of the pivot atom on which another atom rides) --  is also a component $u_l$ of $u$, i.e. 
+\begin{equation}
+\partialder{x_k}{u_j} = \begin{cases} 
+   1& \text{if $j=l$},\\
+   0& \text{if $j \neq l$}.
+   \end{cases}
+\end{equation}
+
+ From the known analytical expression of $Y_c(x)$, one computes the derivatives of $\partialder{Y_c}{x_i}$ (the reader is referred to \appendixref{structurefactorlinearisation} for a detailed presentation of those computations). The minimisation algorithm then only needs the derivatives of
+\begin{align}
+\tilde{Y}_c(u) &= Y_c(x(u)) \\
+ \intertext{with respect to each $u_i$, which are easily obtained by a simple application of the chain rule,}
+\partialder{\tilde{Y}_c}{u} &= \partialder{Y_c}{x} \partialder{x}{u}.
+\end{align}
+The matrix $\partialder{x}{u}$ is known as the constraint matrix in crystallographic circles. In standard mathematical nomenclatures, it is called the Jacobian of the transformation $u \mapsto x$ and we will therefore denote it $J$.
+
+The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $x_i$ depends on very few refined parameters $u_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, the both of these costs scale as $O(n)$ instead of $O(n^2)$ if $J$ was treated as a dense matrix, where n is the number of parameters.
+
+
+\subsection{Variance matrix}
+In this section, we will discuss the rigorous computation of standard uncertainties of and correlation between the parameters of a constrained model. As pointed out in \appendixref{leastsquaresminimisation} in the comment about \eqnref{gaussnewtonaslinearls}, the variance matrix for the refined parameters $u$ is
+\begin{align}
+\var{u} &= B^{-1}\\
+\intertext{where}
+B_{ij} &= \partialder{r}{u_i} \dotprod \partialder{r}{u_j}
+\end{align}
+is the normal matrix for the constrained least squares minimisation. However we are interested in the variance matrix $\var{x}$ for the crystallographic parameters of the model, not in $\var{u}$. For small variations, we have the linear relation
+\begin{align}
+\delta x &\approx J \delta u\\
+\intertext{and therefore, remembering the heuristic definition of the variance matrix of $x$ as the mean value of $\delta x \delta x^T$ in the linear approximation within which we are working in this section,}
+\var{x} &= J\, \var{u} J^T.
+\end{align} 
+
+We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. Consequently, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. Because many refinement programs print only the s.u. of each refined parameter, but not the covariances between the refined parameters, many tools used to analyse the structure after refinement (e.g. PLATON) computes the s.u. of derived quantities such as those discussed in this paragraph by assuming that the covariances are zero. For riding hydrogen, this computation always gives terribly incorrect results, as the coordinates of the hydrogen atoms are totally correlated to those of the the pivot atoms. To make the matter worse, PLATON assumes that any atomic coordinates quoted with s.u. are freely refined. As a result, as Olex 2 reports the s.u. for riding hydrogen coordinates, PLATON assumes that the bond length \ce{C-H} in the example above should be quoted with a s.u. too, which it is not, as it is exactly zero. Then PLATON wrongly computes the s.u. of the angles $\widehat{\ce{R$_i$CH}}$ above and often finds a discrepancy with the correct one quoted by Olex 2. This results in a long list of serious warnings for any structure refined with Olex 2. It should be noted that the current CIF dictionary specifies a flag for each atom that should be used to report whether its coordinates were freely refined, or refined with a riding model, and that Olex 2 correctly sets that flag.
 
 
 
 
 \section{Twinning}
 \label{sec:ls_twinning}
+
 A twinned crystal consist of two or more distinct domains of the same species that are joined together and related by some symmetry operation (other than the identity operator). The resulting observed diffraction pattern is a superposition of the diffraction pattern of each component after application of the appropriate symmetry operation for each twin component. Problems can sometimes arise in solving structures in the presence of twinning, and it is essential to include the contribution of any twin components in the refinement of the structural parameters in order to get the best possible result.
 
 Each twin component is defined by a rotation matrix (\emph{twin law}) which defines the relative orientation of the twin component to the major component, and the fractional contribution of that component to the total crystal volume.
@@ -382,12 +444,12 @@ Twinned crystals can be grouped into four distinct types \cite{Herbst-Irmer:jz00
 For the first three cases outlined above, where the reciprocal lattices are exactly superimposed, the observed diffracted intensity can be given as the sum over the intensities for all miller indices that contribute to a particular point in the diffraction pattern:
 \begin{equation}
 F_o^2 = \sum_i^{n}{\alpha_i F_{o_i}^2}
-\label{eq:twin_eq},
+\label{eqn:twin_eq},
 \end{equation}
 where $\alpha_i$ is the fractional contribution of twin component $i$ to the crystal. Since the sum over all the fractional contribution must be equal to one, $n-1$ of them can be refined, whereas the last one is expressed as a function of those $n-1$ independent parameters,
 \begin{equation}
 \alpha_n = 1 - \sum_i^{n-1}{\alpha}
-\label{eq:twin_fractions}.
+\label{eqn:twin_fractions}.
 \end{equation}
 
 For certain applications it may be necessary to obtain a set of observations that contain only the contribution from the major component. This is essential when calculating an electron density map, and may occasionally be necessary in order to solve a structure successfully. In addition, many early twinned structures were refined against such \emph{detwinned} datasets \cite{Grainger:a06498,Murray-Rust:a10328,Britton:a08682}.
@@ -396,7 +458,7 @@ In the simplified case of hemihedral twinning, two reflections combine in the fo
 \begin{align}
 I_1 &= (1 - \alpha) J_1 + \alpha J_2 \\
 I_2 &= \alpha J_1 + (1- \alpha) J_2
-\label{eq:twin_frac}
+\label{eqn:twin_frac}
 ,
 \end{align}
 where $I_1$ and $I_2$ are the observed intensities produced by the superposition of the untwinned intensities, $J_1$ and $J_2$ with twin fraction $\alpha$.
@@ -407,36 +469,36 @@ This can be solved algebraically \cite{Britton:a08682,Grainger:a06498,Zachariase
 J_1 &= I_1 + \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2) \\
 J_2 &= I_2 - \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2)
 .
-\label{eq:detwin_alg}
+\label{eqn:detwin_alg}
 \end{align}
 These equations become singular as the value of $\alpha$ approaches $0.5$, however it is possible to \emph{detwin} the data using the proportionality of related intensities as calculated from the model
 \begin{equation}
 J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha} + I_2 \frac{F_a^2 \alpha}{F_a^2 \alpha + F_b^2 (1 - \alpha)}
-\label{eq:detwin_prop}
+\label{eqn:detwin_prop}
 \end{equation}
 where $F_a^2$ and $F_b^2$ are the calculated intensities of reflections related by the twin law. This method has the drawback of being more biased towards the model, and it may be better to use the algebraic method if possible.
 
 Alternatively the data can be reduced to the `prime' twin component by
 \begin{equation}
 J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha}
-\label{eq:detwin_prime}
+\label{eqn:detwin_prime}
 \end{equation}
 which is the equation used for Fourier map calculations for twinned structures in JANA \cite{JANA:man98,Dusek:hn0119} and SHELXL \cite{SHELX:man97}. This formula is more trivially extended to multiply twinned crystals.
 %shelx manual page 6-5.
 
-Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:a08682,Murray-Rust:a10328}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on equation \ref{eq:detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least squares parameters is ignored.
+Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:a08682,Murray-Rust:a10328}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on equation \eqnref{detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least squares parameters is ignored.
 
-Most commonly used crystallographic refinement software \cite{Sheldrick:sc5010,Betteridge:os5005} use the twin refinement method of \cite{Jameson:a20747} and \cite{J19710002146}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \ref{eq:twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
+Most commonly used crystallographic refinement software \cite{Sheldrick:sc5010,Betteridge:os5005} use the twin refinement method of \cite{Jameson:a20747} and \cite{J19710002146}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \eqnref{twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
 
 The derivatives of the squared structure factors with respect to the model parameters are calculated as
 \begin{equation}
 \partialder{F_c^2}{p_j} = \left(1-\sum_i^{n-1}{\alpha_i}\right) \partialder{F_{c_n}^2}{p_j} + \sum_i^{n-1}{\alpha_i \partialder{F_{c_i}^2}{p_j}}
-\label{eq:twin_grads},
+\label{eqn:twin_grads},
 \end{equation}
 and the derivatives with respect to the twin fractions, $\alpha_i$, given by
 \begin{equation}
 \partialder{F_c^2}{\alpha_i} = F_{c_i}^2 - F_{c_n}^2
-\label{eq:twin_fraction_grads}.
+\label{eqn:twin_fraction_grads}.
 \end{equation}
 
 
@@ -449,19 +511,19 @@ and the derivatives with respect to the twin fractions, $\alpha_i$, given by
 For a function, $f$, of a set of atomic parameters, $p_i$, its variance is given by \cite{Sands:a05356}
 \begin{equation}
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}
-\label{eq:sigma_f}
+\label{eqn:sigma_f}
 \end{equation}
 
 Derived parameters such as bond lengths and angles are a function of both the least squares atomic parameters and the unit cell parameters. As such, the error in a derived parameter is likewise a function of both the atomic and unit cell parameters. If the errors in atomic parameters are considered to be totally uncorrelated with the errors in the cell parameters (\emph{i.e.} their covariance is zero), then the error in a derived parameter can be considered as comprising two independent sources of errors:
 
 \begin{equation}
 \sigma^2(f) = \sigma^2_{cell}(f) + \sigma^2_{xyz}(f)
-\label{eq:sigma_d},
+\label{eqn:sigma_d},
 \end{equation}
 where $\sigma_{xyz}(f)$ is the part coming from the errors in the least square estimates of the positional parameters, and $\sigma_{cell}(f)$ comes from the errors in the unit cell parameters,
 \begin{equation}
 \sigma^2_{cell}(f) = \sum_{i,j}{{\partialder{f}{i}\partialder{f}{j} cov\left(i,j\right)}}
-\label{eq:sigma_cell},
+\label{eqn:sigma_cell},
 \end{equation}
 where $i,j=\lbrace{a,b,c,\alpha,\beta,\gamma\rbrace}$.
 
@@ -470,17 +532,17 @@ This necessitates the calculation of the derivatives of the function with respec
 \begin{equation}
 %\partialder{f}{i=a,b,c,\alpha,\beta,\gamma} = \partialder{f}{g_{jk}} \partialder{g_{jk}}{i=a,b,c,\alpha,\beta,\gamma}`
 \partialder{f}{i} = \partialder{f}{g_{jk}}\partialder{g_{jk}}{i},\ i=a, b, c, \alpha, \beta, \gamma
-\label{eq:df_dcell}
+\label{eqn:df_dcell}
 \end{equation}
 
-Now we consider the application of equation \ref{eq:sigma_f} to determine the estimated error in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
+Now we consider the application of equation \eqnref{sigma_f} to determine the estimated error in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
 %\begin{equation}
 %\vec{u} = (x_1,y_1,z_1)-(x_2,y_2,z_2)
-%\label{eq:}
+%\label{eqn:}
 %\end{equation}
 \begin{equation}
 D = (u^T \mat{G} u)^\frac{1}{2}
-\label{eq:bond_length},
+\label{eqn:bond_length},
 \end{equation}
 where $\mat{G}$ is the metrical matrix.
 
@@ -488,39 +550,39 @@ The derivative of the distance, $D$, with respect to the elements of the metrica
 %
 %\begin{equation}
 %\partialder{D}{x_i} = (g_{i1} u_{1} + g_{i2} u_2 + g_{i3} u_3)/D
-%\label{eq:d_distance_d_x}
+%\label{eqn:d_distance_d_x}
 %\end{equation}
 
 \begin{equation}
 \partialder{D}{g_{ii}} = \frac{1}{2} \frac{u_i^2}{D}
-\label{eq:d_distance_d_gii}
+\label{eqn:d_distance_d_gii}
 \end{equation}
 and (given the metrical matrix is symmetric)
 \begin{equation}
 \partialder{D}{g_{ij}} = \frac{u_i u_j}{D},\ \text{for all $i<j$}.
-\label{eq:d_distance_d_gij}
+\label{eqn:d_distance_d_gij}
 \end{equation}
 
-Similarly, for the angle between two vectors in fractional coordinates, $u}$ and $v$, where the angle is defined as
+Similarly, for the angle between two vectors in fractional coordinates, $u$ and $v$, where the angle is defined as
 \begin{align}
 \theta &= \arccos \frac{u^T\mat{G}v}{\norm{u^T\mat{G}u}\norm{v^T\mat{G}v}} \\
-%\label{eq:angle_frac}
+%\label{eqn:angle_frac}
 \intertext{or}
 \theta &= \arccos \frac{r_{A}\cdot r_{B}}{\norm{r_{A}}\norm{r_{B}}}
-\label{eq:angle_cart},
+\label{eqn:angle_cart},
 \end{align}
 where $r_{A}$ and $r_{B}$ are the Cartesian equivalents of $u$ and $v$. The derivative of the angle, $\theta$, with respect to the elements of the metrical matrix, $\mat{G}$, is given by
 \begin{equation}
 \partialder{\theta}{g_{ii}} = \frac{1}{2 \sin\theta} \left(\frac{u_i^2 \cos{\theta}}{\norm{r_{A}}^2} - \frac{2 u_i v_i }{\norm{r_{A}}\norm{r_{B}}} +\frac{v_i^2 \cos{\theta}}{\norm{r_{B}}^2}\right)
-\label{eq:d_angle_d_gii}
+\label{eqn:d_angle_d_gii}
 \end{equation}
 and
 \begin{equation}
 \partialder{\theta}{g_{ij}} = \frac{1}{\sin\theta} \left(\frac{u_i u_j \cos{\theta}}{\norm{r_{A}}^2} - \frac{u_i v_j + u_j v_i }{\norm{r_{A}}\norm{r_{B}}} +\frac{v_i v_j \cos{\theta}}{\norm{r_{B}}^2}\right),\ \text{for all $i<j$}.
-\label{eq:d_angle_d_gij}
+\label{eqn:d_angle_d_gij}
 \end{equation}
 
-The derivative of the metrical matrix with respect to the unit cell parameters, needed in order to apply equation \ref{eq:df_dcell}, are given below:
+The derivative of the metrical matrix with respect to the unit cell parameters, needed in order to apply equation \eqnref{df_dcell}, are given below:
 \begin{align}
 \partialder{g_{11}}{cell} =& \left(2 a,0,0,0,0,0\right) \\ \nonumber
 \partialder{g_{22}}{cell} =& \left(0,2 b,0,0,0,0\right) \\ \nonumber
@@ -531,13 +593,13 @@ The derivative of the metrical matrix with respect to the unit cell parameters, 
 \end{align}
 
 \subsection{Symmetry}
-The variance-covariance matrix that is obtained from the inversion of the least squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \cite{Sands:a05356} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \ref{eq:sigma_f} are mapped back to the original parameters.
+The variance-covariance matrix that is obtained from the inversion of the least squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \cite{Sands:a05356} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \eqnref{sigma_f} are mapped back to the original parameters.
 
 Let the function $f$ depend on the Cartesian site $y_c$ that is generated by the symmetry operator $\mat{R}_c$ from the original Cartesian site $x_c$, \emph{i.e.}
 \begin{align}
 y_c &= \mat{R}_c x_c \\ \nonumber
     &= \mat{O} \mat{R}_f \mat{F} x_c
-\label{eq:},
+\label{eqn:},
 \end{align}
 where $\mat{F}$ and $\mat{O}$ are the fractionalisation and orthogonalisation matrices respectively, with $\mat{R}_c$ and $\mat{R}_f$ the symmetry operator in Cartesian and fractional coordinates respectively.
 
@@ -545,19 +607,19 @@ Then the gradient with respect to the original site can be obtained by
 \begin{align}
 \grad_{x_c}{f(y_c)} &= \mat{R}_c^T \grad_{y_c}{f(y_c)} \\ \nonumber
                                 &= \mat{O}^{-T}\mat{R}_f^{-1}\mat{O}^T \grad_{y_c}{f(y_c)}
-\label{eq:symmetry_derivative}.
+\label{eqn:symmetry_derivative}.
 \end{align}
 
 The variance-covariance matrix that is used in this case should be the one that is transformed to Cartesian coordinates. The variance-covariance matrix for Cartesian coordinates can be obtained from that for fractional coordinates by the transformation
 
 \begin{equation}
 \mat{V}_{c} = \mat{O} \mat{V}_{f} \mat{O}^{T}
-\label{eq:vcv_cart},
+\label{eqn:vcv_cart},
 \end{equation}
 where $\mat{O}$ is the orthogonalisation matrix, such that
 \begin{equation}
 x_{c} = \mat{O} x_{f}
-\label{eq:}
+\label{eqn:}
 \end{equation}
 
 The transformation matrix needed to transform the entire variance-covariance matrix in one operation would be block diagonal, with the $3 \times 3$ orthogonalisation matrix, $O$, repeated at the appropriate positions along the diagonal. This transformation can be computed efficiently using sparse matrix techniques.
@@ -565,6 +627,7 @@ The transformation matrix needed to transform the entire variance-covariance mat
 
 \appendix
 \section{Computation of structure factors and their gradient}
+\label{appendix:structurefactorlinearisation}
 
 The formulae discussed in this appendix have been known for nearly a century and have been implemented in all known refinement programs. However it seems to the authors that, during the last decades, the computation for a given Miller index~$h$ of $F_c(h)$ and its gradient $\grad{F_c(h)}$ with respect to crystallographic parameters has very rarely been presented in all the minute details necessary to implement those formulae in a program, which justifies this appendix in our humble opinion.
 
@@ -602,7 +665,7 @@ which shows that the centred case and the primitive case only differ by an overa
 Thus we will only consider a primitive unit cell in the following. Three cases are to be considered.
 \begin{enumerate}
 \item The space group is non-centric. Then there is no further simplification.
-\item The space group is centric and the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\cal{O}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
+\item The space group is centric but the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\cal{O}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
 \begin{align}
 \sum_{\sym{R}{t} \in \cal{O}} G^{\sym{R}{t}} &= 
 \underbrace{\sum_{\sym{R}{t} \in \cal{O^+}} G^{\sym{R}{t}} }_{\Sigma} 
@@ -624,8 +687,7 @@ G^{\inversion\sym{R}{t}} &= G(-hR) e^{-i2\pi ht} e^{i2\pi h t_{\bar{1}}}, \nonum
 The total sum over symmetries is therefore real, and its derivative will be so too, the former involving a cosine and the latter involving a sine for the derivatives with respect to $x$. 
 \end{enumerate}
 
-In order to avoid redundant computations, our code distinguishes these three cases. One piece of code handles the case of centrosymmetric space groups using only real numbers to compute $\Sigma$. Another piece of code handles the other two cases, first computing $\Sigma$ using complex number algebra and then using \eqnref{sumofGforcentricgroups} if the space group is centric and $h t_{\bar{1}} \neq 0$. Another optimisation we applied is to precompute the terms $hR$ and $e^{i2\pi t}$ appearing in \eqnref{transformofG} as well as the test for the condition $h t_{\bar{1}}=0$ before the loop over all scatterers in the asymmetric unit. In all three cases, the computation of $\cos(hRx + t)$ and $\sin(hRx + t)$ is the most costly operation. This is mitigated\footnote{Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a cctbx function that interpolates between tabulated values of sines and cosines.
-} by computing the structure factor and its derivatives together, as the cosine and sine then only need to be computed once for each reflection and scatterer.
+In order to avoid redundant computations, our code distinguishes these three cases. One piece of code handles the case of centrosymmetric space groups using only real numbers to compute $\Sigma$. Another piece of code handles the other two cases, first computing $\Sigma$ using complex number algebra and then using \eqnref{sumofGforcentricgroups} if the space group is centric and $h t_{\bar{1}} \neq 0$. Another optimisation we applied is to precompute the terms $hR$ and $e^{i2\pi t}$ appearing in \eqnref{transformofG} as well as the test for the condition $h t_{\bar{1}}=0$ before the loop over all scatterers in the asymmetric unit. In all three cases, the computation of $\cos(hRx + t)$ and $\sin(hRx + t)$ is the most costly operation. This is mitigated\footnote{Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a cctbx function that interpolates between tabulated values of sines and cosines. The latter is much faster but less precise. Olex 2 uses the former.} by computing the structure factor and its derivatives together, as the cosine and sine then only need to be computed once for each reflection and scatterer.
 This optimisation is the reason why we have written our own new code into the smtbx instead of reusing the original code in the cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines to be computed twice. This is rather well suited to the optimisation algorithm used in the mmtbx (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares, that is prevalent in small molecule crystallography.  
 
 \subsection{Derivatives of $\modulus{F}^2$ and $\modulus{F}$}
@@ -644,6 +706,7 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 The smtbx provides code to compute derivatives for the both of these observables. However Olex 2 only offers the choice to refine against $F^2$.
 
 \section{Minimisation of least-squares with an overall scale factor}
+\label{appendix:leastsquaresminimisation}
 
 The least-squares objective function used in crystallographic refinement features an overall scale factor $K$ because we do not know on which scales are the observables $Y_o(h)$ where $Y$ denotes either $F$ or $F^2$,
 \begin{equation}
@@ -658,7 +721,7 @@ Y \dotprod Y' &= \sum_h w(h) Y(h) Y'(h), \\
 \intertext{and the associated norm $\norm{Y}$,}
 \norm{Y}^2 &= \sum_h w(h) Y(h)^2, \\
 \intertext{as well as the residual vector}
-r(x, K) &= Y_o - Y_c(x).
+r(x, K) &= Y_o - K Y_c(x).
 \label{eqn:lsresidualdef}
 \end{align}
 With those notations, $L(x, K)$ which reads
@@ -681,16 +744,24 @@ However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of 
 \end{align}
 Thus the first-order derivative is exactly the same as it would have been with an independent parameter $K$. We then need the second-order derivatives
 \begin{align}
-\partialderxy{L}{x_i}{x_j} &= \partialder{r}{x_i} \dotprod \partialder{r}{x_j},\ 1 \le i,j \le n
+\partialderxy{L(x, \tilde{K})}{x_i}{x_j} &\approx \partialder{r(x, \tilde{K})}{x_i} \dotprod \partialder{r(x, \tilde{K})}{x_j},\ 1 \le i,j \le n
 \label{eqn:gaussleastsquares}
 \end{align}
-where we have neglected the term $\partialderxy{r}{x_i}{x_j} \dotprod r$ because, for a well-behaved fit, the residual $r$ and its curvature are small enough that this term can safely be neglected.
+where we have neglected the term $\partialderxy{r(x, \tilde{K})}{x_i}{x_j} \dotprod r(x, \tilde{K})$ because, for a well-behaved fit, the residual $r$ and its curvature are small enough that this term can safely be neglected.
 
 Let us now build the normal equations, which are just the Newton equations 
 \begin{equation}
+\label{eqn:gaussnewtoneq}
 Bs = -g
 \end{equation}
-for the shift $s$ of the parameter vector $x$ where $B$ is the Hessian matrix, $B_{ij} = \partialderxy{L(x, \tilde{K})}{x_i}{x_j}$ computed using the approximation of \eqnref{gaussleastsquares} and $g$ is the gradient of $L(x, \tilde{K})$. Using the definition~\eqnref[name=]{lsresidualdef} of $r$ and the expression~\eqnref[name=]{tildeK} of $\tilde{K}$, we have
+for the shift $s$ of the parameter vector $x$ where $B$ is the Hessian matrix, $B_{ij} = \partialderxy{L(x, \tilde{K})}{x_i}{x_j}$, computed using the approximation of \eqnref{gaussleastsquares} and $g$ is the gradient of $L(x, \tilde{K})$. It should be noted that the solution $s$ of \eqnref{gaussnewtoneq} is then also the solution of the linear least-squares problem
+\begin{equation}
+\label{eqn:gaussnewtonaslinearls}
+\min_s \norm{r(x, \tilde{K}) + \partialder{r(x, \tilde{K})}{x} s}^2.
+\end{equation}
+The inverse of the normal matrix $B$ when the least-squares minimum has been reached by $L(x, \tilde{K})$ can therefore be viewed as the variance matrix of $x$, which should be contrasted to the more classic combined refinement of $x$ and $K$, for which the variance matrix is the sub-matrix of inverse of the normal matrix obtained by removing the column and the row corresponding to $K$. 
+
+Using the definition~\eqnref[name=]{lsresidualdef} of $r$ and the expression~\eqnref[name=]{tildeK} of $\tilde{K}$, we have
 \begin{align}
 \partialder{r(x, \tilde{K})}{x_i} &= -\left( \tilde{K}\partialder{Y_c}{x_i} + \partialder{\tilde{K}}{x_i} Y_c \right) \\
 \partialder{\tilde{K}}{x_i} &= \frac{1}{\norm{Y_c}^2}\partialder{Y_c}{x_i} \dotprod \left(Y_o - 2 \tilde{K}Y_c \right).
@@ -711,7 +782,7 @@ It should be noted that the first term of $B$ would appear in exactly the same f
 \section{Restraints and their derivatives}
 
 \subsection{Bond similarity restraint}
-We use an alternative form of (\ref{eq:bond_similarity}) to aid our calculation of the derivatives:
+We use an alternative form of (\eqnref{bond_similarity}) to aid our calculation of the derivatives:
 \begin{align}
 L &= \mean{r^2} - \mean{r}^2 \nonumber\\
 &= \frac{\sum_{i = 1}^n {w_i r_i^2}}{\sum_{i = 1}^n {w_i}} - 
@@ -737,7 +808,7 @@ Therefore, the derivative of the residual with respect to $x_a$ is
 
 \subsection{Rigid-bond restraint}
 
-The derivative of the (\ref{eq:rigid_bond}) with respect to an element of $U_{cart,A}$,
+The derivative of the (\eqnref{rigid_bond}) with respect to an element of $U_{cart,A}$,
 $U_{A,ij}$ is given by (using the chain rule)
 \begin{align}
 \partialder{L}{U_{A,ij}} &= \partialder{L}{z^2_{A,B}} \partialder{z^2_{A,B}}{U_{A,ij}}\\
@@ -774,7 +845,7 @@ with respect to each $U_{ij}$ component.
 
 \subsection{ADP similarity restraint}
 
-Since $\mat{U}$ is symmetric, \emph{i.e.} $U_{ij} = U_{ji}$, (\ref{eq:adp_similarity} can be rewritten as
+Since $\mat{U}$ is symmetric, \emph{i.e.} $U_{ij} = U_{ji}$, (\eqnref{adp_similarity} can be rewritten as
 \begin{equation}
 L = w \left( \sum_{i=1}^3 (U_{A,ii} - U_{B,ii})^2 + 2 \sum_{i < j} (U_{A,ij} - U_{B,ij})^2 \right) .
 \end{equation}
@@ -789,10 +860,10 @@ Similarly the gradient with respect to the off-diagonal element $U_{A,ij}$ is
 
 \subsection{Isotropic ADP restraint}
 
-We expand the summation of the residual (\ref{eq:isotropic_adp}) as follows
+We expand the summation of the residual (\eqnref{isotropic_adp}) as follows
 \begin{align}
-L &= w \left( (U_{11} - U_{iso})^2 + (U_{22} - U_{iso})^2 + (U_{33} - U_{iso})^2 \nonumber \\
-&\qquad + 2 U_{12}^2 + 2 U_{13}^2 + 2 U_{23}^2 \right) .
+L &= w \left( (U_{11} - U_{iso})^2 + (U_{22} - U_{iso})^2 + (U_{33} - U_{iso})^2 \right.\nonumber \\
+&\left. \qquad + 2 U_{12}^2 + 2 U_{13}^2 + 2 U_{23}^2 \right) .
 \end{align}
 We can now see by inspection that the derivatives of the residual with respect to the off-diagonal elements are
 \begin{equation}
