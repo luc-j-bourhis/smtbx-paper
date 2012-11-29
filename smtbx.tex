@@ -915,13 +915,13 @@ and for each $\lambda$ the expression is:
 \begin{equation}
 \lambda_{i} = \sum_{j}^3(x_{j}*Q_{ji}) \text{ with } x_{j} = \sum_{k=1}^3(Q^{-1}_{jk}U_{kj})
 \end{equation}
-And derivatives of the residual with respect to elements of U are:
+And derivatives of the residual with respect to elements of $U_{A}$ are:
 \begin{equation}
-\partialder{L_{A}}{U_{ij}} = w \partialder{V_{A}}{U_{ij}} = \frac{4w\pi}{6\sqrt[2]{\lambda_{1}\lambda_{2}\lambda_{3}}} \sum_{i=1}^3(\prod_{j=1, j \neq i}^3\lambda_{j}\partialder{\lambda_{i}}{U_{ij}})
+\partialder{L_{A}}{U_{A,ij}} = w \partialder{V_{A}}{U_{A,ij}} = \frac{4w\pi}{6\sqrt[2]{\lambda_{A,1}\lambda_{A,2}\lambda_{A,3}}} \sum_{i=1}^3(\prod_{j=1, j \neq i}^3\lambda_{A,j}\partialder{\lambda_{A,i}}{U_{A,ij}})
 \end{equation}
 which then expands to:
 \begin{equation}
-\partialder{L_{A}}{U_{ij}} = \frac{4w\pi}{6\sqrt[2]{\lambda_{1}\lambda_{2}\lambda_{3}}} \sum_{i=1}^3(\prod_{k=1, k \neq i}^3\lambda_{k}Q_{ki}Q_{kj})
+\partialder{L_{A}}{U_{A,ij}} = \frac{4w\pi}{6\sqrt[2]{\lambda_{A,1}\lambda_{A,2}\lambda_{A,3}}} \sum_{i=1}^3(\prod_{k=1, k \neq i}^3\lambda_{A,k}Q_{A,ki}Q_{A,kj})
 \end{equation}
 
 
