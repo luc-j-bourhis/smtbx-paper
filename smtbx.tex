@@ -402,13 +402,13 @@ I_2 &= \alpha J_1 + (1- \alpha) J_2
 where $I_1$ and $I_2$ are the observed intensities produced by the superposition of the untwinned intensities, $J_1$ and $J_2$ with twin fraction $\alpha$.
 
 This can be solved algebraically \cite{Britton:a08682,Grainger:a06498,Zachariasen:a04610} to give
+\footnote{This can be easily extended to a higer number of domains using methods for solving systems of linear equations.}
 \begin{align}
 J_1 &= I_1 + \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2) \\
 J_2 &= I_2 - \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2)
 .
 \label{eq:detwin_alg}
 \end{align}
-
 These equations become singular as the value of $\alpha$ approaches $0.5$, however it is possible to \emph{detwin} the data using the proportionality of related intensities as calculated from the model
 \begin{equation}
 J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha} + I_2 \frac{F_a^2 \alpha}{F_a^2 \alpha + F_b^2 (1 - \alpha)}
@@ -803,6 +803,21 @@ The derivatives of the residual with respect to the diagonal elements can be gen
 \partialder{L}{U_{ii}} = 2 w (U_{ii} - U_{iso}) .
 \end{equation}
 
+\subsection{ADP Ueq similarity}
+Considering a simple case of two atoms, A and B, for the atom A we have:
+\begin{equation}
+L_{A} = w  \left(U_{A,eq}-\frac{U_{A,eq}+U_{B,eq}}{2}\right)^2 = w \left( \sum_{i=1}^3 (\frac{U_{A,ii} - U_{B,ii}}{6}) \right) ^2.
+\end{equation}
+
+And the derivatives with the respect to the diagonal elements of $U_{A}$ are:
+\begin{equation}
+\partialder{L_{A}}{U_{A,ii}} = \frac{2w}{6} \left(\sum_{i=1}^3(\frac{U_{A,ii} - U_{B,ii}}{6})\right) .
+\end{equation}
+
+and with the respect to the diagonal elements of $U_{B}$ are:
+\begin{equation}
+\partialder{L_{A}}{U_{B,ii}} = -\frac{2w}{6} \left(\sum_{i=1}^3(\frac{U_{A,ii} - U_{B,ii}}{6})\right) .
+\end{equation}
 
 
 \ack{Acknowledgements}
