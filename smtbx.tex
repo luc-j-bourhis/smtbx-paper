@@ -891,9 +891,16 @@ and with the respect to the diagonal elements of $U_{B}$ are:
 \end{equation}
 
 \subsection{Fixed ADP Ueq}
-...
+When Ueq of an ADP is restrained to a fixed value, $P$, the residual for this restraint is:
+\begin{equation}
+L_{A} = w  (U_{eq}-P) = w \left(\sum_{i=1}^3U_{ii}-P \right),
+\end{equation}
+and the derivatives of the residula with respect to diagonal values of $U$ are:
+\begin{equation}
+\partialder{L}{Uii} = \frac{1}{3}
+\end{equation}
 
-\subsection{ADP U volume similarity}
+\subsection{ADP volume similarity}
 For the case of two atoms A and B we have:
 \begin{equation}
 L_{A} = w  \left(V_{A}-\frac{V_{A}+V_{B}}{2}\right)^2 = w \left( \frac{V_{A}-V_{B}}{2}\right) ^2.
@@ -905,15 +912,15 @@ V = \frac{4}{3}\pi \sqrt[2]{\lambda_{1}\lambda_{2}\lambda_{3}}.
 \end{equation}
 where $\lambda_{1}, \lambda_{2}$ and$ \lambda_{3}$ are the eigenvalues of the U matrix. Eigendecomposition of the U matrix is represented by the following formula:
 \begin{equation}
-U = Q\begin{pmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{pmatrix} Q^{-1}.
+U = Q\begin{pmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{pmatrix} Q^{T}.
 \end{equation}
 Giving us the following equation for determining the eigenvalues:
 \begin{equation}
-\begin{pmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{pmatrix} = Q^{-1}UQ.
+\begin{pmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{pmatrix} = Q^{T}UQ.
 \end{equation}
 and for each $\lambda$ the expression is:
 \begin{equation}
-\lambda_{i} = \sum_{j}^3(x_{j}*Q_{ji}) \text{ with } x_{j} = \sum_{k=1}^3(Q^{-1}_{jk}U_{kj})
+\lambda_{i} = \sum_{j}^3\left(Q_{ji}\sum_{k=1}^3(Q^{T}_{jk}U_{kj})\right)
 \end{equation}
 And derivatives of the residual with respect to elements of $U_{A}$ are:
 \begin{equation}
