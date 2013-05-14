@@ -1,0 +1,95 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[top=2cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+
+
+\begin{document}
+
+
+\noindent{\LARGE \bf CheckCif Alerts}
+\vspace{20pt}
+
+{\LARGE ... that only exist for smtbx.refine}
+\vspace{30pt}
+
+
+There are some CheckCif Alerts that will be generated when a structure was refined using olex.refine that are not present when the ShelXL-2013 refinement engine is used.
+
+It doesn't matter at this stage who is right or wrong, or whether the generated alerts are correct or meaningful -- fact is that these Alerts deter users and make it currently impossible to publish a structure (especially in the IUCr journals) without having to argue with the referee. It's not fair on our users -- it's not them that should fight this war.
+
+I suggest that we enable a `CheckCif compatibility mode' that will not cause any Alerts.
+
+Below, I will list any Alerts that I have come across so far (and I will add to this list) that are present exclusively in the smbtx refined version of a structure and absent in the ShelXL-2013 version.
+
+
+\section*{018\_ALERT\_1\_A}
+
+{\bf
+\begin{verbatim}
+018_ALERT_1_A  _diffrn_measured_fraction_theta_max .NE. _full      !
+\end{verbatim}
+}
+
+This is a strange one. I've not quite got to the bottom of it yet. It clearly has to do with the ACTA and OMIT commands. When neither ACTA nor OMIT are present, the above alert will be generated. The two relevant items in the CIF are these:
+
+\begin{verbatim}
+_diffrn_reflns_theta_full         29.1457
+_diffrn_reflns_theta_max          29.15
+\end{verbatim}
+
+In ShelXL-2013 (after inserting ACTA), these two items are:
+
+\begin{verbatim}
+_diffrn_reflns_theta_max          29.146
+_diffrn_reflns_theta_full         25.242
+\end{verbatim}
+
+\section*{068\_ALERT\_1\_C}
+
+{\bf
+\begin{verbatim}
+068_ALERT_1_C Reported F000 Differs from Calcd (or Missing)...          ?
+\end{verbatim}
+}
+
+
+\section*{732\_ALERT\_1\_C}
+
+{\bf
+\begin{verbatim}
+732_ALERT_1_C Angle   Calc    120.0(3), Rep  119.98(11) ......       2.73 su-Ra
+              H7A  -C7A  -C2A     1.555   1.555   1.555      #         50
+\end{verbatim}
+}
+
+
+\section*{741\_ALERT\_1\_C}
+
+{\bf
+\begin{verbatim}
+741_ALERT_1_C Bond    Calc    0.950(3), Rep     0.95000 ......    Missing su
+              C4A  -H4A     1.555   1.555                    #          1
+\end{verbatim}
+}
+
+
+\section*{742\_ALERT\_1\_C}
+
+{\bf
+\begin{verbatim}
+742_ALERT_1_C Angle   Calc   109.5(12), Rep      109.50 ......    Missing su
+              H12E -C12B -H12D    1.555   1.555   1.555      #          4
+\end{verbatim}
+}
+
+
+\section*{760\_ALERT\_1\_G}
+
+{\bf
+\begin{verbatim}
+760_ALERT_1_G CIF Contains no Torsion Angles .................          ?
+\end{verbatim}
+}
+
+These torsion angles are required by IUCr papers. smtbx.refine doesn't produce them, even though the CONF command is in the ins file.
+
+\end{document}
