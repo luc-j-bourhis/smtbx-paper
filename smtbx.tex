@@ -819,11 +819,11 @@ The matrix multiplication in obtaining $z^2_{A,B}$ can be evaluated as follows
 (remembering $\mat{U}_{\text{cart}}$ is symmetric):
 \begin{align}
 r^T\mat{U}_{\text{cart},A}r &= 
-\begin{pmatrix} x & y & z \end{pmatrix}
-\begin{pmatrix} U_{11} & U_{12} & U_{13}\\
+\begin{bmatrix} x & y & z \end{bmatrix}
+\begin{bmatrix} U_{11} & U_{12} & U_{13}\\
   U_{12} & U_{22} & U_{23}\\
-  U_{13} & U_{23} & U_{33}\end{pmatrix}
-\begin{pmatrix} x\\y\\z\end{pmatrix}\\
+  U_{13} & U_{23} & U_{33}\end{bmatrix}
+\begin{bmatrix} x\\y\\z\end{bmatrix}\\
 &= U_{11}\: x^2 + U_{22}\: y^2 + U_{33}\: z^2 \nonumber \\
 &\qquad  + 2U_{12}\: xy + 2U_{13}\: xz + 2U_{23}\: yz
 \end{align}
@@ -912,11 +912,11 @@ V = \frac{4}{3}\pi \sqrt[2]{\lambda_{1}\lambda_{2}\lambda_{3}}.
 \end{equation}
 where $\lambda_{1}, \lambda_{2}$ and$ \lambda_{3}$ are the eigenvalues of the U matrix. Eigendecomposition of the U matrix is represented by the following formula:
 \begin{equation}
-U = Q\begin{pmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{pmatrix} Q^{T}.
+U = Q\begin{bmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{bmatrix} Q^{T}.
 \end{equation}
 Giving us the following equation for determining the eigenvalues:
 \begin{equation}
-\begin{pmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{pmatrix} = Q^{T}UQ.
+\begin{bmatrix}\lambda_{1}&0&0\\0&\lambda_{2}&0\\0&0&\lambda_{3}\end{bmatrix} = Q^{T}UQ.
 \end{equation}
 and for each $\lambda$ the expression is:
 \begin{equation}
@@ -949,31 +949,30 @@ where s is the distance scaling component ($s=1$ if not refined) and $r_{p}$ is 
 
 
 \subsection{Rotated $U$ constraint}
-This constraint links $U$ of one atom to $U$ of the other atom as  rotated by a given/refined angle around the given direction. The direction can be defined as a static vector, best line or best plane normal. Considering atoms A and B and expressing $U_{B}$ through $U_{A}$
-\begin{equation}
-U_{B} = RU_{A}R^{T} \text{, where $R$ is the rotation matrix}
-\end{equation}
-\begin{equation}
-R = 
-  \begin{pmatrix} \label{eq:rm}
-    txx + \cos\alpha && tyx + z\sin\alpha && tzx - y\sin\alpha \\
-    txy - z\sin\alpha && tyy + \cos\alpha && tzy + x\sin\alpha \\
-    txz + y\sin\alpha && tyz - x\sin\alpha && tzz + \cos\alpha \\
-  \end{pmatrix}
-\end{equation}
+This constraint links $U$ of one atom to $U$ of the other atom as  rotated by a given/refined angle around the given direction. The direction can be defined as a static vector, best line or best plane normal. Considering atoms A and B and expressing $U_{B}$ through $U_{A}$, as
+\begin{align}
+U_{B} &= RU_{A}R^{T}, \\
+\intertext{where $R$ is the rotation matrix}
+R &=
+  \begin{bmatrix} \label{eq:rm}
+    txx + c_\alpha && tyx + zs_\alpha && tzx - ys_\alpha \\
+    txy - zs_\alpha && tyy + c_\alpha && tzy + xs_\alpha \\
+    txz + ys_\alpha && tyz - xs_\alpha && tzz + c_\alpha \\
+  \end{bmatrix}
+\end{align}
 
-with $t=1-\cos \alpha$, where the rotation direction represented by a normal $(x,y,z)$ and $\alpha$ is the rotation angle around this direction. The column of the Jacobian related to atom B is copied from the related column of the Jacobian for A and transformed in similar manner. If the rotation angle is refined, then the derivative of this transformation by the angle is:
+with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, where the rotation direction represented by a normal $(x,y,z)$ and $\alpha$ is the rotation angle around this direction. The column of the Jacobian related to atom B is copied from the related column of the Jacobian for A and transformed in similar manner. If the rotation angle is refined, then the derivative of this transformation by the angle is:
 \begin{equation}
-\partialder{\delta U_{B}}{\delta\alpha} = \partialder{\delta(RU_{A}R^{T})}{\delta\alpha} = RUR'^{T} + R'UR^{T},
+\partialder{U_{B}}{\alpha} = \partialder{(RU_{A}R^{T})}{\alpha} = RUR'^{T} + R'UR^{T},
 \end{equation}
 where $R'$ is the derivative of $R$ by $\alpha$:
 \begin{equation}
 R' = 
-  \begin{pmatrix} \label{eq:rmd}
-    xx\sin\alpha - \sin\alpha && yx\sin\alpha + z\cos\alpha && zx\sin\alpha - y\cos\alpha \\
-    xy\sin\alpha - z\cos\alpha && yy\sin\alpha - \sin\alpha && zy\sin\alpha + x\cos\alpha \\
-    xz\sin\alpha + y\cos\alpha && yz\sin\alpha - x\cos\alpha && zz\sin\alpha - \sin\alpha \\
-  \end{pmatrix}
+  \begin{bmatrix} \label{eq:rmd}
+    xx s_\alpha -  s_\alpha && yx s_\alpha + z c_\alpha && zx s_\alpha - y c_\alpha \\
+    xy s_\alpha - z c_\alpha && yy s_\alpha -  s_\alpha && zy s_\alpha + x c_\alpha \\
+    xz s_\alpha + y c_\alpha && yz s_\alpha - x c_\alpha && zz s_\alpha - s_\alpha
+  \end{bmatrix}
 \end{equation}
 
 \subsection{Pivoted rotation of a rigid body}
@@ -989,37 +988,34 @@ where $r_{p}$ is the centre of the pivot atom, $s$ is the distance scale compone
 
 \subsection{Free rotation of a rigid body}
 This constraint is the most generic case of the rigid body refinement (ShelXl AFIX 6). In this case there are 6 refined parameters - the three Euler angles and three positional components, the ADPs are normally refined independently. The coordinate transformation in this case happens similarly to \ref{sec:pivoted_rotated_group}, however different rotation matrix is used:
-\onecolumn
 \begin{equation}
-R = \begin{pmatrix} \label{eq:erm}
-  \cos\beta\cos\gamma && -\cos\beta\sin\gamma && \sin\beta \\
-  \sin\alpha\sin\beta\cos\gamma + \cos\alpha\sin\gamma && -\sin\alpha\sin\beta\sin\gamma+\cos\alpha\cos\gamma && -\sin\alpha\cos\beta \\
-  -\cos\alpha\sin\beta\cos\gamma+\sin\alpha\sin\gamma && \cos\alpha\sin\beta\sin\gamma+\sin\alpha\cos\gamma && \cos\alpha\cos\beta
-\end{pmatrix}
+R = \begin{bmatrix} \label{eq:erm}
+   c_\beta c_\gamma && - c_\beta s_\gamma &&  s_\beta \\
+   s_\alpha s_\beta c_\gamma +  c_\alpha s_\gamma && - s_\alpha s_\beta s_\gamma+ c_\alpha c_\gamma && - s_\alpha c_\beta \\
+  - c_\alpha s_\beta c_\gamma+ s_\alpha s_\gamma &&  c_\alpha s_\beta s_\gamma+ s_\alpha c_\gamma &&  c_\alpha c_\beta
+\end{bmatrix}
 \end{equation}
 and it's derivatives by the angles are:
-\begin{equation}
-\partialder{\delta R}{\delta \alpha} = \begin{pmatrix}
+\begin{align}
+\partialder{R}{\alpha} &= \begin{bmatrix}
   0 && 0 && 0 \\
-  \cos\alpha\sin\beta\cos\gamma - \sin\alpha\sin\gamma && -\cos\alpha\sin\beta\sin\gamma-\sin\alpha\cos\gamma && -\cos\alpha\cos\beta \\
-  \sin\alpha\sin\beta\cos\gamma+\cos\alpha\sin\gamma && -\sin\alpha\sin\beta\sin\gamma+\cos\alpha\cos\gamma && -\sin\alpha\cos\beta
-\end{pmatrix}
-\end{equation}
-\begin{equation}
-\partialder{\delta R}{\delta \beta} = \begin{pmatrix}
-  -\sin\beta\cos\gamma && \sin\beta\sin\gamma && \cos\beta \\
-  \sin\alpha\cos\beta\cos\gamma && -\sin\alpha\cos\beta\sin\gamma && \sin\alpha\sin\beta \\
-  -\cos\alpha\cos\beta\cos\gamma && \cos\alpha\cos\beta\sin\gamma && -\cos\alpha\sin\beta
-\end{pmatrix}
-\end{equation}
-\begin{equation}
-\partialder{\delta R}{\delta \gamma} = \begin{pmatrix}
-  -\cos\beta\sin\gamma && -\cos\beta\cos\gamma && 0 \\
-  -\sin\alpha\sin\beta\sin\gamma + \cos\alpha\cos\gamma && -\sin\alpha\sin\beta\cos\gamma-\cos\alpha\sin\gamma && 0 \\
-  \cos\alpha\sin\beta\sin\gamma+\sin\alpha\cos\gamma && \cos\alpha\sin\beta\cos\gamma-\sin\alpha\sin\gamma && 0
-\end{pmatrix}
-\end{equation}
-\twocolumn
+   c_\alpha s_\beta c_\gamma -  s_\alpha s_\gamma && - c_\alpha s_\beta s_\gamma- s_\alpha c_\gamma && - c_\alpha c_\beta \\
+   s_\alpha s_\beta c_\gamma+ c_\alpha s_\gamma && - s_\alpha s_\beta s_\gamma+ c_\alpha c_\gamma && - s_\alpha c_\beta
+\end{bmatrix}
+\\
+\partialder{R}{\beta} &= \begin{bmatrix}
+  - s_\beta c_\gamma &&  s_\beta s_\gamma &&  c_\beta \\
+   s_\alpha c_\beta c_\gamma && - s_\alpha c_\beta s_\gamma &&  s_\alpha s_\beta \\
+  - c_\alpha c_\beta c_\gamma &&  c_\alpha c_\beta s_\gamma && - c_\alpha s_\beta
+\end{bmatrix}
+\\
+\partialder{R}{\gamma} &= \begin{bmatrix}
+  - c_\beta s_\gamma && - c_\beta c_\gamma && 0 \\
+  - s_\alpha s_\beta s_\gamma +  c_\alpha c_\gamma && - s_\alpha s_\beta c_\gamma- c_\alpha s_\gamma && 0 \\
+   c_\alpha s_\beta s_\gamma+ s_\alpha c_\gamma &&  c_\alpha s_\beta c_\gamma- s_\alpha s_\gamma && 0
+\end{bmatrix}
+\end{align}
+
 For the special cases of spherical counterions or groups like Cp and Ph the size component of this constraint can also be refined (ShelXl AFIX 9).
 
 \subsection{non-crystallographic symmetry constraint}
