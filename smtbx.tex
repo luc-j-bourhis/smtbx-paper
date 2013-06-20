@@ -118,16 +118,16 @@ When we first embarked on the project reported herein, we were very clear about 
 A small molecule structure refinement typically minimises the weighted least squares function
 \begin{equation}
 \begin{split}
-L = &\sum_h w(h) \left( Y_o(h) - K Y_c(h) \right)^2 \\
-  &+ \sum_{\text{restraint } i} w(i) \left( T_o(i) - T_c(i) \right)^2
+L = &\underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\text{data}} \\
+  &+ \underbrace{\sum_{\text{restraint } i} w_i \left( T_{o,i} - T_{c,i} \right)^2}_{L_\text{restraints}}
 \label{eqn:L:def}
 \end{split}
 \end{equation}
-where $Y$ denotes either $F$ or $F^2$, and $K$ is an overall, unknown, scale factor that places the computed $Y_c$ on the same scale as the measured $Y_o$. The first sum over $h$ runs over a set of $m$ non-equivalent reflections that have been observed. Each observation is given an appropriate weight, $w(h)$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, although more complex weighting schemes are usually used.
+where $Y$ denotes either $F$ or $F^2$, and $K$ is an overall, unknown, scale factor that places the computed $Y_c$ on the same scale as the measured $Y_o$. The first sum over $h$ runs over a set of $m$ non-equivalent reflections that have been observed. Each observation is given an appropriate weight, $w_h$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, although more complex weighting schemes are usually used.
 
 These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). With the use of appropriate weighting of the restraints the minimisation is gently pushed towards giving a chemically sensible and hopefully correct structure. This sum over the restraints may of course be empty.
 
-In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, ADP's, and sof's in routine refinements) that each $Y_c(h)$ and each $T_c(i)$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y; h)$ and $T_c(y; i)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately.
+In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, ADP's, and sof's in routine refinements) that each component of $Y_c$ and $T_c$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y)$ and $T_c(y)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately, as will be explained later.
 
 For a small molecule structure with a high data to parameter ratio, such unconstrained minimisation as defined by the first term of \eqnref{L:def}, when $y \equiv x$ may well be sufficient. However, as the structure becomes larger, or the data to parameter ratio worsens, unconstrained minimisation may not be well-behaved, or result in some questionable parameter values. It has become customary to rely on two techniques to solve such issues,
 \begin{description}
@@ -137,12 +137,14 @@ For a small molecule structure with a high data to parameter ratio, such unconst
 
 Whether the refinement uses restraints or constraints or both, at each refinement cycle, we first find the value of $K$ that minimises $L(x, K)$ keeping the parameter vector $x$ fixed: we will denote it by $\tilde{K}(x)$, where we use a notation that explicits its dependence on the value of the refined parameters at the beginning of the cycle. We then search the shift vector $s$ of the parameter vector $x$ that brings $L(x, \tilde{K}(x))$ closer to the minimum. It is solution of the so-called normal equations,
 \begin{equation}
-(B + B')s = -(g + g'),
+(B_\text{data} + B_\text{restraints})s = -(g_\text{data} + g_\text{restraint}),
 \label{eqn:generalnormalequations}
 \end{equation}
-where $B$ and $B'$ are the so-called normal matrices associated with the first and the second term of \eqnref{L:def} respectively and where the right hand side $g$ and $g'$ are equivalently associated with those two terms.
+where $B_\text{data}$ and $B_\text{restraints}$ are the so-called normal matrices associated with the two terms sharing the same labels in \eqnref{L:def} respectively and where the right hand side $g_\text{data}$ and $g_\text{restraint}$ are equivalently associated with those two terms.
 
-The computation of $B$ and $g$ is presented in details in \appendixref{leastsquaresminimisation} along with the procedure used to find the optimal value of $K$ whereas \secref{restraints} is devoted to the computation of $B'$ and $g'$. Finally, the derivatives with respect to the $x_1, \cdots, x_n$ are computed from the derivatives with respect to the $y_1, \cdots, y_p$ as described in \secref{constraints}.
+\Secref[vref]{constraints} deals with the computation of the derivatives with respect to the refined parameters $x_1, \cdots, x_n$ from the derivatives with respect to the crystallographic parameters $y_1, \cdots, y_p$. The computation of the latter derivatives is explicited in \appendixref{structurefactorlinearisation} along with the formulae for the complex structure factors $F_c$.
+
+The computation of the normal equation terms $B_\text{data}$ and $g_\text{data}$ for the measured data is presented in details in \appendixref{leastsquaresminimisation} along with the procedure used to find the optimal value of $K$ whereas \secref{restraints} is devoted to the computation of $B_\text{restraints}$ and $g_\text{restraint}$.
 
 \section{Constraints}
 \label{sec:constraints}
@@ -266,28 +268,28 @@ We would like to stress an important consequence of this formula: constrained pa
 \section{Restrained Least Squares Refinement}
 \label{sec:restraints}
 
-Since each of the restraint target $T_c$ only depends on a very small subset of the $y_i$ (e.g., in the case of a bond length, only the 6 coordinates of the two bonded atoms would play a role), the matrix of derivatives with respect to the crystallographic parameters
+Since each restraint target $T_{c,i}$ only depends on a very small subset of the $y_j$ (e.g., in the case of a bond length, only the 6 coordinates of the two bonded atoms would play a role), the matrix of derivatives with respect to the crystallographic parameters
 \begin{equation}
-D = \partialder{T_c(y; i)}{y},
+D_\text{restraints} = \partialder{T_c}{y} = \left[\partialder{T_{c,i}}{y_j}\right]_{i,j}
 \end{equation}
 which is known as the design matrix for the restraints, is very sparse. We will therefore use sparse matrix techniques to efficiently store and perform computations with $D$, by only storing non-zero elements, and never performing products that involve an element of $D$ known to be zero. We then introduce the matrix of derivatives with respect to the refined parameters,
 \begin{equation}
-\tilde{D} = \partialder{T_c(i)}{x} = D \partialder{y}{x},
+\tilde{D}_\text{restraints} = \partialder{T_c}{x} = D_\text{restraints} \partialder{y}{x},
 \end{equation}
 which is computed by forming the product of $D$ and the constraint matrix. This is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$. 
 
 The two term in normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix products and matrix-vector product\footnote{$D^T$ denotes the transpose of $D$.},
 \begin{align}
-B' &= \tilde{D}^T W \tilde{D}\\
-g' &= \tilde{D}^T \Delta T,\\
+B_\text{restraints} &= \tilde{D}_\text{restraints}^T W \tilde{D}_\text{restraints}\\
+g_\text{restraints} &= \tilde{D}_\text{restraints}^T \Delta T,\\
 \intertext{where $W$ is the diagonal matrix featuring the restraints weights, and where}
-\Delta T_i &= T_o(i) - T_c(i)
+\Delta T_i &= T_{o,i} - T_{c,i}
 \end{align}
 is the residual for the $i$-th restraint.
 
 It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002} suggest the normalization factor
 \begin{equation}
-w_\text{restraints} = \frac{1}{m-n} \sum_{h}{ w_h (Y_o(h) - K Y_c(h))^2}.
+w_\text{restraints} = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
 \label{eqn:giacovazzo_normalisation}
 \end{equation}
 This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{SHELX:man97}.
@@ -396,24 +398,9 @@ U_{iso} = \tfrac{1}{3} \mathrm{tr}(\mat{U}_{cart}).
 
 \subsection{Implementation}
 
-A generalisation of the target function (\eqnref{L_restraints_def}) can be given as
-\begin{equation}
-L = L_\text{data} + w L_\text{restraints}
-\label{eqn:mm_target},
-\end{equation}
-where using a least squares minimiser
-\begin{equation}
-L_\text{data} = \sum_{h} w_h \left(Y_o(h) - k Y_c(h)\right)^2,
-\label{eqn:mm_target_data:def}
-\end{equation}
-and
-\begin{equation}
-L_\text{restraints} = \sum_\text{restraints}{ w (T_o - T_c)^2}.
-\label{eqn:mm_target_restraint:def}
-\end{equation}
-In the case of macromolecular crystallography the part $L_{\text{data}}$ may frequently be a maximum-likelihood based target function in place of the traditional least squares function written above. A generic minimiser such the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\text{data}$ and $\nabla L_\text{restraints}$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where by the chain rule
+In the case of macromolecular crystallography the term $L_\text{restraints}$ of \eqnref{L:def} may frequently be a maximum-likelihood based target function in place of the traditional least squares function considered in this paper. A generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\text{data}$ and $\nabla L_\text{restraints}$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where by the chain rule
 \begin{align}
-\partialder{L}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \\
+\partialder{L_\text{restraints}}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \nonumber\\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}
 \label{eqn:}.
 \end{align}
@@ -705,7 +692,7 @@ The smtbx provides code to compute derivatives for the both of these observables
 \section{Minimisation of least-squares with an overall scale factor}
 \label{appendix:leastsquaresminimisation}
 
-In this appendix, we are concerned with the minimisation of $L(x, K)$ as defined in \eqnref{L:def}. We will denote by $(x^*, K^*)$ the values of those parameters at which $L(x,K)$ reaches the minimum we are interested in.
+In this appendix, we are concerned with the minimisation of $L_\text{data}(x, K)$ as defined in \eqnref{L:def}. We will drop the label `data' throughout this appendix for clarity. We will denote by $(x^*, K^*)$ the values of those parameters at which $L(x,K)$ reaches the minimum we are interested in.
 
 It is very well known that the overall scale factor tends to be highly correlated to the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. Therefore it exists an analytical formula for the value of $K$ that minimises it. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and it leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
 
