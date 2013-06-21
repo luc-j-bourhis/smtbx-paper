@@ -296,108 +296,6 @@ w_\restraints = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
 \end{equation}
 This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{SHELX:man97}.
 
-
-\subsection{Geometry Restraints}
-
-Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:ba5180}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865}, similarity restraints and isotropic ADP restraints.
-
-%------------------------------------------------------------------------------
-
-
-\subsubsection{Restraints involving symmetry}
-
-Given a restraint, $f(x)$, involving a site $x$ which is outside the asymmetric unit and which is related to the site $y$ within the asymmetric unit by some symmetry transformation $R$, such that $x=Ry$, the gradient is transformed as
-\begin{align}
-\nabla_y f\left(x \right)  &= R^T \nabla_x f\left(x\right) \nonumber\\
-&= R^{-1} \nabla_x f\left(R y\right)
-\label{eqn:}
-\end{align}
-since $R$ is a space group symmetry operation and is therefore an orthogonal transformation (\emph{i.e.} one which preserves distances and angles), which means that, $R^T = R^{-1}$.
-
-%------------------------------------------------------------------------------
-
-
-\subsubsection{Bond similarity restraint}
-
-The distances between two or more atom pairs are restrained to be equal by minimising the weighted variance of the distances, where the least squares residual, $L$, is defined as the population variance biased estimator
-\begin{equation}
-\label{eqn:bond_similarity}
-L(r_1,...,r_n) = \frac{\sum_{i = 1}^n {w_i(r_i - \mean{r})^2}}
-                      {\sum_{i = 1}^n {w_i}},
-\end{equation}
-with
-\begin{equation*}
-r_j = u^\frac{1}{2},
-\end{equation*}
-where for a pair of atoms, $a$ and $b$,
-\begin{equation*}
-u = (x_a - x_b)^2 + (y_a - y_b)^2 + (z_a - z_b)^2,
-\end{equation*}
-
-%>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-\subsection{Restraints on Atomic Displacement Parameters}
-
-Three types of restraints on anisotropic displacement parameters, similar to restraints implemented in SHELXL \cite{Sheldrick:sc5010} and REFMAC \cite{Murshudov:li0304}.
-
-\subsubsection{Rigid-bond restraint}
-
-In a `rigid-bond' restraint the components of the anisotropic displacement parameters of two atoms in the direction of the vector connecting those two atoms are restrained to be equal. This corresponds to Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865} for testing whether anisotropic displacement parameters are physically reasonable \cite{SHELX:man97} and is in general appropriate for bonded and 1,3-separated pairs of atoms and should hold true for most covalently bonded systems.
-
-We therefore minimise the mean square displacement of the atoms in the direction of the bond. The weighted least squares residual is then
-\begin{equation}
-\label{eqn:rigid_bond}
-L = w(z^2_{A,B} - z^2_{B,A})^2,
-\end{equation}
-where in the Cartesian coordinate system the mean square displacement of atom A
-along the vector $\overrightarrow{AB}$, $z^2_{A,B}$, is given by
-\begin{equation}
-z^2_{A,B} = \frac{r^T\mat{U}_{cart,A}r}{\norm{r}^2},
-\end{equation}
-where
-\begin{equation}
-r = \begin{bmatrix} x_A - x_B\\y_A - y_B\\z_A - z_B \end{bmatrix}
-= \begin{bmatrix} x\\y\\z \end{bmatrix},
-\end{equation}
-$r^T$ is the transpose of $r$ (\textit{i.e.} a row vector) and
-$\norm{r}$ is the length of the vector $\overrightarrow{AB}$.
-
-%------------------------------------------------------------------------------
-
-
-\subsubsection{ADP similarity restraint}
-\label{ADP:similarity}
-The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain \cite{SHELX:man97}. This is equivalent to a SHELXL SIMU restraint \cite{SHELX:man97}.
-The weighted least squares residual is defined as
-\begin{equation}
-\label{eqn:adp_similarity}
-L = w \sum_{i=1}^3 \sum_{j=1}^3 (U_{A,ij} - U_{B,ij})^2,
-\end{equation}
-which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Delta U \Delta U^T$. This expression\footnote{This is known to mathematicians as the square of the Frobenius norm of the matrix $\Delta U$.} makes it clear that it is invariant under any rotation $R$, since it transforms $\Delta U$ into $R\Delta U R^T$. 
-
-%------------------------------------------------------------------------------
-
-
-\subsubsection{Isotropic ADP restraint}
-Here we minimise the difference between the Cartesian ADPs, $\mat{U}_{cart}$, and the isotropic equivalent, $\mat{U}_{eq}$. Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{SHELX:man97}. As in \textsection \ref{ADP:similarity}, we must remember that we are dealing with symmetric matrices, and we can therefore define the weighted least squares residual as
-\begin{equation}
-\label{eqn:isotropic_adp}
-L = w \left( \sum_{i=1}^3 (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij} - U_{eq,ij})^2 \right) ,
-\end{equation}
-where
-\begin{equation}
-\mat{U}_{eq} = 
-\begin{bmatrix} U_{iso} & 0 & 0\\
-  0 & U_{iso} & 0\\
-  0 & 0 & U_{iso}\end{bmatrix},
-\end{equation}
-and
-\begin{equation}
-U_{iso} = \tfrac{1}{3} \mathrm{tr}(\mat{U}_{cart}).
-\end{equation}
-
-
 \subsection{Implementation}
 
 In the case of macromolecular crystallography the term $L_\restraints$ of \eqnref{L:def} may frequently be a maximum-likelihood based target function in place of the traditional least squares function considered in this paper. A generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\data$ and $\nabla L_\restraints$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where by the chain rule
@@ -773,119 +671,151 @@ However, the best of those design matrix techniques, the QR decomposition, invol
 
 \section{Restraints and their derivatives}
 
+Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:ba5180}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865}, similarity restraints and isotropic ADP restraints.
+
+\subsection{Restraints involving symmetry}
+
+Given a restraint, $f(x)$, involving a site $x$ which is outside the asymmetric unit and which is related to the site $y$ within the asymmetric unit by some symmetry transformation $\sym{R}{t}$, i.e. $x=Ry+t$, the gradient is transformed as
+\begin{align}
+\nabla_y f\left(x \right)  &= R^T \nabla_x f\left(x\right) \nonumber\\
+&= R^{-1} \nabla_x f\left(R y\right)
+\label{eqn:}
+\end{align}
+since $R$ is a space group symmetry operation and is therefore an orthogonal transformation (\emph{i.e.} one which preserves distances and angles), which means that, $R^T = R^{-1}$.
+
 \subsection{Bond similarity restraint}
-We use an alternative form of (\eqnref{bond_similarity}) to aid our calculation of the derivatives:
-\begin{align}
-L &= \mean{r^2} - \mean{r}^2 \nonumber\\
-&= \frac{\sum_{i = 1}^n {w_i r_i^2}}{\sum_{i = 1}^n {w_i}} - 
-    \left(\frac{\sum_{i = 1}^n {w_i r_i}}{\sum_{i = 1}^n {w_i}}\right)^2.
-\end{align}
-The derivative of $L$ with respect to a distance $r_j$ is then
-\begin{align}
-\partialder{L}{r_j} &=
-  \frac{2 w_j r_j}{\sum_{i=1}^n{w_i}}
-  - \frac{2 w_j \sum_{i=1}^n w_i r_i}{(\sum_{i=1}^n w_i)^2}\nonumber\\
-&= \frac{2 w_j}{\sum_{i=1}^n{w_i}}(r_j - \mean{r}).
-\end{align}
 
-The derivative of $r_j$ with respect to the Cartesian coordinate $x_a$ is given by
-\begin{equation}
-\partialder{r_j}{x_a} = \partialder{r_j}{u} \partialder{u}{x_a}= \frac{(x_a - x_b)}{r_j}.
-\end{equation}
-Therefore, the derivative of the residual with respect to $x_a$ is
+The distances between two or more atom pairs are restrained to be equal by minimising the weighted variance of the distances, where the least squares residual, $L$, is defined as the population variance biased estimator
 \begin{align}
-\partialder{L}{x_a} &= \partialder{L}{r_j} \partialder{r_j}{x_a}\nonumber\\
-&= \frac{2 w_j (r_j - \mean{r})(x_a - x_b)}{r_j \sum_{i=1}^n {w_i}}.
+\label{eqn:bond_similarity}
+L &= \mean{r - \mean{r}}^2,\\
+\intertext{where $r=(r_1, \cdots, r_n)$ are the Euclidean distances between the atoms of each pair. The mean is defined as}
+\mean{\xi} &= \sum_i \omega_i \xi_i, \\
+\intertext{where}
+\omega_i &= \frac{w_i}{\sum_j w_j},
+\end{align}
+and where $w_i$ is therefore the weight for the $i$-th pair.
+
+The computation of the derivatives is easier with the alternate form of this variance, 
+\begin{align}
+L &= \mean{r^2} - \mean{r}^2 = \sum_i \omega_i r_i^2 - \left(\sum_i \omega_i r_i\right)^2.\\
+\intertext{The derivative of $L$ with respect to a distance $r_i$ is then}
+\partialder{L}{r_i} &= 2 \omega_i(r_i - \mean{r}).
 \end{align}
 
-\subsection{Rigid-bond restraint}
+Then the derivatives of $r_i = (x_a^2 - x_b^2)^\frac{1}{2}$, where $x_a$ and $x_b$ are the Cartesian coordinates of the two atoms in that pair, are given by
+\begin{equation}
+\partialder{r_i}{x_a} = \frac{x_a - x_b}{r_i},
+\end{equation}
+and the same formula with $b \leftrightarrow a$.
+Therefore, using the chain rule, the derivatives of the residual with respect to $x_a$ is
+\begin{equation}
+\partialder{L}{x_a} = \frac{2 \omega_i (r_j - \mean{r})(x_a - x_b)}{r_j},
+\end{equation}
+and the same formula with $b \leftrightarrow a$.
 
-The derivative of the (\eqnref{rigid_bond}) with respect to an element of $U_{cart,A}$,
-$U_{A,ij}$ is given by (using the chain rule)
+\subsection{Restraints on Atomic Displacement Parameters}
+
+Three types of restraints on anisotropic displacement parameters, similar to restraints implemented in SHELXL \cite{Sheldrick:sc5010} and REFMAC \cite{Murshudov:li0304}.
+
+\subsubsection{Rigid-bond restraint}
+
+In a `rigid-bond' restraint the components of the anisotropic displacement parameters of two atoms in the direction of the vector connecting those two atoms are restrained to be equal. This corresponds to Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865} for testing whether anisotropic displacement parameters are physically reasonable \cite{SHELX:man97} and is in general appropriate for bonded and 1,3-separated pairs of atoms and should hold true for most covalently bonded systems.
+
+Since the mean-square displacement of an atom of thermal displacement tensor $U$ along an normalised vector $u$ is $u^T U u$, the restraint residual for two atoms A and B at respective positions $x_A$ and $x_B$ and with respective thermal displacement tensors $U_A$ and $U_B$ reads
 \begin{align}
-\partialder{L}{U_{A,ij}} &= \partialder{L}{z^2_{A,B}} \partialder{z^2_{A,B}}{U_{A,ij}}\\
-&=2w(z^2_{A,B} - z^2_{B,A}) \partialder{z^2_{A,B}}{U_{A,ij}}\label{eqn:u_derivative}
+\label{eqn:rigid_bond}
+r &= \frac{u^T (U_A - U_B) u}{\norm{u}},\\
+\intertext{where}
+u &= x_A - x_B, \\
+\intertext{and the restraint term is then}
+L&(r_A, U_A, r_B, U_B) = w r^2.
+\end{align}
+Those formulae are valid whether using Cartesian or fractional coordinates, providing the adapted formula is used to compute $\norm{u}$.
+
+The computation of the derivatives of L with respect to the components of $U_A$ and $U_B$ proceeds in two steps. First, since $u^T U u = \sum_i U_{ii} u_i^2 + 2\sum_{i<j} U_{ij}u_i u_j$ where $U$ is either $U_A$ or $U_B$, 
+\begin{align}
+\partialder{r}{U_{A,ij}} &= \begin{cases}
+ \displaystyle \frac{u_i^2}{\norm{u}^2} & \text{if $i=j$,}\\[1em]
+ \displaystyle \frac{2u_i u_j}{\norm{u}^2} & \text{otherwise,}
+ \end{cases}\\
+\partialder{r}{U_{B,ij}} &= \begin{cases}
+ \displaystyle -\frac{u_i^2}{\norm{u}^2} & \text{if $i=j$,}\\[1em]
+ \displaystyle -\frac{2u_i u_j}{\norm{u}^2} & \text{otherwise.}
+ \end{cases}
+\end{align}
+The chain rule then gives, where $U$ is either $U_A$ or $U_B$,
+\begin{equation}
+\partialder{L}{U_{ij}} = 2wr \partialder{r}{U_{A,ij}}.
+\end{equation}
+
+The derivatives of $L(r_A, U_A, r_B, U_B)$ with respect to the positions $r_A$ and $r_B$ are ignored.
+
+\subsubsection{ADP similarity restraint}
+\label{ADP:similarity}
+The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain \cite{SHELX:man97}. This is equivalent to a SHELXL SIMU restraint \cite{SHELX:man97}.
+The weighted least squares residual is defined as
+\begin{equation}
+\label{eqn:ADP:restraints:similarity}
+L = w \sum_{i=1}^3 \sum_{j=1}^3 (U_{A,ij} - U_{B,ij})^2,
+\end{equation}
+which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Delta U \Delta U^T$. This expression\footnote{This is known to mathematicians as the square of the Frobenius norm of the matrix $\Delta U$.} makes it clear that it is invariant under any rotation $R$, since it transforms $\Delta U$ into $R\Delta U R^T$. 
+
+Since $\mat{U}$ is symmetric, \emph{i.e.} $U_{ij} = U_{ji}$, \eqnref{ADP:restraints:similarity} can be rewritten as
+\begin{equation}
+L = w \left( \sum_i (U_{A,ii} - U_{B,ii})^2 + 2 \sum_{i < j} (U_{A,ij} - U_{B,ij})^2 \right) .
+\end{equation}
+Therefore the gradients of the residual with respect to diagonal elements are then
+\begin{align}
+\partialder{L}{U_{A,ii}} &= 2w(U_{A,ii} - U_{B,ii}),\\
+\intertext{whereas the gradient with respect to the off-diagonal elements are}
+\partialder{L}{U_{A,ij}} &=  4w(U_{A,ij} - U_{B,ij}),
+\end{align}
+and then the same equation with $B \leftrightarrow A$.
+
+\subsubsection{Isotropic ADP restraint}
+Here we minimise the difference between the ADP's $\mat{U}$, and the isotropic equivalent, defined in Cartesian coordinates by
+\begin{align}
+\mat{U}_\text{eq} &= U_\text{iso}\identity, \\
+\intertext{and}
+U_\text{iso} &= \tfrac{1}{3} \tr \mat{U}.
+\end{align}
+Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{SHELX:man97}. As in \eqnref{ADP:restraints:similarity}, we define a restraint term invariant under rotations, as $L = \tr (U-U_\text{eq})(U-U_\text{eq})^T$, or explicitly,
+\begin{align}
+\label{eqn:ADP:restraints:isotropic}
+L &= w \left( \sum_i (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij}-U_{eq,ij})^2 \right),\\
+\intertext{which simplifies in Cartesian coordinates into}
+L &= w \left( \sum_i (U_{ii} - U_\text{iso})^2 + 2 \sum_{i<j} U_{ij}^2 \right)
 \end{align}
 
-The matrix multiplication in obtaining $z^2_{A,B}$ can be evaluated as follows
-(remembering $\mat{U}_{\text{cart}}$ is symmetric):
+By mere inspection, we can seethat the derivatives of the residual with respect to the off-diagonal elements are in Cartesian coordinates
+\begin{equation}
+\partialder{L}{U_{ij}} = \begin{cases}
+ 2 w (U_{ii} - U_\text{iso}) & \text{if $i=j$,}\\
+ 4 w U_{ij} & \text{otherwise}.
+ \end{cases}
+\end{equation}
+
+\subsubsection{ADP Ueq similarity}
+
+The ADP of two atoms A and B may be restrained to have the same $U_\text{eq}$. The restraint term for atom A reads in Cartesian coordinates
 \begin{align}
-r^T\mat{U}_{\text{cart},A}r &= 
-\begin{bmatrix} x & y & z \end{bmatrix}
-\begin{bmatrix} U_{11} & U_{12} & U_{13}\\
-  U_{12} & U_{22} & U_{23}\\
-  U_{13} & U_{23} & U_{33}\end{bmatrix}
-\begin{bmatrix} x\\y\\z\end{bmatrix}\\
-&= U_{11}\: x^2 + U_{22}\: y^2 + U_{33}\: z^2 \nonumber \\
-&\qquad  + 2U_{12}\: xy + 2U_{13}\: xz + 2U_{23}\: yz
+L_\text{A} &= w  \left(U_\text{A,eq}-\frac{U_\text{A,eq}+U_\text{B,eq}}{2}\right)^2 \\
+\intertext{or in Cartesian coordinates}
+L_\text{A} &= w \left( \sum_{i=1}^3 \frac{U_{\text{A},ii} - U_{\text{B},ii}}{6} \right) ^2.
 \end{align}
-It then follows that
-\begin{equation}
-\partialder{z^2_{A,B}}{U_{11}} = \frac{x^2}{\norm{r}^2} ,\qquad
-\partialder{z^2_{A,B}}{U_{22}} = \frac{y^2}{\norm{r}^2} ,\qquad
-\partialder{z^2_{A,B}}{U_{33}} = \frac{z^2}{\norm{r}^2} ,
-\end{equation}
-and
-\begin{equation}
-\partialder{z^2_{A,B}}{U_{12}} = \frac{2xy}{\norm{r}^2} ,\qquad
-\partialder{z^2_{A,B}}{U_{13}} = \frac{2xz}{\norm{r}^2} ,\qquad
-\partialder{z^2_{A,B}}{U_{23}} = \frac{2yz}{\norm{r}^2} .
-\end{equation}
-These can be combined with \eqnref{u_derivative} to give us the derivatives
-with respect to each $U_{ij}$ component.
+This restraint is therefore invariant under rotation.
 
-
-\subsection{ADP similarity restraint}
-
-Since $\mat{U}$ is symmetric, \emph{i.e.} $U_{ij} = U_{ji}$, (\eqnref{adp_similarity} can be rewritten as
+The derivatives with the respect to the diagonal elements of $U_{A}$ are then
 \begin{equation}
-L = w \left( \sum_{i=1}^3 (U_{A,ii} - U_{B,ii})^2 + 2 \sum_{i < j} (U_{A,ij} - U_{B,ij})^2 \right) .
+\partialder{L_{A}}{U_{A,ii}} = \frac{2w}{6} \sum_{i=1}^3 \frac{U_{A,ii} - U_{B,ii}}{6} ,
 \end{equation}
-Therefore the gradient of the residual with respect to the diagonal element $U_{A,ii}$ is then
-\begin{equation}
-\partialder{L}{U_{A,ii}} = 2w(U_{A,ii} - U_{B,ii}).
-\end{equation}
-Similarly the gradient with respect to the off-diagonal element $U_{A,ij}$ is
-\begin{equation}
-\partialder{L}{U_{A,ij}} = 4w(U_{A,ij} - U_{B,ij}).
-\end{equation}
+and the same formula with $B \leftrightarrow A$.
 
-\subsection{Isotropic ADP restraint}
-
-We expand the summation of the residual (\eqnref{isotropic_adp}) as follows
-\begin{align}
-L &= w \left( (U_{11} - U_{iso})^2 + (U_{22} - U_{iso})^2 + (U_{33} - U_{iso})^2 \right.\nonumber \\
-&\left. \qquad + 2 U_{12}^2 + 2 U_{13}^2 + 2 U_{23}^2 \right) .
-\end{align}
-We can now see by inspection that the derivatives of the residual with respect to the off-diagonal elements are
+\subsubsection{Fixed ADP Ueq}
+When the $U_\text{eq}$ of an atom is restrained to a fixed value, $P$, the residual for this restraint is:
 \begin{equation}
-\partialder{L}{U_{ij,i<j}} = 4 w U_{ij}.
-\end{equation}
-The derivatives of the residual with respect to the diagonal elements can be generalised as
-\begin{equation}
-\partialder{L}{U_{ii}} = 2 w (U_{ii} - U_{iso}) .
-\end{equation}
-
-\subsection{ADP Ueq similarity}
-Considering a simple case of two atoms, A and B, for the atom A we have:
-\begin{equation}
-L_{A} = w  \left(U_{A,eq}-\frac{U_{A,eq}+U_{B,eq}}{2}\right)^2 = w \left( \sum_{i=1}^3 (\frac{U_{A,ii} - U_{B,ii}}{6}) \right) ^2.
-\end{equation}
-
-And the derivatives with the respect to the diagonal elements of $U_{A}$ are:
-\begin{equation}
-\partialder{L_{A}}{U_{A,ii}} = \frac{2w}{6} \left(\sum_{i=1}^3(\frac{U_{A,ii} - U_{B,ii}}{6})\right) .
-\end{equation}
-
-and with the respect to the diagonal elements of $U_{B}$ are:
-\begin{equation}
-\partialder{L_{A}}{U_{B,ii}} = -\frac{2w}{6} \left(\sum_{i=1}^3(\frac{U_{A,ii} - U_{B,ii}}{6})\right) .
-\end{equation}
-
-\subsection{Fixed ADP Ueq}
-When Ueq of an ADP is restrained to a fixed value, $P$, the residual for this restraint is:
-\begin{equation}
-L_{A} = w  (U_{eq}-P) = w \left(\frac{1}{3}\sum_{i=1}^3U_{ii}-P \right),
+L_{A} = w  (U_\text{eq}-P) = w \left(\frac{1}{3}\sum_{i=1}^3 U_{ii}-P \right),
 \end{equation}
 and the derivatives of the residual with respect to diagonal values of $U$ are:
 \begin{equation}
