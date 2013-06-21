@@ -114,18 +114,20 @@ When we first embarked on the project reported herein, we were very clear about 
 
 
 \section{Least Squares Refinement}
+\newcommand{\data}{\text{data}}
+\newcommand{\restraints}{\text{restraints}}
 
 A small molecule structure refinement typically minimises the weighted least squares function
 \begin{equation}
 \begin{split}
-L = &\underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\text{data}} \\
-  &+ \underbrace{\sum_{\text{restraint } i} w_i \left( T_{o,i} - T_{c,i} \right)^2}_{L_\text{restraints}}
+L = &\underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\data} \\
+  &+ \underbrace{\sum_{\text{restraint } i} w_i \left( T_{o,i} - T_{c,i} \right)^2}_{L_\restraints}
 \label{eqn:L:def}
 \end{split}
 \end{equation}
 where $Y$ denotes either $F$ or $F^2$, and $K$ is an overall, unknown, scale factor that places the computed $Y_c$ on the same scale as the measured $Y_o$. The first sum over $h$ runs over a set of $m$ non-equivalent reflections that have been observed. Each observation is given an appropriate weight, $w_h$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, although more complex weighting schemes are usually used.
 
-These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). With the use of appropriate weighting of the restraints the minimisation is gently pushed towards giving a chemically sensible and hopefully correct structure. This sum over the restraints may of course be empty.
+These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). With the use of appropriate weighting of the restraints the minimisation is gently pushed towards giving a chemically sensible and hopefully correct structure. This term $L_\restraints$ may of course be absent.
 
 In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, ADP's, and sof's in routine refinements) that each component of $Y_c$ and $T_c$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y)$ and $T_c(y)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately, as will be explained later.
 
@@ -137,14 +139,14 @@ For a small molecule structure with a high data to parameter ratio, such unconst
 
 Whether the refinement uses restraints or constraints or both, at each refinement cycle, we first find the value of $K$ that minimises $L(x, K)$ keeping the parameter vector $x$ fixed: we will denote it by $\tilde{K}(x)$, where we use a notation that explicits its dependence on the value of the refined parameters at the beginning of the cycle. We then search the shift vector $s$ of the parameter vector $x$ that brings $L(x, \tilde{K}(x))$ closer to the minimum. It is solution of the so-called normal equations,
 \begin{equation}
-(B_\text{data} + B_\text{restraints})s = -(g_\text{data} + g_\text{restraint}),
+(B_\data + B_\restraints)s = -(g_\data + g_\restraints),
 \label{eqn:generalnormalequations}
 \end{equation}
-where $B_\text{data}$ and $B_\text{restraints}$ are the so-called normal matrices associated with the two terms sharing the same labels in \eqnref{L:def} respectively and where the right hand side $g_\text{data}$ and $g_\text{restraint}$ are equivalently associated with those two terms.
+where $B_\data$ and $B_\restraints$ are the so-called normal matrices associated with the two terms sharing the same labels in \eqnref{L:def} respectively and where the right hand side $g_\data$ and $g_\restraints$ are equivalently associated with those two terms.
 
 \Secref{constraints} deals with the computation of the derivatives with respect to the refined parameters $x_1, \cdots, x_n$ from the derivatives with respect to the crystallographic parameters $y_1, \cdots, y_p$. The computation of the latter derivatives is explicited in \appendixref{structurefactorlinearisation} along with the formulae for the complex structure factors $F_c$.
 
-The computation of the normal equation terms $B_\text{data}$ and $g_\text{data}$ for the measured data is presented in details in \appendixref{leastsquaresminimisation} along with the procedure used to find the optimal value of $K$ whereas \secref{restraints} is devoted to the computation of $B_\text{restraints}$ and $g_\text{restraint}$.
+The computation of the normal equation terms $B_\data$ and $g_\data$ for the measured data is presented in details in \appendixref{leastsquaresminimisation} along with the procedure used to find the optimal value of $K$ whereas \secref{restraints} is devoted to the computation of $B_\restraints$ and $g_\restraints$.
 
 \section{Constraints}
 \label{sec:constraints}
@@ -221,7 +223,7 @@ in the riding approximation. This composition of reparametrisation may be repres
 \end{figure}
 
 
-As models become more complex, e.g. hydrogen atoms riding on the atoms of a rigid body whose rotation centre is tied to an atom whose coordinates are refined, the reparametrisation graph becomes deeper. We decided not to put arbitrary limits on that graph. Indeed we could have made a closed list of reparametrisations and of reparametrisation combinations  that our framework would accept but instead we decided to write our code so that it could correctly handle the computation of parameter values and of partial derivatives for arbitrary reparametrisations, furthermore combined in arbitrary ways. This framework is therefore open as new type of reparametrisations can be added, without the need to change the basic infrastructure in any way, and therefore without the risk of breaking existing reparametrisations. This has proven very useful to the authors as this enabled them to incrementally add the wealth of constraints that is now available, some of them unique to Olex2.refine, as discussed later. But it also enables third parties to develop their own constraints without the need for the authors to get involved beyond documenting how the reparametrisation framework works.
+As models become more complex, e.g. hydrogen atoms riding on the atoms of a rigid body whose rotation centre is tied to an atom whose coordinates are refined, the reparametrisation graph becomes deeper. We decided not to put arbitrary limits on that graph. Indeed we could have made a closed list of reparametrisations and of reparametrisation combinations  that our framework would accept but instead we decided to write our code so that it could correctly handle the computation of parameter values and of partial derivatives for arbitrary reparametrisations, furthermore combined in arbitrary ways. This framework is therefore open as new type of reparametrisations can be added, without the need to change the basic infrastructure in any way, and therefore without the risk of breaking existing reparametrisations. This has proven very useful to the authors as this enabled them to incrementally add the wealth of constraints that is now available, some of them unique to Olex2.refine, as discussed in \appendixref{constraints}. But it also enables third parties to develop their own constraints without the need for the authors to get involved beyond documenting how the reparametrisation framework works.
 
 A crystallographic refinement may involve many such reparametrisations. By piecing them all together, we obtain one reparametrisation that expresses all refinable crystallographic parameters as a smaller vector of independent parameters that shall then be refined. Our framework safeguards that piecewise construction by preventing the same reparametrisation (i.e. same type, applied to the same parameters) to be added twice and by bailing out with an error if it detects a cycle in the graph, as that would mean that at least one parameter, through a series of reparametrisation combinations, depends upon itself. This last case would clearly result from either a bug in the code of ours constructing the combinations of reparametrisations or from a bogus user input.
 
@@ -270,18 +272,18 @@ We would like to stress an important consequence of this formula: constrained pa
 
 Since each restraint target $T_{c,i}$ only depends on a very small subset of the $y_j$ (e.g., in the case of a bond length, only the 6 coordinates of the two bonded atoms would play a role), the matrix of derivatives with respect to the crystallographic parameters
 \begin{equation}
-D_\text{restraints} = \partialder{T_c}{y} = \left[\partialder{T_{c,i}}{y_j}\right]_{i,j}
+D_\restraints = \partialder{T_c}{y} = \left[\partialder{T_{c,i}}{y_j}\right]_{i,j}
 \end{equation}
 which is known as the design matrix for the restraints, is very sparse. We will therefore use sparse matrix techniques to efficiently store and perform computations with $D$, by only storing non-zero elements, and never performing products that involve an element of $D$ known to be zero. We then introduce the matrix of derivatives with respect to the refined parameters,
 \begin{equation}
-\tilde{D}_\text{restraints} = \partialder{T_c}{x} = D_\text{restraints} \partialder{y}{x},
+\tilde{D}_\restraints = \partialder{T_c}{x} = D_\restraints \partialder{y}{x},
 \end{equation}
 which is computed by forming the product of $D$ and the constraint matrix. This is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$. 
 
 The two term in normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix products and matrix-vector product\footnote{$D^T$ denotes the transpose of $D$.},
 \begin{align}
-B_\text{restraints} &= \tilde{D}_\text{restraints}^T W \tilde{D}_\text{restraints}\\
-g_\text{restraints} &= \tilde{D}_\text{restraints}^T \Delta T,\\
+B_\restraints &= \tilde{D}_\restraints^T W \tilde{D}_\restraints\\
+g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
 \intertext{where $W$ is the diagonal matrix featuring the restraints weights, and where}
 \Delta T_i &= T_{o,i} - T_{c,i}
 \end{align}
@@ -289,7 +291,7 @@ is the residual for the $i$-th restraint.
 
 It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002} suggest the normalization factor
 \begin{equation}
-w_\text{restraints} = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
+w_\restraints = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
 \label{eqn:giacovazzo_normalisation}
 \end{equation}
 This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{SHELX:man97}.
@@ -398,9 +400,9 @@ U_{iso} = \tfrac{1}{3} \mathrm{tr}(\mat{U}_{cart}).
 
 \subsection{Implementation}
 
-In the case of macromolecular crystallography the term $L_\text{restraints}$ of \eqnref{L:def} may frequently be a maximum-likelihood based target function in place of the traditional least squares function considered in this paper. A generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\text{data}$ and $\nabla L_\text{restraints}$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where by the chain rule
+In the case of macromolecular crystallography the term $L_\restraints$ of \eqnref{L:def} may frequently be a maximum-likelihood based target function in place of the traditional least squares function considered in this paper. A generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\data$ and $\nabla L_\restraints$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where by the chain rule
 \begin{align}
-\partialder{L_\text{restraints}}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \nonumber\\
+\partialder{L_\restraints}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \nonumber\\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}
 \label{eqn:}.
 \end{align}
@@ -692,7 +694,7 @@ The smtbx provides code to compute derivatives for the both of these observables
 \section{Minimisation of least-squares with an overall scale factor}
 \label{appendix:leastsquaresminimisation}
 
-In this appendix, we are concerned with the minimisation of $L_\text{data}(x, K)$ as defined in \eqnref{L:def}. We will drop the label `data' throughout this appendix for clarity. We will denote by $(x^*, K^*)$ the values of those parameters at which $L(x,K)$ reaches the minimum we are interested in.
+In this appendix, we are concerned with the minimisation of $L_\data(x, K)$ as defined in \eqnref{L:def}. We will drop the label `data' throughout this appendix for clarity. We will denote by $(x^*, K^*)$ the values of those parameters at which $L(x,K)$ reaches the minimum we are interested in.
 
 It is very well known that the overall scale factor tends to be highly correlated to the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. Therefore it exists an analytical formula for the value of $K$ that minimises it. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and it leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
 
@@ -922,24 +924,27 @@ which then expands to:
 \end{equation}
 
 \section{Constraints}
-Olex2.refine provides constraints to influence the geometry or the U of an atom or a group of atoms. This section will enumerate the constraints and provide the details of their implementation.
+\label{appendix:constraints}
+Olex2.refine provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms. This section will enumerate the constraints and provide the details of their implementation.
 
 \subsection{Shared site and shared $U$ constraint}
 These constraints are pretty straight forward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values of the reference atom.
 
 \subsection{Riding atoms/group $U$ constraint}
-This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (ShelXl AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (ShelXl AFIX 4), which is applicable to groups like $XY_{n, 1\leq n \leq 4}$ (X=B,C,N etc, Y=H, F, Cl etc). In general the transformation is written down like this:
+This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (ShelXl AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (ShelXl AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ and X=B, C, N etc, and Y=H, F, Cl etc. In general the transformation of the triplet of coordinates $r$ is written down like this:
 \begin{equation}
 r' = s(r-r_{p}) + r_{p},
 \end{equation}
 where s is the distance scaling component ($s=1$ if not refined) and $r_{p}$ is the pivot atom centre. In the case when $s$ is refined, the corresponding derivative of the transformation is:
-\begin{equation}
-\partialder{\delta r'}{\delta s} = r-r_{p}
-\end{equation}
+\begin{align}
+\partialder{r'}{s} &= r-r_{p} \\
+\intertext{whereas}
+\partialder{r'}{r} &= s \identity
+\end{align}
 
 
 \subsection{Rotated $U$ constraint}
-This constraint links $U$ of one atom to $U$ of the other atom as  rotated by a given/refined angle around the given direction. The direction can be defined as a static vector, best line or best plane normal. Considering atoms A and B and expressing $U_{B}$ through $U_{A}$, as
+This constraint relates the ADP's of one atom to the ADP's of another atom as rotated by a fixed or refined angle around a given direction. The direction can be defined as a static vector, best line or best plane normal. Considering atoms A and B, the relation between their ADP tensor $U_A$ and $U_B$ reads
 \begin{align}
 U_{B} &= RU_{A}R^{T}, \\
 \intertext{where $R$ is the rotation matrix}
@@ -951,7 +956,7 @@ R &=
   \end{bmatrix}
 \end{align}
 
-with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, where the rotation direction represented by a normal $(x,y,z)$ and $\alpha$ is the rotation angle around this direction. The column of the Jacobian related to atom B is copied from the related column of the Jacobian for A and transformed in similar manner. If the rotation angle is refined, then the derivative of this transformation by the angle is:
+with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, and where the rotation direction is represented by a normal $(x,y,z)$ and where $\alpha$ is the rotation angle around this direction. The column of the Jacobian related to atom B is copied from the related column of the Jacobian for A and transformed in similar manner. If the rotation angle is refined, then the derivative of this transformation by the angle is:
 \begin{equation}
 \partialder{U_{B}}{\alpha} = \partialder{(RU_{A}R^{T})}{\alpha} = RUR'^{T} + R'UR^{T},
 \end{equation}
