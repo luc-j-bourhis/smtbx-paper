@@ -229,7 +229,7 @@ A crystallographic refinement may involve many such reparametrisations. By pieci
 
 \subsection{Constraint matrix}
 
-There is a wealth of algorithms designed to minimise least squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex 2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (ShelXL).  The macro-molecular community later introduced the LBFGS method (Phenix) and sparse normal matrix algorithms (REFMAC). They all have in common the fact that they require  only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
+There is a wealth of algorithms designed to minimise least squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex 2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (SHELXL).  The macro-molecular community later introduced the LBFGS method (Phenix) and sparse normal matrix algorithms (REFMAC). They all have in common the fact that they require  only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
 
 Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section, and then piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- either because it is not involved in any constraints, or because it is only the arguments of a reparametrisation (e.g. a coordinate of the pivot atom on which another atom rides) --  is also a component $x_l$ of $x$, i.e. 
 \begin{equation}
@@ -855,7 +855,7 @@ Olex2.refine provides constraints to influence the position(s) or the ADP('s) of
 These constraints are pretty straight forward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values of the reference atom.
 
 \subsection{Riding atoms/group $U$ constraint}
-This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (ShelXl AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (ShelXl AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N etc, and Y is H, F, Cl etc. In general the transformation of the triplet of coordinates $r$ is written down like this:
+This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (SHELXL AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (SHELXL AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N etc, and Y is H, F, Cl etc. In general the transformation of the triplet of coordinates $r$ is written down like this:
 \begin{equation}
 r' = s(r-r_{p}) + r_{p}, \label{eqn:isometry}
 \end{equation}
@@ -897,7 +897,7 @@ R'_\alpha =
 
 \subsection{Pivoted rotation of a rigid body}
 \label{sec:pivoted:rotated:group}
-This constrained is suitable for groups which can be rotated around a given direction (ShelXl AFIX 7). For groups \ce{XY_n} with $1\leq n \leq 4$ and X being B,C,N, etc, and Y being H, F, Cl etc, the distances from X to Y can also be refined (ShelXl AFIX 8). The coordinate transformation is
+This constrained is suitable for groups which can be rotated around a given direction (SHELXL AFIX 7). For groups \ce{XY_n} with $1\leq n \leq 4$ and X being B,C,N, etc, and Y being H, F, Cl etc, the distances from X to Y can also be refined (SHELXL AFIX 8). The coordinate transformation is
 \begin{align}
 r' &= sR(r-r_p) + r_{p},\\
 \intertext{and its derivatives are}
@@ -908,7 +908,7 @@ where $r_p$ is the centre of the pivot atom, $s$ is the distance scale component
 
 \subsection{Free rotation of a rigid body}
 \label{sec:free:rotated:group}
-This constraint is the most generic case of the rigid body refinement (ShelXl AFIX 6). In this case there are 6 refined parameters - the three Euler angles and three positional components, the ADPs are normally refined independently. The coordinate transformation in this case happens similarly to \secref{pivoted:rotated:group}, however a different rotation matrix is used:
+This constraint is the most generic case of the rigid body refinement (SHELXL AFIX 6). In this case there are 6 refined parameters - the three Euler angles and three positional components, the ADPs are normally refined independently. The coordinate transformation in this case happens similarly to \secref{pivoted:rotated:group}, however a different rotation matrix is used:
 \begin{equation}
 R = \begin{bmatrix} \label{eq:erm}
    c_\beta c_\gamma && - c_\beta s_\gamma &&  s_\beta \\
@@ -937,7 +937,7 @@ and it's derivatives by the angles are:
 \end{bmatrix}
 \end{align}
 
-For the special cases of spherical counter-ions or groups like Cp and Ph the size component of this constraint can also be refined (ShelXl AFIX 9).
+For the special cases of spherical counter-ions or groups like Cp and Ph the size component of this constraint can also be refined (SHELXL AFIX 9).
 
 \subsection{non-crystallographic symmetry constraint}
 This constraint is applicable to structures containing fragments which should be exactly superposable onto each other but which appear at different positions with different orientations.
