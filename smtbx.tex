@@ -197,7 +197,7 @@ x_\ce{H$_n$} = x_\ce{C}
 \end{split}
 \label{eqn:rotatingch3reparam}
 \end{equation}
-where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond \ce{X\bond{->}C}. The riding approximation in this case consists in neglecting the derivatives of those base vectors, leading to
+where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond \ce{X\bond{->}C}. The riding approximation in this case consists of neglecting the derivatives of those base vectors, leading to
 \begin{align}
 \partialder{\tilde{Y}_c}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}},\\
 \partialder{\tilde{Y}_c}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}}, \nonumber \\
@@ -223,15 +223,15 @@ in the riding approximation. This composition of reparametrisation may be repres
 \end{figure}
 
 
-As models become more complex, e.g. hydrogen atoms riding on the atoms of a rigid body whose rotation centre is tied to an atom whose coordinates are refined, the reparametrisation graph becomes deeper. We decided not to put arbitrary limits on that graph. Indeed we could have made a closed list of reparametrisations and of reparametrisation combinations  that our framework would accept but instead we decided to write our code so that it could correctly handle the computation of parameter values and of partial derivatives for arbitrary reparametrisations, furthermore combined in arbitrary ways. This framework is therefore open as new type of reparametrisations can be added, without the need to change the basic infrastructure in any way, and therefore without the risk of breaking existing reparametrisations. This has proven very useful to the authors as this enabled them to incrementally add the wealth of constraints that is now available, some of them unique to Olex2.refine, as discussed in \appendixref{constraints}. But it also enables third parties to develop their own constraints without the need for the authors to get involved beyond documenting how the reparametrisation framework works.
+As models become more complex, e.g. hydrogen atoms riding on the atoms of a rigid body whose rotation centre is tied to an atom whose coordinates are refined, the reparametrisation graph becomes deeper. We decided not to put arbitrary limits on that graph. Indeed we could have made a closed list of reparametrisations and of reparametrisation combinations  that our framework would accept but instead we decided to write our code so that it could correctly handle the computation of parameter values and of partial derivatives for arbitrary reparametrisations, combined in arbitrary ways. This framework is therefore open as new type of reparametrisations can be added, without the need to change the basic infrastructure in any way, and without the risk of breaking existing reparametrisations. This has proven very useful to the authors as this enabled them to incrementally add the wealth of constraints now available, some of which are unique to Olex2.refine, as discussed in \appendixref{constraints}. Furthermore, it enables third parties to develop their own constraints without the need for the involvement of the original authors beyond documenting how the reparametrisation framework works.
 
-A crystallographic refinement may involve many such reparametrisations. By piecing them all together, we obtain one reparametrisation that expresses all refinable crystallographic parameters as a smaller vector of independent parameters that shall then be refined. Our framework safeguards that piecewise construction by preventing the same reparametrisation (i.e. same type, applied to the same parameters) to be added twice and by bailing out with an error if it detects a cycle in the graph, as that would mean that at least one parameter, through a series of reparametrisation combinations, depends upon itself. This last case would clearly result from either a bug in the code of ours constructing the combinations of reparametrisations or from a bogus user input.
+A crystallographic refinement may involve many such reparametrisations. By piecing them all together, we obtain one reparametrisation that expresses all refinable crystallographic parameters as a smaller vector of independent parameters that shall then be refined. Our framework safeguards that piecewise construction by preventing the same reparametrisation (i.e. same type, applied to the same parameters) being added twice and by bailing out with an error if it detects a cycle in the graph, as that would mean that at least one parameter, through a series of reparametrisation combinations, depends upon itself. This last case would clearly result from either a bug in the code of ours constructing the combinations of reparametrisations or from a bogus user input.
 
 \subsection{Constraint matrix}
 
-There is a wealth of algorithms designed to minimise least squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex 2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (SHELXL).  The macro-molecular community later introduced the LBFGS method (Phenix) and sparse normal matrix algorithms (REFMAC). They all have in common the fact that they require  only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
+There is a wealth of algorithms designed to minimise least squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (SHELXL).  The macro-molecular community later introduced the LBFGS method (\emph{phenix.refine} \cite{Afonine:ba5180}) and sparse normal matrix algorithms (REFMAC \cite{Murshudov:li0304}). All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
 
-Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section, and then piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- either because it is not involved in any constraints, or because it is only the arguments of a reparametrisation (e.g. a coordinate of the pivot atom on which another atom rides) --  is also a component $x_l$ of $x$, i.e. 
+Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- either because it is not involved in any constraints, or because it is only the arguments of a reparametrisation (e.g. a coordinate of the pivot atom on which another atom rides) --  is also a component $x_l$ of $x$, i.e. 
 \begin{equation}
 \partialder{y_k}{x_j} = \begin{cases} 
    1& \text{if $j=l$},\\
@@ -258,14 +258,14 @@ In this section, we will discuss the rigorous computation of standard uncertaint
 \intertext{where}
 B_{ij} &= \partialder{r}{x_i} \dotprod \partialder{r}{x_j}
 \end{align}
-is the normal matrix for the constrained least squares minimisation. However we are interested in the variance matrix $\var{y}$ for the crystallographic parameters of the model, not in $\var{x}$. For small variations, we have the linear relation
+is the normal matrix for the constrained least squares minimisation. However, we are interested in the variance matrix $\var{y}$ for the crystallographic parameters of the model, not in $\var{x}$. For small variations, we have the linear relation
 \begin{align}
 \delta y &\approx J \delta x\\
 \intertext{and therefore, remembering the heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation within which we are working in this section,}
 \var{y} &= J\, \var{x} J^T.
 \end{align} 
 
-We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. Consequently, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. Because many refinement programs print only the s.u. of each refined parameter, but not the covariances between the refined parameters, many tools used to analyse the structure after refinement (e.g. PLATON) computes the s.u. of derived quantities such as those discussed in this paragraph by assuming that the covariances are zero. For riding hydrogen, this computation always gives terribly incorrect results, as the coordinates of the hydrogen atoms are totally correlated to those of the the pivot atoms. To make the matter worse, PLATON assumes that any atomic coordinates quoted with s.u. are freely refined. As a result, as Olex2 reports the s.u. for riding hydrogen coordinates, PLATON assumes that the bond length \ce{C-H} in the example above should be quoted with a s.u. too, which it is not, as it is exactly zero. Then PLATON wrongly computes the s.u. of the angles $\widehat{\ce{R$_i$CH}}$ above and often finds a discrepancy with the correct one quoted by Olex2. This results in a long list of spurious warnings for any structure refined with Olex2. It should be noted that the current CIF dictionary specifies a flag for each atom that should be used to report whether its coordinates were freely refined, or refined with a riding model, and that Olex2 correctly sets that flag. Were that flag used by CheckCIF, instead of inferring the refinement status of an atom from the presence or lack of s.u., the spurious warnings would not be issued.
+We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. Consequently, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. Because many refinement programs print only the s.u. of each refined parameter, but not the covariances between the refined parameters, many tools used to analyse the structure after refinement (e.g. PLATON) compute the s.u. of derived quantities such as those discussed in this paragraph by assuming that the covariances are zero. For riding hydrogens, this computation always gives incorrect results, as the coordinates of the hydrogen atoms are totally correlated to those of the pivot atoms. To make matters worse, PLATON assumes that any atomic coordinates quoted with s.u. are freely refined. As a result, as Olex2 reports the s.u. for riding hydrogen coordinates, PLATON assumes that the bond length \ce{C-H} in the example above should be quoted with a s.u. too, which it is not, as it is exactly zero. Then PLATON wrongly computes the s.u. of the angles $\widehat{\ce{R$_i$CH}}$ above and often finds a discrepancy with the correct one quoted by Olex2. This results in a long list of spurious warnings for any structure refined with Olex2. It should be noted that the current CIF dictionary specifies a flag for each atom that should be used to report whether its coordinates were freely refined, or refined with a riding model, and that Olex2 correctly sets that flag. Were that flag used by CheckCIF, instead of inferring the refinement status of an atom from the presence or lack of s.u., the spurious warnings would not be issued.
 
 
 \section{Restrained Least Squares Refinement}
@@ -273,15 +273,15 @@ We would like to stress an important consequence of this formula: constrained pa
 
 Since each restraint target $T_{c,i}$ only depends on a very small subset of the $y_j$ (e.g., in the case of a bond length, only the 6 coordinates of the two bonded atoms would play a role), the matrix of derivatives with respect to the crystallographic parameters
 \begin{equation}
-D_\restraints = \partialder{T_c}{y} = \left[\partialder{T_{c,i}}{y_j}\right]_{i,j}
+D_\restraints = \partialder{T_c}{y} = \left[\partialder{T_{c,i}}{y_j}\right]_{i,j},
 \end{equation}
-which is known as the design matrix for the restraints, is very sparse. We will therefore use sparse matrix techniques to efficiently store and perform computations with $D$, by only storing non-zero elements, and never performing products that involve an element of $D$ known to be zero. We then introduce the matrix of derivatives with respect to the refined parameters,
+which is known as the design matrix for the restraints, is very sparse. We therefore use sparse matrix techniques to efficiently store and perform computations with $D$, by only storing non-zero elements, and never performing products that involve an element of $D$ known to be zero. We then introduce the matrix of derivatives with respect to the refined parameters,
 \begin{equation}
 \tilde{D}_\restraints = \partialder{T_c}{x} = D_\restraints \partialder{y}{x},
 \end{equation}
 which is computed by forming the product of $D$ and the constraint matrix. This is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$. 
 
-The two term in normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix products and matrix-vector product\footnote{$D^T$ denotes the transpose of $D$.},
+The two terms in the normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix product and matrix-vector product\footnote{$D^T$ denotes the transpose of $D$.},
 \begin{align}
 B_\restraints &= \tilde{D}_\restraints^T W \tilde{D}_\restraints\\
 g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
@@ -299,19 +299,19 @@ This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This
 
 \subsection{Implementation}
 
-In the case of macromolecular crystallography the term $L_\restraints$ of \eqnref{L:def} may frequently be a maximum-likelihood based target function in place of the traditional least squares function considered in this paper. A generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\data$ and $\nabla L_\restraints$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where by the chain rule
+In the case of macromolecular crystallography the term $L_\restraints$ of \eqnref{L:def} may frequently be a maximum-likelihood based target function in place of the traditional least squares function considered in this paper. A generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\data$ and $\nabla L_\restraints$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where, by the chain rule,
 \begin{align}
 \partialder{L_\restraints}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \nonumber\\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}.
 \end{align}
 
-The route taken to add restraints into this framework was to build independently those rows of the Jacobian associated with the equations of restraint. Since the restraints largely involve relatively few of the crystallographic parameters, it can be efficient to store this part of the Jacobian as a sparse matrix. This allows the restraints to be built up without any knowledge of the constraint matrix, and only after the contribution of the data to the normal matrix has been computed, the contribution of the restraints can be added efficiently with the use of sparse matrix techniques. The restraints framework was designed in such a way that it would be easy to add further restraints. Each restraint must provide the array of partial derivatives of the restraint with respect to the parameters (one row of the Jacobian), the restraint delta, $T_o - T_c$, and the weight, $w$, of the restraint.
+The route taken to incorporate restraints into this framework was to build independently those rows of the Jacobian associated with the equations of restraint. Since the restraints largely involve relatively few of the crystallographic parameters, it can be efficient to store this part of the Jacobian as a sparse matrix. This allows the restraints to be built up without any knowledge of the constraint matrix, and only after the contribution of the data to the normal matrix has been computed, the contribution of the restraints is added efficiently with the use of sparse matrix techniques. The restraints framework was designed in such a way that it could be easily extended by adding further restraints. Each restraint must provide the array of partial derivatives of the restraint with respect to the parameters (one row of the Jacobian), the restraint delta, $T_o - T_c$, and the weight, $w$, of the restraint.
 
 
 \section{Twinning}
 \label{sec:ls_twinning}
 
-A twinned crystal consist of two or more distinct domains of the same species that are joined together and related by some symmetry operation (other than the identity operator). The resulting observed diffraction pattern is a superposition of the diffraction pattern of each component after application of the appropriate symmetry operation for each twin component. Problems can sometimes arise in solving structures in the presence of twinning, and it is essential to include the contribution of any twin components in the refinement of the structural parameters in order to get the best possible result.
+A twinned crystal consists of two or more distinct domains of the same species that are joined together and related by some symmetry operation (other than the identity operator). The resulting observed diffraction pattern is a superposition of the diffraction pattern of each component after application of the appropriate symmetry operation for each twin component. Problems can sometimes arise in solving structures in the presence of twinning, and it is essential to include the contribution of any twin components in the refinement of the structural parameters in order to get the best possible result.
 
 Each twin component is defined by a rotation matrix (\emph{twin law}) which defines the relative orientation of the twin component to the major component, and the fractional contribution of that component to the total crystal volume.
 
@@ -394,7 +394,7 @@ and the derivatives with respect to the twin fractions, $\alpha_i$, given by
 
 For a function, $f$, of a set of atomic parameters, $p_i$, its variance is given by \cite{Sands:a05356}
 \begin{equation}
-\sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}
+\sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}.
 \label{eqn:sigma_f}
 \end{equation}
 
@@ -411,21 +411,21 @@ where $\sigma_{xyz}(f)$ is the part coming from the errors in the least square e
 \end{equation}
 where $i,j=\lbrace{a,b,c,\alpha,\beta,\gamma\rbrace}$.
 
-This necessitates the calculation of the derivatives of the function with respect to the unit cell parameters. In order to do so, it is easier to calculate separately the derivative of the function with respect to the elements of the metrical matrix, and also the derivative of the metrical matrix with respect to the cell parameters. The former must be evaluated for every function, whereas the latter is constant for a given unit cell.
+This necessitates the calculation of the derivatives of the function with respect to the unit cell parameters. In order to do so, it is easier to calculate separately the derivatives of the function with respect to the elements of the metrical matrix, and also the derivatives of the metrical matrix with respect to the cell parameters. The former must be evaluated for every function, whereas the latter is constant for a given unit cell.
 
 \begin{equation}
 \partialder{f}{i} = \partialder{f}{g_{jk}}\partialder{g_{jk}}{i},\ i=a, b, c, \alpha, \beta, \gamma
 \label{eqn:df_dcell}
 \end{equation}
 
-Now we consider the application of equation \eqnref{sigma_f} to determine the estimated error in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
+Now we consider the application of \eqnref{sigma_f} to determine the estimated error in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
 \begin{equation}
 D = (u^T \mat{G} u)^\frac{1}{2}
 \label{eqn:bond_length},
 \end{equation}
 where $\mat{G}$ is the metrical matrix.
 
-The derivative of the distance, $D$, with respect to the elements of the metrical matrix, $\mat{G}$, is given by
+The derivatives of the distance, $D$, with respect to the elements of the metrical matrix, $\mat{G}$, are given by
 
 \begin{equation}
 \partialder{D}{g_{ii}} = \frac{1}{2} \frac{u_i^2}{D}
@@ -775,7 +775,7 @@ By mere inspection, we can seethat the derivatives of the residual with respect 
  \end{cases}
 \end{equation}
 
-\subsubsection{ADP Ueq similarity}
+\subsubsection{ADP $U_\text{eq}$ similarity}
 
 The ADP of two atoms A and B may be restrained to have the same $U_\text{eq}$. The restraint term for atom A reads in Cartesian coordinates
 \begin{align}
@@ -791,7 +791,7 @@ The derivatives with the respect to the diagonal elements of $U_{A}$ are then
 \end{equation}
 and the same formula with $B \leftrightarrow A$.
 
-\subsubsection{Fixed ADP Ueq}
+\subsubsection{Fixed ADP $U_\text{eq}$}
 When the $U_\text{eq}$ of an atom is restrained to a fixed value, $P$, the residual for this restraint is:
 \begin{equation}
 L_{A} = w  (U_\text{eq}-P) = w \left(\frac{1}{3}\sum_{i=1}^3 U_{ii}-P \right),
