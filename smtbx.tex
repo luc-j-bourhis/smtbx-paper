@@ -108,7 +108,7 @@ Abstract goes here.
 \section{Introduction}
 \label{sec:introduction}
 
-During the last four decades, small molecule crystallographers have used a myriad of stand-alone routines with individual purpose and various comprehensive software packages, most notably that written by David Watkin \cite{Betteridge:os5005} and those written by George Sheldrick \cite{Sheldrick:2008,SHELX:man97}. These latter two packages have dominated the citations in all publications containing crystal structure analyses for many years now.
+During the last four decades, small molecule crystallographers have used a myriad of stand-alone routines with individual purpose and various comprehensive software packages, most notably those written by George Sheldrick \cite{Sheldrick:2008,SHELX:man97} and David Watkin \cite{Betteridge:os5005}. These latter two packages have dominated the citations in all publications containing crystal structure analyses for many years now.
 It could be said, therefore, that the analysis of single crystal X-ray (and neutron) diffraction data has reached a certain level of maturity and that there is no need for further program development. However there has been the very recent release of SHELXL 2013 and there is still considerable activity in this area in other groups around the world. A retro-fit of new ideas to the major programs is not always possible, except perhaps by the authors themselves viz a viz SHELX 2013 and an external programmer, however able, would not have dared to tinker with his excellent and succinct code.
 When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point - namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and it was to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for modification by others. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for OLEX2 refine, openly available.\footnote{www.olex2.org}
 
@@ -129,7 +129,7 @@ where $Y$ denotes either $F$ or $F^2$, and $K$ is an overall, unknown, scale fac
 
 These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). With the use of appropriate weighting of the restraints the minimisation is gently pushed towards giving a chemically sensible and hopefully correct structure. This term $L_\restraints$ may of course be absent.
 
-In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, ADP's, and sof's in routine refinements) that each component of $Y_c$ and $T_c$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y)$ and $T_c(y)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately, as will be explained later.
+In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, atomic displacement parameters (ADPs), and chemical occupancy in routine refinements) that each component of $Y_c$ and $T_c$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y)$ and $T_c(y)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately, as will be explained later.
 
 For a small molecule structure with a high data to parameter ratio, such unconstrained minimisation as defined by the first term of \eqnref{L:def}, when $y \equiv x$ may well be sufficient. However, as the structure becomes larger, or the data to parameter ratio worsens, unconstrained minimisation may not be well-behaved, or result in some questionable parameter values. It has become customary to rely on two techniques to solve such issues,
 \begin{description}
@@ -137,7 +137,7 @@ For a small molecule structure with a high data to parameter ratio, such unconst
 \item[constraints:] by having a parameter vector $x$ shorter than $y$, therefore explicitly taking into account constraints between some of the parameters $y_i$.
 \end{description}
 
-Whether the refinement uses restraints or constraints or both, at each refinement cycle, we first find the value of $K$ that minimises $L(x, K)$ keeping the parameter vector $x$ fixed: we will denote it by $\tilde{K}(x)$, where we use a notation that explicits its dependence on the value of the refined parameters at the beginning of the cycle. We then search the shift vector $s$ of the parameter vector $x$ that brings $L(x, \tilde{K}(x))$ closer to the minimum. It is solution of the so-called normal equations,
+Whether the refinement uses restraints or constraints or both, at each refinement cycle, we first find the value of $K$ that minimises $L(x, K)$ keeping the parameter vector $x$ fixed: we will denote it by $\tilde{K}(x)$, where we use a notation that explicits its dependence on the value of the refined parameters at the beginning of the cycle. We then search for the shift vector $s$ of the parameter vector $x$ that brings $L(x, \tilde{K}(x))$ closer to the minimum. It is solution of the so-called normal equations,
 \begin{equation}
 (B_\data + B_\restraints)s = -(g_\data + g_\restraints),
 \label{eqn:generalnormalequations}
@@ -153,7 +153,7 @@ The computation of the normal equation terms $B_\data$ and $g_\data$ for the mea
 
 \subsection{Synopsis}
 
-Constraints may be conceptualised mainly in two manners, that we will first illustrate on a simple example, a geometrically constrained acetylenic hydrogen, \ce{X#C-H}. The position of the hydrogen must be such that the distance \ce{CH} is equal to some ideal bond length $d$ and such that the angle $\widehat{\ce{XCH}}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (\ce{CH} - d)^2 + w_2 (\cos \widehat{\ce{XCH}} - 1)^2 + w_3 (\sin  \widehat{\ce{XCH}})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
+Constraints may be conceptualised mainly in two manners that we will first illustrate on a simple example: a geometrically constrained acetylenic hydrogen, \ce{X#C-H}. The position of the hydrogen must be such that the distance \ce{CH} is equal to some ideal bond length $d$ and such that the angle $\widehat{\ce{XCH}}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (\ce{CH} - d)^2 + w_2 (\cos \widehat{\ce{XCH}} - 1)^2 + w_3 (\sin  \widehat{\ce{XCH}})^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
 
 It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of \ce{H} as a function of the positions of the two carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
 \begin{equation}
@@ -248,7 +248,7 @@ Indeed, after transforming every constraint on the model into a reparametrisatio
 \end{align}
 The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallographic circles. In standard mathematical nomenclatures, it is called the Jacobian of the transformation $x \mapsto y$ and we will therefore denote it $J$.
 
-The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $y_i$ depends on very few refined parameters $x_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, the both of these costs scale as the number of non-zero elements in $J$ instead of $O(n^2)$ if $J$ were treated as a dense matrix.
+The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $y_i$ depends on very few refined parameters $x_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, both of these costs scale as the number of non-zero elements in $J$ instead of $O(n^2)$ if $J$ were treated as a dense matrix.
 
 
 \subsection{Variance matrix}
@@ -370,7 +370,7 @@ J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha}
 which is the equation used for Fourier map calculations for twinned structures in JANA \cite{JANA:man98,Dusek:hn0119} and SHELXL \cite{SHELX:man97}. This formula is more trivially extended to multiply twinned crystals.
 %shelx manual page 6-5.
 
-Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:a08682,Murray-Rust:a10328}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on equation \eqnref{detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least squares parameters is ignored.
+Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:a08682,Murray-Rust:a10328}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on \eqnref{detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least squares parameters is ignored.
 
 Most commonly used crystallographic refinement software \cite{Sheldrick:sc5010,Betteridge:os5005} use the twin refinement method of \cite{Jameson:a20747} and \cite{J19710002146}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \eqnref{twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
 
@@ -552,7 +552,7 @@ The total sum over symmetries is therefore real, and its derivative will be so t
 \end{enumerate}
 
 In order to avoid redundant computations, our code distinguishes these three cases. One piece of code handles the case of centrosymmetric space groups using only real numbers to compute $\Sigma$. Another piece of code handles the other two cases, first computing $\Sigma$ using complex number algebra and then using \eqnref{sumofGforcentricgroups} if the space group is centric and $h t_{\bar{1}} \neq 0$. Another optimisation we applied is to precompute the terms $hR$ and $e^{i2\pi t}$ appearing in \eqnref{transformofG} as well as the test for the condition $h t_{\bar{1}}=0$ before the loop over all scatterers in the asymmetric unit. In all three cases, the computation of $\cos(hRx + t)$ and $\sin(hRx + t)$ is the most costly operation. This is mitigated\footnote{Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a cctbx function that interpolates between tabulated values of sines and cosines. The latter is much faster but less precise. Olex2 uses the former.} by computing the structure factor and its derivatives together, as the cosine and sine then only need to be computed once for each reflection and scatterer.
-This optimisation is the reason why we have written our own new code into the smtbx instead of reusing the original code in the cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines to be computed twice. This is rather well suited to the optimisation algorithm used in the mmtbx (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares, that is prevalent in small molecule crystallography.  
+This optimisation is the reason why we have written our own new code into the smtbx instead of reusing the original code in the cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines to be computed twice. This is rather well suited to the optimisation algorithm used in the mmtbx (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares as is prevalent in small molecule crystallography.  
 
 \subsection{Derivatives of $\modulus{F}^2$ and $\modulus{F}$}
 
@@ -574,7 +574,7 @@ The smtbx provides code to compute derivatives for the both of these observables
 
 In this appendix, we are concerned with the minimisation of $L_\data(x, K)$ as defined in \eqnref{L:def}. We will drop the label `data' throughout this appendix for clarity. We will denote by $(x^*, K^*)$ the values of those parameters at which $L(x,K)$ reaches the minimum we are interested in.
 
-It is very well known that the overall scale factor tends to be highly correlated to the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. Therefore it exists an analytical formula for the value of $K$ that minimises it. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and it leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
+It is well known that the overall scale factor tends to be highly correlated with the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. Therefore it exists an analytical formula for the value of $K$ that minimises it. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
 
 \begin{align}
 Y \dotprod Y' &= \sum_h w(h) Y(h) Y'(h), \\
@@ -591,18 +591,18 @@ L(x, K) &= \norm{r(x, K)}^2, \\
 \tilde{K} &= \frac{Y_c \dotprod Y_o}{\norm{Y_c}^2},
 \label{eqn:tildeK}
 \\
-\intertext{while keeping $x$ fixed and the value at the minimum reads}
+\intertext{while keeping $x$ fixed, and the value at the minimum reads}
 L(x, \tilde{K}) &= \norm{Y_o}^2 - \tilde{K}^2 \norm{Y_c(x)}^2.
 \end{align}
 We could then simply use $\tilde{K}$ as a starting value for a combined refinement of $x$ and $K$, i.e. the minimisation of $L(x, K)$ with the independent vector $(x, K)$ of parameters.
 
-However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \cite[, and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
+However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \cite[and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously, but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
 \begin{align}
 \partialder{L(x, \tilde{K})}{x_j} &= \partialder{L}{x_j}(x, \tilde{K}),\ 1 \le j \le n, \\
-\intertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{K}{x_j}$ but it is zero because of the definition of $\tilde{K}$. In this expression,}
+\intertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{K}{x_j}$ but in this case it is zero because of the definition of $\tilde{K}$. In this expression,}
 \partialder{L}{x_j} &= 2 r \dotprod \partialder{r}{x_j}.
 \end{align}
-Thus the first-order derivative is exactly the same as it would have been with an independent parameter $K$. We then need the second-order derivatives
+Thus, the first-order derivative is exactly the same as it would have been with an independent parameter $K$. We then need the second-order derivatives
 \begin{align}
 \partialderxy{L(x, \tilde{K})}{x_i}{x_j} &\approx \partialder{r(x, \tilde{K})}{x_i} \dotprod \partialder{r(x, \tilde{K})}{x_j},\ 1 \le i,j \le n
 \label{eqn:gaussleastsquares}
@@ -614,12 +614,12 @@ Let us now build the normal equations,
 \label{eqn:gaussnewtoneq}
 Bs = -g,
 \end{equation}
-for the shift $s$ of the parameter vector $x$. The matrix $B$ is known as the normal matrix. Those equations are just the Newton equations, featuring the Hessian matrix, $B_{ij} = \partialderxy{L(x, \tilde{K})}{x_i}{x_j}$, computed using the approximation of \eqnref{gaussleastsquares} and the gradient $g$ of $L(x, \tilde{K})$. It should be noted that the solution $s$ of \eqnref{gaussnewtoneq} is then also the solution of the linear least-squares problem
+for the shift, $s$, of the parameter vector $x$. The matrix $B$ is known as the normal matrix. Those equations are simply the Newton equations, featuring the Hessian matrix, $B_{ij} = \partialderxy{L(x, \tilde{K})}{x_i}{x_j}$, computed using the approximation of \eqnref{gaussleastsquares} and the gradient $g$ of $L(x, \tilde{K})$. It should be noted that the solution, $s$, of \eqnref{gaussnewtoneq} is then also the solution of the linear least-squares problem
 \begin{equation}
 \label{eqn:gaussnewtonaslinearls}
 \min_s \norm{r(x, \tilde{K}) + \partialder{r(x, \tilde{K})}{x} s}^2.
 \end{equation}
-The inverse of the normal matrix $B$ when the least-squares minimum has been reached by $L(x, \tilde{K})$ can therefore be viewed as the variance matrix of $x$, which should be contrasted to the more classic combined refinement of $x$ and $K$, for which the variance matrix is the sub-matrix of inverse of the normal matrix obtained by removing the column and the row corresponding to $K$. 
+The inverse of the normal matrix $B$ when the least-squares minimum has been reached by $L(x, \tilde{K})$ can therefore be viewed as the variance matrix of $x$, which should be contrasted to the more classic combined refinement of $x$ and $K$, for which the variance matrix is the sub-matrix of the inverse of the normal matrix obtained by removing the column and the row corresponding to $K$. 
 
 Using the definition~\eqnref[name=]{lsresidualdef} of $r$ and the expression~\eqnref[name=]{tildeK} of $\tilde{K}$, we have
 \begin{align}
@@ -637,17 +637,17 @@ B_{ij} &= \begin{aligned}[t] \tilde{K}^2\partialder{Y_c}{x_i} \dotprod \partiald
 g_i &= - (Y_o - \tilde{K}Y_c) \dotprod \left( \tilde{K}\partialder{Y_c}{x_i} + \partialder{\tilde{K}}{x_i} Y_c \right).
 \end{align}
 
-It should be noted that the first term of $B$ would appear in exactly the same form if we had kept the scale factor $K$ as an independent parameter. Moreover terms very similar to the second and third term of $B$ would need to be computed in that case, as the normal matrix B would then have one more column and one more row which would feature those similar terms. Thus the computation cost of our unorthodox method is the same as that of the more traditional refinement of the overall scale factor along with the other crystallographic parameters. In any case, for all methods based on the normal equations, the computation time is dominated by the first term of $B$, as it scales as $O(mn^2)$ where $m$ is the number of reflections.
+It should be noted that the first term of $B$ would appear in exactly the same form if we had kept the scale factor $K$ as an independent parameter. Moreover, terms very similar to the second and third term of $B$ would need to be computed in that case, as the normal matrix B would then have one more column and one more row which would feature those similar terms. Thus, the computation cost of our unorthodox method is the same as that of the more traditional refinement of the overall scale factor along with the other crystallographic parameters. In any case, for all methods based on the normal equations, the computation time is dominated by the first term of $B$, as it scales as $O(mn^2)$ where $m$ is the number of reflections.
 
-It should also be noted that we never construct and store the whole of the so-called design matrix $\left[ \partialder{Y_c(h)}{x_i} \right]_{h,i}$ that appear in those equations. Instead we compute the vector of derivatives $\left[ \partialder{Y_c(h)}{x_i} \right]_i$ for a few reflections $h$ and then we immediately accumulate them into the normal matrix $B$ and into the right-hand side $g$, as opposed to construct the whole design matrix and then to form the products $\partialder{Y_c}{x_i} \dotprod \partialder{Y_c}{x_j}$ appearing in \eqnref{normalmatrixwithoutscalefactor} e.g. It used to be the only efficient way to proceeds a few decades ago when least-squares refinement was being developed but the fantastic increase of computer memory has made that point moot.
+It should also be noted that we never construct and store the whole of the so-called design matrix $\left[ \partialder{Y_c(h)}{x_i} \right]_{h,i}$ that appear in those equations. Instead, we compute the vector of derivatives $\left[ \partialder{Y_c(h)}{x_i} \right]_i$ for a few reflections $h$ and then we immediately accumulate them into the normal matrix $B$ and into the right-hand side $g$, as opposed to constructing the whole design matrix and then forming the products $\partialder{Y_c}{x_i} \dotprod \partialder{Y_c}{x_j}$ appearing in \eqnref{normalmatrixwithoutscalefactor}, for example. It used to be the only efficient way to proceed a few decades ago when least-squares refinement was being developed but the fantastic increase of computer memory has made that point largely irrelevant.
 
 The traditional argument is to show that the normal matrix is typically one to two orders of magnitude smaller than the design matrix. Indeed the latter has $m n$ elements whereas the former has approximately $n^2/2$ elements for large values of $n$. Since, in a typical small molecule crystal structure determination, the data to parameter ratio, $m / n$ is typically in the range $10-30$, the normal matrix is therefore 20 to 60 times smaller than the design matrix. With the common use of constraints, particularly with respect to those on the parameters of hydrogen atoms, this contrast gets even more striking as $n$ shall then be replaced with the number of parameters actually refined, which can be as small as $n/2$ for typical organic structures. This results in another factor 2 in the comparison of the respective sizes of the design and of the normal matrix, and it makes the latter typically 40 to 120 times smaller than the former. 
 
-However, in the extreme case of a structure with about 1000 atoms in the asymmetric unit, the design matrix stored in double precision only weights 40 to 120 Mb assuming constraints reducing the number of refinable parameters by a factor 2, as opposed to around 2 Mb for the normal matrix. They would therefore both easily fit in the main memory of a modern PC which comes with many Gigabytes of RAM.
+However, in the extreme case of a structure with about 1000 atoms in the asymmetric unit, the design matrix stored in double precision only requires 40 to 120 Mb of memory, assuming constraints reducing the number of refinable parameters by a factor 2, as opposed to around 2 Mb for the normal matrix. They would therefore both easily fit in the main memory of a modern PC which comes with many Gigabytes of RAM.
 
 The counter-argument goes even further as the normal matrix is actually not necessary either to solve the least-square problem or to compute estimated standard deviations for geometric quantities, which are necessary to publish a structure. Indeed, there are well-known mathematical techniques based only on the design matrix to solve these two problems, c.f. for example \cite{Bjorck:1996fk}, section 2.8.3 for s.u. computations and section 2.4.3 for the solution of the least-squares.
  
-However, the best of those design matrix techniques, the QR decomposition, involves about twice more floating point operations than the method based on the normal equations. That is the actual motivation for our choosing the latter and therefore abiding to a long crystallographic tradition.
+However, the best of those design matrix techniques, the QR decomposition, involves about twice as many floating point operations as the method based on the normal equations. That is the actual motivation for our choosing the latter and therefore abiding to a long crystallographic tradition.
 
 \section{Restraints and their derivatives}
 
@@ -905,7 +905,7 @@ R = \begin{bmatrix} \label{eq:erm}
   - c_\alpha s_\beta c_\gamma+ s_\alpha s_\gamma &&  c_\alpha s_\beta s_\gamma+ s_\alpha c_\gamma &&  c_\alpha c_\beta
 \end{bmatrix}
 \end{equation}
-and it's derivatives by the angles are:
+and its derivatives by the angles are:
 \begin{align}
 \partialder{R}{\alpha} &= \begin{bmatrix}
   0 && 0 && 0 \\
