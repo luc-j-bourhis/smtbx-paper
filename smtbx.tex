@@ -650,6 +650,104 @@ The counter-argument goes even further as the normal matrix is actually not nece
  
 However, the best of those design matrix techniques, the QR decomposition, involves about twice as many floating point operations as the method based on the normal equations. That is the actual motivation for our choosing the latter and therefore abiding to a long crystallographic tradition.
 
+
+\section{Constraints}
+\label{appendix:constraints}
+Olex2.refine provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms. This section will enumerate the constraints and provide the details of their implementation.
+
+\subsection{Shared site and shared $U$ constraint}
+These constraints are pretty straight forward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values of the reference atom.
+
+\subsection{Riding atoms/group $U$ constraint}
+This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (SHELXL AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (SHELXL AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N etc, and Y is H, F, Cl etc. In general the transformation of the triplet of coordinates $r$ is written down like this:
+\begin{equation}
+r' = s(r-r_{p}) + r_{p}, \label{eqn:isometry}
+\end{equation}
+where s is the distance scaling component ($s=1$ if not refined) and $r_{p}$ is the pivot atom centre. In the case when $s$ is refined, the corresponding derivative of the transformation is:
+\begin{align}
+\partialder{r'}{s} &= r-r_{p} \\
+\intertext{whereas}
+\partialder{r'}{r} &= s \identity
+\end{align}
+
+
+\subsection{Rotated $U$ constraint}
+This constraint relates the ADP's of one atom to the ADP's of another atom as rotated by a fixed or refined angle around a given direction. The direction can be defined as a static vector, best line or best plane normal. Considering atoms A and B, the relation between their ADP tensor $U_A$ and $U_B$ reads
+\begin{align}
+U_{B} &= RU_{A}R^{T}, \\
+\intertext{where $R$ is the rotation matrix}
+R &=
+  \begin{bmatrix} 
+    txx + c_\alpha && tyx + zs_\alpha && tzx - ys_\alpha \\
+    txy - zs_\alpha && tyy + c_\alpha && tzy + xs_\alpha \\
+    txz + ys_\alpha && tyz - xs_\alpha && tzz + c_\alpha \\
+  \end{bmatrix}
+  \label{eqn:rotmat}
+\end{align}
+with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, and where the rotation direction is represented by a normal $(x,y,z)$ and where $\alpha$ is the rotation angle around this direction. This transforms is trivally rewritten as a linear transform of $(U_{A,11}, U_{A,22}, U_{A,33}, U_{A,12}, U_{A,13}, U_{A,23})$ into $(U_{B,11}, U_{B,22}, U_{B,33}, U_{B,12}, U_{B,13}, U_{B,23})$, whose matrix is therefore the Jacobian needed for the chain rule \eqnref{chainrule}. If the rotation angle is refined, then the derivative of this transformation by the angle is:
+\begin{equation}
+\partialder{U_{B}}{\alpha} = RUR_\alpha^{\prime T} + R'_\alpha U R^{T},
+\end{equation}
+where $R'_\alpha$ is the derivative of $R$ by $\alpha$:
+\begin{equation}
+R'_\alpha = 
+  \begin{bmatrix} 
+    xx s_\alpha -  s_\alpha && yx s_\alpha + z c_\alpha && zx s_\alpha - y c_\alpha \\
+    xy s_\alpha - z c_\alpha && yy s_\alpha -  s_\alpha && zy s_\alpha + x c_\alpha \\
+    xz s_\alpha + y c_\alpha && yz s_\alpha - x c_\alpha && zz s_\alpha - s_\alpha
+  \end{bmatrix}
+  \label{eqn:rotmatdev}
+\end{equation}
+
+\subsection{Pivoted rotation of a rigid body}
+\label{sec:pivoted:rotated:group}
+This constrained is suitable for groups which can be rotated around a given direction (SHELXL AFIX 7). For groups \ce{XY_n} with $1\leq n \leq 4$ and X being B,C,N, etc, and Y being H, F, Cl etc, the distances from X to Y can also be refined (SHELXL AFIX 8). The coordinate transformation is
+\begin{align}
+r' &= sR(r-r_p) + r_{p},\\
+\intertext{and its derivatives are}
+\partialder{r'}{\alpha} &= sR'_\alpha(r - r_p),\\ 
+\partialder{r'}{s} &= R(r-r_p),
+\end{align}
+where $r_p$ is the centre of the pivot atom, $s$ is the distance scale component ($s=1$ if not refined), $R$ is rotation matrix \eqnref{rotmat} and $R'$ is the derivative of the rotation matrix by the angle \eqnref{rotmatdev}. If neither the angle nor distances are refined, this constraint reduces to simple riding.
+
+\subsection{Free rotation of a rigid body}
+\label{sec:free:rotated:group}
+This constraint is the most generic case of the rigid body refinement (SHELXL AFIX 6). In this case there are 6 refined parameters - the three Euler angles and three positional components, the ADPs are normally refined independently. The coordinate transformation in this case happens similarly to \secref{pivoted:rotated:group}, however a different rotation matrix is used:
+\begin{equation}
+R = \begin{bmatrix} \label{eq:erm}
+   c_\beta c_\gamma && - c_\beta s_\gamma &&  s_\beta \\
+   s_\alpha s_\beta c_\gamma +  c_\alpha s_\gamma && - s_\alpha s_\beta s_\gamma+ c_\alpha c_\gamma && - s_\alpha c_\beta \\
+  - c_\alpha s_\beta c_\gamma+ s_\alpha s_\gamma &&  c_\alpha s_\beta s_\gamma+ s_\alpha c_\gamma &&  c_\alpha c_\beta
+\end{bmatrix}
+\end{equation}
+and its derivatives by the angles are:
+\begin{align}
+\partialder{R}{\alpha} &= \begin{bmatrix}
+  0 && 0 && 0 \\
+   c_\alpha s_\beta c_\gamma -  s_\alpha s_\gamma && - c_\alpha s_\beta s_\gamma- s_\alpha c_\gamma && - c_\alpha c_\beta \\
+   s_\alpha s_\beta c_\gamma+ c_\alpha s_\gamma && - s_\alpha s_\beta s_\gamma+ c_\alpha c_\gamma && - s_\alpha c_\beta
+\end{bmatrix}
+\\
+\partialder{R}{\beta} &= \begin{bmatrix}
+  - s_\beta c_\gamma &&  s_\beta s_\gamma &&  c_\beta \\
+   s_\alpha c_\beta c_\gamma && - s_\alpha c_\beta s_\gamma &&  s_\alpha s_\beta \\
+  - c_\alpha c_\beta c_\gamma &&  c_\alpha c_\beta s_\gamma && - c_\alpha s_\beta
+\end{bmatrix}
+\\
+\partialder{R}{\gamma} &= \begin{bmatrix}
+  - c_\beta s_\gamma && - c_\beta c_\gamma && 0 \\
+  - s_\alpha s_\beta s_\gamma +  c_\alpha c_\gamma && - s_\alpha s_\beta c_\gamma- c_\alpha s_\gamma && 0 \\
+   c_\alpha s_\beta s_\gamma+ s_\alpha c_\gamma &&  c_\alpha s_\beta c_\gamma- s_\alpha s_\gamma && 0
+\end{bmatrix}
+\end{align}
+
+For the special cases of spherical counter-ions or groups like Cp and Ph the size component of this constraint can also be refined (SHELXL AFIX 9).
+
+\subsection{non-crystallographic symmetry constraint}
+This constraint is applicable to structures containing fragments which should be exactly superposable onto each other but which appear at different positions with different orientations.
+The same equations as for the free rotation of a rigid body described in \secref{free:rotated:group} are used in this case but the coordinates of one of the group are refined along with the rotation angles and shift (i.e. \eqnref{isometry} is used where all $r$'s is refined, contrary to the rigid body case where those coordinates are fixed input, usually taken from a collection of known chemical groups). This allows more observations to be used in the refinement of the atomic coordinates and ADPs.
+
+
 \section{Restraints and their derivatives}
 
 Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:ba5180}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865}, similarity restraints and isotropic ADP restraints.
@@ -836,102 +934,6 @@ U_{11} U_{22}-U_{12}^2\\
 2 (U_{12}U_{13}- U_{23} U_{11} )
 \end{bmatrix}.
 \end{align}
-
-\section{Constraints}
-\label{appendix:constraints}
-Olex2.refine provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms. This section will enumerate the constraints and provide the details of their implementation.
-
-\subsection{Shared site and shared $U$ constraint}
-These constraints are pretty straight forward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values of the reference atom.
-
-\subsection{Riding atoms/group $U$ constraint}
-This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (SHELXL AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (SHELXL AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N etc, and Y is H, F, Cl etc. In general the transformation of the triplet of coordinates $r$ is written down like this:
-\begin{equation}
-r' = s(r-r_{p}) + r_{p}, \label{eqn:isometry}
-\end{equation}
-where s is the distance scaling component ($s=1$ if not refined) and $r_{p}$ is the pivot atom centre. In the case when $s$ is refined, the corresponding derivative of the transformation is:
-\begin{align}
-\partialder{r'}{s} &= r-r_{p} \\
-\intertext{whereas}
-\partialder{r'}{r} &= s \identity
-\end{align}
-
-
-\subsection{Rotated $U$ constraint}
-This constraint relates the ADP's of one atom to the ADP's of another atom as rotated by a fixed or refined angle around a given direction. The direction can be defined as a static vector, best line or best plane normal. Considering atoms A and B, the relation between their ADP tensor $U_A$ and $U_B$ reads
-\begin{align}
-U_{B} &= RU_{A}R^{T}, \\
-\intertext{where $R$ is the rotation matrix}
-R &=
-  \begin{bmatrix} 
-    txx + c_\alpha && tyx + zs_\alpha && tzx - ys_\alpha \\
-    txy - zs_\alpha && tyy + c_\alpha && tzy + xs_\alpha \\
-    txz + ys_\alpha && tyz - xs_\alpha && tzz + c_\alpha \\
-  \end{bmatrix}
-  \label{eqn:rotmat}
-\end{align}
-with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, and where the rotation direction is represented by a normal $(x,y,z)$ and where $\alpha$ is the rotation angle around this direction. This transforms is trivally rewritten as a linear transform of $(U_{A,11}, U_{A,22}, U_{A,33}, U_{A,12}, U_{A,13}, U_{A,23})$ into $(U_{B,11}, U_{B,22}, U_{B,33}, U_{B,12}, U_{B,13}, U_{B,23})$, whose matrix is therefore the Jacobian needed for the chain rule \eqnref{chainrule}. If the rotation angle is refined, then the derivative of this transformation by the angle is:
-\begin{equation}
-\partialder{U_{B}}{\alpha} = RUR_\alpha^{\prime T} + R'_\alpha U R^{T},
-\end{equation}
-where $R'_\alpha$ is the derivative of $R$ by $\alpha$:
-\begin{equation}
-R'_\alpha = 
-  \begin{bmatrix} 
-    xx s_\alpha -  s_\alpha && yx s_\alpha + z c_\alpha && zx s_\alpha - y c_\alpha \\
-    xy s_\alpha - z c_\alpha && yy s_\alpha -  s_\alpha && zy s_\alpha + x c_\alpha \\
-    xz s_\alpha + y c_\alpha && yz s_\alpha - x c_\alpha && zz s_\alpha - s_\alpha
-  \end{bmatrix}
-  \label{eqn:rotmatdev}
-\end{equation}
-
-\subsection{Pivoted rotation of a rigid body}
-\label{sec:pivoted:rotated:group}
-This constrained is suitable for groups which can be rotated around a given direction (SHELXL AFIX 7). For groups \ce{XY_n} with $1\leq n \leq 4$ and X being B,C,N, etc, and Y being H, F, Cl etc, the distances from X to Y can also be refined (SHELXL AFIX 8). The coordinate transformation is
-\begin{align}
-r' &= sR(r-r_p) + r_{p},\\
-\intertext{and its derivatives are}
-\partialder{r'}{\alpha} &= sR'_\alpha(r - r_p),\\ 
-\partialder{r'}{s} &= R(r-r_p),
-\end{align}
-where $r_p$ is the centre of the pivot atom, $s$ is the distance scale component ($s=1$ if not refined), $R$ is rotation matrix \eqnref{rotmat} and $R'$ is the derivative of the rotation matrix by the angle \eqnref{rotmatdev}. If neither the angle nor distances are refined, this constraint reduces to simple riding.
-
-\subsection{Free rotation of a rigid body}
-\label{sec:free:rotated:group}
-This constraint is the most generic case of the rigid body refinement (SHELXL AFIX 6). In this case there are 6 refined parameters - the three Euler angles and three positional components, the ADPs are normally refined independently. The coordinate transformation in this case happens similarly to \secref{pivoted:rotated:group}, however a different rotation matrix is used:
-\begin{equation}
-R = \begin{bmatrix} \label{eq:erm}
-   c_\beta c_\gamma && - c_\beta s_\gamma &&  s_\beta \\
-   s_\alpha s_\beta c_\gamma +  c_\alpha s_\gamma && - s_\alpha s_\beta s_\gamma+ c_\alpha c_\gamma && - s_\alpha c_\beta \\
-  - c_\alpha s_\beta c_\gamma+ s_\alpha s_\gamma &&  c_\alpha s_\beta s_\gamma+ s_\alpha c_\gamma &&  c_\alpha c_\beta
-\end{bmatrix}
-\end{equation}
-and its derivatives by the angles are:
-\begin{align}
-\partialder{R}{\alpha} &= \begin{bmatrix}
-  0 && 0 && 0 \\
-   c_\alpha s_\beta c_\gamma -  s_\alpha s_\gamma && - c_\alpha s_\beta s_\gamma- s_\alpha c_\gamma && - c_\alpha c_\beta \\
-   s_\alpha s_\beta c_\gamma+ c_\alpha s_\gamma && - s_\alpha s_\beta s_\gamma+ c_\alpha c_\gamma && - s_\alpha c_\beta
-\end{bmatrix}
-\\
-\partialder{R}{\beta} &= \begin{bmatrix}
-  - s_\beta c_\gamma &&  s_\beta s_\gamma &&  c_\beta \\
-   s_\alpha c_\beta c_\gamma && - s_\alpha c_\beta s_\gamma &&  s_\alpha s_\beta \\
-  - c_\alpha c_\beta c_\gamma &&  c_\alpha c_\beta s_\gamma && - c_\alpha s_\beta
-\end{bmatrix}
-\\
-\partialder{R}{\gamma} &= \begin{bmatrix}
-  - c_\beta s_\gamma && - c_\beta c_\gamma && 0 \\
-  - s_\alpha s_\beta s_\gamma +  c_\alpha c_\gamma && - s_\alpha s_\beta c_\gamma- c_\alpha s_\gamma && 0 \\
-   c_\alpha s_\beta s_\gamma+ s_\alpha c_\gamma &&  c_\alpha s_\beta c_\gamma- s_\alpha s_\gamma && 0
-\end{bmatrix}
-\end{align}
-
-For the special cases of spherical counter-ions or groups like Cp and Ph the size component of this constraint can also be refined (SHELXL AFIX 9).
-
-\subsection{non-crystallographic symmetry constraint}
-This constraint is applicable to structures containing fragments which should be exactly superposable onto each other but which appear at different positions with different orientations.
-The same equations as for the free rotation of a rigid body described in \secref{free:rotated:group} are used in this case but the coordinates of one of the group are refined along with the rotation angles and shift (i.e. \eqnref{isometry} is used where all $r$'s is refined, contrary to the rigid body case where those coordinates are fixed input, usually taken from a collection of known chemical groups). This allows more observations to be used in the refinement of the atomic coordinates and ADPs.
 
 \ack{Acknowledgements}
 
