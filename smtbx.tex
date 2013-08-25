@@ -137,14 +137,14 @@ For a small molecule structure with a high data to parameter ratio, such unconst
 \item[constraints:] by having a parameter vector $x$ shorter than $y$, therefore explicitly taking into account constraints between some of the parameters $y_i$.
 \end{description}
 
-Whether the refinement uses restraints or constraints or both, at each refinement cycle, we first find the value of $K$ that minimises $L(x, K)$ keeping the parameter vector $x$ fixed: we will denote it by $\tilde{K}(x)$, where we use a notation that explicits its dependence on the value of the refined parameters at the beginning of the cycle. We then search for the shift vector $s$ of the parameter vector $x$ that brings $L(x, \tilde{K}(x))$ closer to the minimum. It is solution of the so-called normal equations,
+Whether the refinement uses restraints or constraints or both, at each refinement cycle, we first find the value of $K$ that minimises $L(x, K)$ keeping the parameter vector $x$ fixed: we will denote it by $\tilde{K}(x)$, where we use a notation that is explicit in its dependency on the value of the refined parameters at the beginning of the cycle. We then search for the shift vector $s$ of the parameter vector $x$ that brings $L(x, \tilde{K}(x))$ closer to the minimum. It is solution of the so-called normal equations,
 \begin{equation}
 (B_\data + B_\restraints)s = -(g_\data + g_\restraints),
 \label{eqn:generalnormalequations}
 \end{equation}
 where $B_\data$ and $B_\restraints$ are the so-called normal matrices associated with the two terms sharing the same labels in \eqnref{L:def} respectively and where the right hand side $g_\data$ and $g_\restraints$ are equivalently associated with those two terms.
 
-\Secref{constraints} deals with the computation of the derivatives with respect to the refined parameters $x_1, \cdots, x_n$ from the derivatives with respect to the crystallographic parameters $y_1, \cdots, y_p$. The computation of the latter derivatives is explicited in \appendixref{structurefactorlinearisation} along with the formulae for the complex structure factors $F_c$.
+\Secref{constraints} deals with the computation of the derivatives with respect to the refined parameters $x_1, \cdots, x_n$ from the derivatives with respect to the crystallographic parameters $y_1, \cdots, y_p$. The computation of the latter derivatives is expounded in \appendixref{structurefactorlinearisation} along with the formulae for the complex structure factors $F_c$.
 
 The computation of the normal equation terms $B_\data$ and $g_\data$ for the measured data is presented in details in \appendixref{leastsquaresminimisation} along with the procedure used to find the optimal value of $K$ whereas \secref{restraints} is devoted to the computation of $B_\restraints$ and $g_\restraints$.
 
