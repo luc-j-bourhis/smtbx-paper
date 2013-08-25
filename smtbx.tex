@@ -278,8 +278,9 @@ D_\restraints = \partialder{T_c}{y} = \left[\partialder{T_{c,i}}{y_j}\right]_{i,
 which is known as the design matrix for the restraints, is very sparse. We therefore use sparse matrix techniques to efficiently store and perform computations with $D$, by only storing non-zero elements, and never performing products that involve an element of $D$ known to be zero. We then introduce the matrix of derivatives with respect to the refined parameters,
 \begin{equation}
 \tilde{D}_\restraints = \partialder{T_c}{x} = D_\restraints \partialder{y}{x},
+\label{eqn:constraints:applied:torestraints}
 \end{equation}
-which is computed by forming the product of $D$ and the constraint matrix. This is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$. 
+which is computed by forming the product of $D$ and the constraint matrix. Thus the restraints are initially built up without any knowledge of the constraint matrix. This greatly simplifies their implementation and it simplifies their use by refinement program that do not use constraints. This organisation of the computation does not incur any inefficiency as the product~\eqnref[name=]{constraints:applied:torestraints} is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$. 
 
 The two terms in the normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix product and matrix-vector product\footnote{$D^T$ denotes the transpose of $D$.},
 \begin{align}
@@ -288,7 +289,7 @@ g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
 \intertext{where $W$ is the diagonal matrix featuring the restraints weights, and where}
 \Delta T_i &= T_{o,i} - T_{c,i}
 \end{align}
-is the residual for the $i$-th restraint.
+is the residual for the $i$-th restraint. We take again advantage of the sparsity of $\tilde{D}_\restraints$ to efficiently implements those products.
 
 It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002} suggest the normalization factor
 \begin{equation}
@@ -305,7 +306,7 @@ The choice of the minimisation algorithm has a significant impact on the organis
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}.
 \end{align}
 
-The route taken to incorporate restraints into this framework was to build independently those rows of the Jacobian associated with the equations of restraint. Since the restraints largely involve relatively few of the crystallographic parameters, it can be efficient to store this part of the Jacobian as a sparse matrix. This allows the restraints to be built up without any knowledge of the constraint matrix, and only after the contribution of the data to the normal matrix has been computed, the contribution of the restraints is added efficiently with the use of sparse matrix techniques. The restraints framework was designed in such a way that it could be easily extended by adding further restraints. Each restraint must provide the array of partial derivatives of the restraint with respect to the parameters (one row of the Jacobian), the restraint delta, $T_o - T_c$, and the weight, $w$, of the restraint.
+The restraints framework was designed in such a way that it could be easily extended by adding further restraints. Each restraint must provide the array of partial derivatives of the restraint with respect to the parameters (one row of the Jacobian), the restraint delta, $T_o - T_c$, and the weight, $w$, of the restraint.
 
 
 \section{Twinning}
