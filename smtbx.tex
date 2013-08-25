@@ -568,14 +568,14 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 \partialder{\modulus{F_c}}{\xi} &= \frac{1}{\modulus{F_c}} \re\left( F_c^* \partialder{F_c}{\xi}\right)
 \end{align}
 
-The smtbx provides code to compute derivatives for the both of these observables. However Olex2 only offers the choice to refine against $F^2$.
+The smtbx provides code to compute derivatives for the both of these observables. However Olex2 currently only offers the choice to refine against $F^2$.
 
 \section{Minimisation of least-squares with an overall scale factor}
 \label{appendix:leastsquaresminimisation}
 
 In this appendix, we are concerned with the minimisation of $L_\data(x, K)$ as defined in \eqnref{L:def}. We will drop the label `data' throughout this appendix for clarity. We will denote by $(x^*, K^*)$ the values of those parameters at which $L(x,K)$ reaches the minimum we are interested in.
 
-It is well known that the overall scale factor tends to be highly correlated with the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. Therefore it exists an analytical formula for the value of $K$ that minimises it. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
+It is well known that the overall scale factor tends to be highly correlated with the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. An analytical formula therefore exists for the value of $K$ that minimises that polynomial. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
 
 \begin{align}
 Y \dotprod Y' &= \sum_h w(h) Y(h) Y'(h), \\
