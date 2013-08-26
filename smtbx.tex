@@ -253,24 +253,6 @@ The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallogra
 
 The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $y_i$ depends on very few refined parameters $x_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, both of these costs scale as the number of non-zero elements in $J$ instead of $O(n^2)$ if $J$ were treated as a dense matrix.
 
-
-\subsection{Variance matrix}
-In this section, we will discuss the rigorous computation of standard uncertainties of and correlation between the parameters of a constrained model. As pointed out in \appendixref{leastsquaresminimisation} in the comment about \eqnref{gaussnewtonaslinearls}, the variance matrix for the refined parameters $x$ is
-\begin{align}
-\var{x} &= B^{-1}\\
-\intertext{where}
-B_{ij} &= \partialder{r}{x_i} \dotprod \partialder{r}{x_j}
-\end{align}
-is the normal matrix for the constrained least-squares minimisation. However, we are interested in the variance matrix $\var{y}$ for the crystallographic parameters of the model, not in $\var{x}$. For small variations, we have the linear relation
-\begin{align}
-\delta y &\approx J \delta x\\
-\intertext{and therefore, remembering the heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation within which we are working in this section,}
-\var{y} &= J\, \var{x} J^T.
-\end{align} 
-
-We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms.\footnote{For most constraints, the s.u. of Hydrogen coordinates are equal to the s.u. of the atom they ride on but e.g. for a rotating \ce{-CH_3}, they differ because the s.u. of the azimuthal angle increases the s.u. of the Hydrogen coordinates that comes from riding only.} Consequently, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. This correct behaviour unfortunately triggers many alerts when a structure refined with Olex2 is checked with PLATON. Specifically, it fails checkCIF test PLAT732, for the reason explained in the documentation of this alert: PLATON computes the s.u. of the said angle using the s.u. of the atomic coordinates as if they were independent parameters as it does not have access to the variance-covariance matrix that describes their correlations. In this case, those correlations are very significant since the position of H completely depends on the position of R1, R2 and R3. Hence the s.u. of this angle as reported by Olex2 differs from PLATON estimate. Thus all failures of test PLAT732 for angles or distances involving constrained Hydrogen atoms are spurious. It should be enough to quote note number 2 in the documentation for that test to answer the question of a referee concerning such a failure. 
-
-
 \section{Restrained Least-Squares Refinement}
 \label{sec:restraints}
 
@@ -393,22 +375,48 @@ and the derivatives with respect to the twin fractions, $\alpha_i$, given by
 
 
 
-\section{Errors on derived parameters}
+\section{Standard Uncertainties}
 \label{sec:errors}
 
-For a function, $f$, of a set of atomic parameters, $p_i$, its variance is given by \cite{Sands:1966bh}
+\subsection{Variance Matrix}
+\label{sec:variance:matrix}
+
+In this section, we will discuss the rigorous computation of standard uncertainties (s.u.) of and correlation between the parameters of a constrained model. As pointed out in \appendixref{leastsquaresminimisation} in the comment about \eqnref{gaussnewtonaslinearls}, the variance matrix for the refined parameters $x$ is
+\begin{align}
+\var{x} &= B^{-1}\\
+\intertext{where}
+B_{ij} &= \partialder{r}{x_i} \dotprod \partialder{r}{x_j}
+\end{align}
+is the normal matrix for the constrained least-squares minimisation. However, we are interested in the variance matrix $\var{y}$ for the crystallographic parameters of the model, not in $\var{x}$. For small variations, we have the linear relation
+\begin{align}
+\delta y &\approx J \delta x\\
+\intertext{and therefore, using the well-known heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation around the minimum assumed implicitly assumed throughout crystallographic refinement,}
+\var{y} &= J\, \var{x} J^T.
+\label{eqn:constrained:variance:matrix}
+\end{align} 
+
+We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms.\footnote{For most constraints, the s.u. of Hydrogen coordinates are equal to the s.u. of the atom they ride on but e.g. for a rotating \ce{-CH_3}, they differ because the s.u. of the azimuthal angle increases the s.u. of the Hydrogen coordinates that comes from riding only.} 
+
+\subsection{Derived parameters}
+
+We will now discuss the s.u. of derived parameters. Such a parameter is a function $f$ of a set of atomic parameters $p_i$ and its variance can be derived using the same heuristic as above in a linear approximation where $\delta f \approx \sum_i \partialder{f}{p_i} \delta p_i$ by computing $\var{f}$ as the mean of $(\delta f)^2$. This leads to the formula which, to the best of our knowledge, appeared for the first time in the crystallographic litterature in \cite{Sands:1966bh},
 \begin{equation}
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}.
 \label{eqn:sigma_f}
 \end{equation}
 
-Derived parameters such as bond lengths and angles are a function of both the least-squares atomic parameters and the unit cell parameters. As such, the error in a derived parameter is likewise a function of both the atomic and unit cell parameters. If the errors in atomic parameters are considered to be totally uncorrelated with the errors in the cell parameters (\emph{i.e.} their covariance is zero), then the error in a derived parameter can be considered as comprising two independent sources of errors:
+ As a result of this formula and of the consequence of \eqnref{constrained:variance:matrix} stated after it, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. This correct behaviour unfortunately triggers many alerts when a structure refined with Olex2 is checked with PLATON. Specifically, it fails checkCIF test PLAT732, for the reason explained in the documentation of this alert: PLATON computes the s.u. of the said angle using the s.u. of the atomic coordinates as if they were independent parameters as it does not have access to the variance-covariance matrix that describes their correlations. In this case, those correlations are very significant since the position of H completely depends on the position of R1, R2 and R3. Hence the s.u. of this angle as reported by Olex2 differs from PLATON estimate. Thus all failures of test PLAT732 for angles or distances involving constrained Hydrogen atoms are spurious. It should be enough to quote note number 2 in the documentation for that test to answer the question of a referee concerning such a failure.
+
+
+\subsubsection{Incorporating s.u. of unit cell parameters}
+
+Derived parameters such as bond lengths and angles are a function of both the least-squares atomic parameters and the unit cell parameters. As such, the s.u. of a derived parameter is likewise a function of both the atomic and unit cell parameters as well as their respective s.u. If the s.u. in atomic parameters are considered to be totally uncorrelated with the s.u. in the cell parameters (\emph{i.e.} their covariance is zero), then the s.u. in a derived parameter can be considered as comprising two independent sources of uncertainties:
 
 \begin{equation}
 \sigma^2(f) = \sigma^2_{cell}(f) + \sigma^2_{xyz}(f)
 \label{eqn:sigma_d},
 \end{equation}
-where $\sigma_{xyz}(f)$ is the part coming from the errors in the least square estimates of the positional parameters, and $\sigma_{cell}(f)$ comes from the errors in the unit cell parameters,
+where $\sigma_{xyz}(f)$ is the part coming from the uncertainties in the least square estimates of the positional parameters, and $\sigma_{cell}(f)$ comes from the uncertainties in the unit cell parameters,
 \begin{equation}
 \sigma^2_{cell}(f) = \sum_{i,j}{{\partialder{f}{i}\partialder{f}{j} cov\left(i,j\right)}}
 \label{eqn:sigma_cell},
@@ -422,7 +430,7 @@ This necessitates the calculation of the derivatives of the function with respec
 \label{eqn:df_dcell}
 \end{equation}
 
-Now we consider the application of \eqnref{sigma_f} to determine the estimated error in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
+Now we consider the application of \eqnref{sigma_f} to determine the estimated s.u. in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
 \begin{equation}
 D = (u^T \mat{G} u)^\frac{1}{2}
 \label{eqn:bond_length},
