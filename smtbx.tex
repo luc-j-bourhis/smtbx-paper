@@ -108,9 +108,9 @@ Abstract goes here.
 \section{Introduction}
 \label{sec:introduction}
 
-During the last four decades, small molecule crystallographers have used a myriad of stand-alone routines with individual purpose and various comprehensive software packages, most notably those written by George Sheldrick \cite{Sheldrick:2008,SHELX:man97} and David Watkin \cite{Betteridge:os5005}. These latter two packages have dominated the citations in all publications containing crystal structure analyses for many years now.
+During the last four decades, small molecule crystallographers have used a myriad of stand-alone routines with individual purpose and various comprehensive software packages, most notably those written by George Sheldrick \cite{Sheldrick:2008aa,Sheldrick:1997aa} and David Watkin \cite{Betteridge:2003ab}. These latter two packages have dominated the citations in all publications containing crystal structure analyses for many years now.
 It could be said, therefore, that the analysis of single crystal X-ray (and neutron) diffraction data has reached a certain level of maturity and that there is no need for further program development. However there has been the very recent release of SHELXL 2013 and there is still considerable activity in this area in other groups around the world. A retro-fit of new ideas to the major programs is not always possible, except perhaps by the authors themselves viz a viz SHELX 2013 and an external programmer, however able, would not have dared to tinker with his excellent and succinct code.
-When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point - namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and it was to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for modification by others. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for OLEX2 refine, openly available.\footnote{www.olex2.org}
+When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point - namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and it was to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for modification by others [\emph{mention the cctbx here}]. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for OLEX2 refine, openly available.\footnote{www.olex2.org}
 
 
 \section{Least-Squares Refinement}
@@ -127,7 +127,7 @@ L = &\underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\data} \\
 \end{equation}
 where $Y$ denotes either $F$ or $F^2$, and $K$ is an overall, unknown, scale factor that places the computed $Y_c$ on the same scale as the measured $Y_o$. The first sum over $h$ runs over a set of $m$ non-equivalent reflections that have been observed. Each observation is given an appropriate weight, $w_h$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, although more complex weighting schemes are usually used.
 
-These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:a03999}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002,Watkin:kk5025}). This term $L_\restraints$ may of course be absent.
+These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:1963aa}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002aa,Watkin:2008aa}). This term $L_\restraints$ may of course be absent.
 
 In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, atomic displacement parameters (ADPs), and chemical occupancy in routine refinements) that each component of $Y_c$ and $T_c$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y)$ and $T_c(y)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately, as will be explained later.
 
@@ -229,7 +229,7 @@ A crystallographic refinement may involve many such reparametrisations. By pieci
 
 \subsection{Constraint matrix}
 
-There is a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (SHELXL).  The macro-molecular community later introduced the LBFGS method (\emph{phenix.refine} \cite{Afonine:ba5180}) and sparse normal matrix algorithms (REFMAC \cite{Murshudov:li0304}). All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
+There is a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and CGLS (SHELXL).  The macro-molecular community later introduced the LBFGS method (\emph{phenix.refine} \cite{Afonine:2012aa}) and sparse normal matrix algorithms (REFMAC \cite{Murshudov:1999aa}). All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
 
 Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- e.g. a coordinate of the pivot atom on which another atom rides, and of course any parameter that is not involved in any constraint --  is also a component $x_l$ of $x$, i.e. 
 \begin{equation}
@@ -291,16 +291,16 @@ g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
 \end{align}
 is the residual for the $i$-th restraint. We take again advantage of the sparsity of $\tilde{D}_\restraints$ to efficiently implements those products.
 
-It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002} suggest the normalization factor
+It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002aa} suggest the normalization factor
 \begin{equation}
 w_\restraints = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
 \label{eqn:giacovazzo_normalisation}
 \end{equation}
-This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{SHELX:man97}.
+This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{Sheldrick:1997aa}.
 
 \subsection{Implementation}
 
-The choice of the minimisation algorithm has a significant impact on the organisation of the computation of restraints. Indeed, a generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:ba5180} requires at each iteration only the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\data$ and $\nabla L_\restraints$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least-squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where, by the chain rule,
+The choice of the minimisation algorithm has a significant impact on the organisation of the computation of restraints. Indeed, a generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:2012aa} requires at each iteration only the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\data$ and $\nabla L_\restraints$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least-squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where, by the chain rule,
 \begin{align}
 \partialder{L_\restraints}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \nonumber\\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}.
@@ -316,13 +316,13 @@ A twinned crystal consists of two or more distinct domains of the same species t
 
 Each twin component is defined by a rotation matrix (\emph{twin law}) which defines the relative orientation of the twin component to the major component, and the fractional contribution of that component to the total crystal volume.
 
-Twinned crystals can be grouped into four distinct types \cite{Herbst-Irmer:jz0004}:
+Twinned crystals can be grouped into four distinct types \cite{Herbst-Irmer:2002aa}:
 
-(a) Twinning by merohedry: The crystal posseses lower symmetry than the crystal system. The twin law belongs to the crystal system, but not to the crystal point group. As a result, the diffraction patterns from the crystal components overlap exactly, and the observed diffraction pattern may appear to have higher symmetry than is actually present. Racemic twinning, where both ``hands'' of a non-centrosymmetric structure are present is a special case of this subset, from which follows the definition of the Flack parameter \cite{Flack:a22047}.
+(a) Twinning by merohedry: The crystal posseses lower symmetry than the crystal system. The twin law belongs to the crystal system, but not to the crystal point group. As a result, the diffraction patterns from the crystal components overlap exactly, and the observed diffraction pattern may appear to have higher symmetry than is actually present. Racemic twinning, where both ``hands'' of a non-centrosymmetric structure are present is a special case of this subset, from which follows the definition of the Flack parameter \cite{Flack:1983sp}.
 
 (b) Twinning by pseudo-merohedry: The metric symmetry is higher than the crystal system of the structure. This kind of twinning is essentially the same as for (a), except that the twin law belongs to a higher symmetry crystal system than the structure. Common examples of this type of twinning include monoclinic structures where $ \beta \approx 90^\circ $ , or $ a \approx b $.
 
-(c) Twinning by reticular merohedry: Similarly to types \emph{a} and \emph{b}, the diffraction patterns are exactly superimposed, however the symmetry is such that some of the reflections of one component overlap with the systematic absences of the others and \emph{vice versa}. As a result, it may be possible to attempt structure solution using those reflections that contain a contribution from one component only. For examples of the treatment of such twins, see \cite{Herbst-Irmer:jz0014}.
+(c) Twinning by reticular merohedry: Similarly to types \emph{a} and \emph{b}, the diffraction patterns are exactly superimposed, however the symmetry is such that some of the reflections of one component overlap with the systematic absences of the others and \emph{vice versa}. As a result, it may be possible to attempt structure solution using those reflections that contain a contribution from one component only. For examples of the treatment of such twins, see \cite{Herbst-Irmer:2002aa}.
 
 (d) Non-merohderal twinning: The previous types of twinning all require that the symmetry operator belongs to some crystallographic point group, and can be indexed on a single lattice. In contrast, the components of a non-merohedral twin are related by some arbitrary operator, and each component is indexed on a different lattice with a different orientation matrix. Some reflections may happen to overlap exactly, or be otherwise indistinguishable, while the majority of reflections can be identified as belonging entirely to one twin component. This type of twinning is observable directly in the diffraction pattern and can lead to problems with unit cell determination and indexing, however diffractometer software is becoming increasingly sophisticated in dealing with non-merohedral twinning.
 
@@ -337,7 +337,7 @@ where $\alpha_i$ is the fractional contribution of twin component $i$ to the cry
 \label{eqn:twin_fractions}.
 \end{equation}
 
-For certain applications it may be necessary to obtain a set of observations that contain only the contribution from the major component. This is essential when calculating an electron density map, and may occasionally be necessary in order to solve a structure successfully. In addition, many early twinned structures were refined against such \emph{detwinned} datasets \cite{Grainger:a06498,Murray-Rust:a10328,Britton:a08682}.
+For certain applications it may be necessary to obtain a set of observations that contain only the contribution from the major component. This is essential when calculating an electron density map, and may occasionally be necessary in order to solve a structure successfully. In addition, many early twinned structures were refined against such \emph{detwinned} datasets \cite{Grainger:1969aa,Murray-Rust:1973aa,Britton:1972aa}.
 
 In the simplified case of hemihedral twinning, two reflections combine in the following way 
 \begin{align}
@@ -348,7 +348,7 @@ I_2 &= \alpha J_1 + (1- \alpha) J_2
 \end{align}
 where $I_1$ and $I_2$ are the observed intensities produced by the superposition of the untwinned intensities, $J_1$ and $J_2$ with twin fraction $\alpha$.
 
-This can be solved algebraically \cite{Britton:a08682,Grainger:a06498,Zachariasen:a04610} to give
+This can be solved algebraically \cite{Britton:1972aa,Grainger:1969aa,Zachariasen:1965aa} to give
 \footnote{This can be easily extended to a higer number of domains using methods for solving systems of linear equations.}
 \begin{align}
 J_1 &= I_1 + \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2) \\
@@ -368,12 +368,12 @@ Alternatively the data can be reduced to the `prime' twin component by
 J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha}
 \label{eqn:detwin_prime}
 \end{equation}
-which is the equation used for Fourier map calculations for twinned structures in JANA \cite{JANA:man98,Dusek:hn0119} and SHELXL \cite{SHELX:man97}. This formula is more trivially extended to multiply twinned crystals.
+which is the equation used for Fourier map calculations for twinned structures in JANA \cite{Petricek:2000aa,Dusek:hn0119} and SHELXL \cite{Sheldrick:1997aa}. This formula is more trivially extended to multiply twinned crystals.
 %shelx manual page 6-5.
 
-Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:a08682,Murray-Rust:a10328}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on \eqnref{detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least-squares parameters is ignored.
+Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:1972aa,Murray-Rust:1973aa}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on \eqnref{detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least-squares parameters is ignored.
 
-Most commonly used crystallographic refinement software \cite{Sheldrick:sc5010,Betteridge:os5005} use the twin refinement method of \cite{Jameson:a20747} and \cite{J19710002146}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \eqnref{twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
+Most commonly used crystallographic refinement software \cite{Sheldrick:2008aa,Betteridge:2003ab} use the twin refinement method of \cite{Jameson:1982aa} and \cite{Pratt:1971aa}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \eqnref{twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
 
 The derivatives of the squared structure factors with respect to the model parameters are calculated as
 \begin{equation}
@@ -393,7 +393,7 @@ and the derivatives with respect to the twin fractions, $\alpha_i$, given by
 \section{Errors on derived parameters}
 \label{sec:errors}
 
-For a function, $f$, of a set of atomic parameters, $p_i$, its variance is given by \cite{Sands:a05356}
+For a function, $f$, of a set of atomic parameters, $p_i$, its variance is given by \cite{Sands:1966bh}
 \begin{equation}
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}.
 \label{eqn:sigma_f}
@@ -471,7 +471,7 @@ The derivative of the metrical matrix with respect to the unit cell parameters,
 \end{align}
 
 \subsection{Symmetry}
-The variance-covariance matrix that is obtained from the inversion of the least-squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \cite{Sands:a05356} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \eqnref{sigma_f} are mapped back to the original parameters.
+The variance-covariance matrix that is obtained from the inversion of the least-squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \cite{Sands:1966bh} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \eqnref{sigma_f} are mapped back to the original parameters.
 
 Let the function $f$ depend on the Cartesian site $y_c$ that is generated by the symmetry operator $\mat{R}_c$ from the original Cartesian site $x_c$, \emph{i.e.}
 \begin{align}
@@ -750,7 +750,7 @@ The same equations as for the free rotation of a rigid body described in \secref
 
 \section{Restraints and their derivatives}
 
-Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:ba5180}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865}, similarity restraints and isotropic ADP restraints.
+Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:2012aa}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
 
 \subsection{Restraints involving symmetry}
 
@@ -794,11 +794,11 @@ and the same formula with $b \leftrightarrow a$.
 
 \subsection{Restraints on Atomic Displacement Parameters}
 
-Three types of restraints on anisotropic displacement parameters, similar to restraints implemented in SHELXL \cite{Sheldrick:sc5010} and REFMAC \cite{Murshudov:li0304}.
+Three types of restraints on anisotropic displacement parameters, similar to restraints implemented in SHELXL \cite{Sheldrick:2008aa} and REFMAC \cite{Murshudov:1999aa}.
 
 \subsubsection{Rigid-bond restraint}
 
-In a `rigid-bond' restraint the components of the anisotropic displacement parameters of two atoms in the direction of the vector connecting those two atoms are restrained to be equal. This corresponds to Hirshfeld's `rigid-bond' test \cite{Hirshfeld:a12865} for testing whether anisotropic displacement parameters are physically reasonable \cite{SHELX:man97} and is in general appropriate for bonded and 1,3-separated pairs of atoms and should hold true for most covalently bonded systems.
+In a `rigid-bond' restraint the components of the anisotropic displacement parameters of two atoms in the direction of the vector connecting those two atoms are restrained to be equal. This corresponds to Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa} for testing whether anisotropic displacement parameters are physically reasonable \cite{Sheldrick:1997aa} and is in general appropriate for bonded and 1,3-separated pairs of atoms and should hold true for most covalently bonded systems.
 
 Since the mean-square displacement of an atom of thermal displacement tensor $U$ along an normalised vector $u$ is $u^T U u$, the restraint residual for two atoms A and B at respective positions $x_A$ and $x_B$ and with respective thermal displacement tensors $U_A$ and $U_B$ reads
 \begin{align}
@@ -831,7 +831,7 @@ The derivatives of $L(r_A, U_A, r_B, U_B)$ with respect to the positions $r_A$ a
 
 \subsubsection{ADP similarity restraint}
 \label{ADP:similarity}
-The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least-squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain \cite{SHELX:man97}. This is equivalent to a SHELXL SIMU restraint \cite{SHELX:man97}.
+The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least-squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain. This is equivalent to a SHELXL SIMU restraint \cite{Sheldrick:1997aa}.
 The weighted least-squares residual is defined as
 \begin{equation}
 \label{eqn:ADP:restraints:similarity}
@@ -858,7 +858,7 @@ Here we minimise the difference between the ADP's $\mat{U}$, and the isotropic e
 \intertext{and}
 U_\text{iso} &= \tfrac{1}{3} \tr \mat{U}.
 \end{align}
-Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{SHELX:man97}. As in \eqnref{ADP:restraints:similarity}, we define a restraint term invariant under rotations, as $L = \tr (U-U_\text{eq})(U-U_\text{eq})^T$, or explicitly,
+Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{Sheldrick:1997aa}. As in \eqnref{ADP:restraints:similarity}, we define a restraint term invariant under rotations, as $L = \tr (U-U_\text{eq})(U-U_\text{eq})^T$, or explicitly,
 \begin{align}
 \label{eqn:ADP:restraints:isotropic}
 L &= w \left( \sum_i (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij}-U_{eq,ij})^2 \right),\\
