@@ -77,18 +77,23 @@ refcmd=\ref{#1}
      % Use lower-case letters in square brackets to link authors to their
      % affiliations; if there is only one affiliation address, remove the [a].
 
-\newcommand{\brukerfr}{Bruker AXS-SAS, 4 Allée Lorentz, 77447 Marne-la-Vallée cedex 2, \country{France}}
+\newcommand{\brukerfr}{Bruker AXS-SAS, 4 All\'ee Lorentz, 77447 Marne-la-Vall\'ee cedex 2, \country{France}}
 \newcommand{\durhamchem}{Department of Chemistry, Durham University, South Road, Durham, DH1~3LE, \country{UK}}
 \newcommand{\olexsys}{OlexSys Ltd, \durhamchem}
 \newcommand{\cci}{CCI, Lawrence Berkeley Laboratory, 1 Cyclotron Road, BLDG 64R0121, Berkeley, CA 94720-8235, \country{USA}}
+\newcommand{\diamondlight}{Diamond Light Source Ltd, Diamond House, Harwell Oxford, Didcot, Oxfordshire, OX11 0DE, \country{UK}}
 
-\cauthor{Luc J.}{Bourhis}{luc\_j\_bourhis@mac.com}{\brukerfr}
-\author{Oleg V.}{Dolomanov}
-\author{Richard J.}{Gildea}
-\author{Judith A. K.}{Howard}
-\author{Horst}{Puschmann}
+\cauthor[a,\dagger]{Luc J.}{Bourhis}{luc\_j\_bourhis@mac.com}{foobar}
+\author[b,\dagger]{Oleg V.}{Dolomanov}
+\author[c,\dagger]{Richard J.}{Gildea}
+\author[d]{Judith A. K.}{Howard}
+\author[b,\dagger]{Horst}{Puschmann}
 
-\aff{\durhamchem}
+\aff[a]{\brukerfr}
+\aff[b]{\olexsys}
+\aff[c]{\diamondlight}
+\aff[d]{\durhamchem}
+\aff[\dagger]{the Dept. of Chemistry of Durham University at the time where the work reported in this article was done}
 
 \shortauthor{Bourhis, Dolomanov, Gildea, Howard and Puschmann} % abbreviated author list for use in running heads
 
