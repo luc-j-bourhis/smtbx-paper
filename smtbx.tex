@@ -285,7 +285,7 @@ This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This
 
 \subsection{Implementation}
 
-The choice of the minimisation algorithm has a significant impact on the organisation of the computation of restraints. Indeed, a generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:2012aa} requires at each iteration only the function value $L$ and the  gradient $\nabla L$ with respect to each parameter. The gradients $\nabla L_\data$ and $\nabla L_\restraints$ can be calculated separately before combining their sum to obtain $\nabla L$. In contrast, for full-matrix least-squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where, by the chain rule,
+The choice of the minimisation algorithm has a significant impact on the organisation of the computation of restraints. Indeed, a generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:2012aa} requires at each iteration only the function value $L$ and the derivatives $\partialder{L}{x}$. The derivatives $\partialder{L_\data}{x}$ and $\partialder{L_\restraints}{x}$ can be calculated separately before combining their sum to obtain $\partialder{L}{x}$. In contrast, for full-matrix least-squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where, by the chain rule,
 \begin{align}
 \partialder{L_\restraints}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \nonumber\\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}.
@@ -799,10 +799,9 @@ Possible restraints on the stereochemistry or geometry of atomic positions inclu
 
 Given a restraint, $f(x)$, involving a site $x$ which is outside the asymmetric unit and which is related to the site $y$ within the asymmetric unit by some symmetry transformation $\sym{R}{t}$, i.e. $x=Ry+t$, the gradient is transformed as
 \begin{align}
-\nabla_y f\left(x \right)  &= R^T \nabla_x f\left(x\right) \nonumber\\
-&= R^{-1} \nabla_x f\left(R y\right)
+\partialder{f(x)}{y}  &= \left.\partialder{f}{x}\right|_{x=Ry+t} R.
+\label{eqn:partialder:transform:under:symmetry}
 \end{align}
-since $R$ is a space group symmetry operation and is therefore an orthogonal transformation (\emph{i.e.} one which preserves distances and angles), which means that, $R^T = R^{-1}$.
 
 \subsection{Bond similarity restraint}
 
