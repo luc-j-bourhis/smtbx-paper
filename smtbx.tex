@@ -837,7 +837,7 @@ and the same formula with $b \leftrightarrow a$.
 
 \subsection{Flatness Restraint}
 
-In this section, we will discuss a restraint enforcing that a group of atom sites are coplanar. We will first consider the case of 4 sites, $x_i, x_j, x_k, x_l$. They are coplanar if and only if the associated tetrahedron has a zero volume. This volume reads
+In this section, we will discuss a restraint enforcing that a group of atom sites are coplanar. We will first consider the case of 4 sites, with Cartesian coordinate vectors $x_i, x_j, x_k, x_l$. They are coplanar if and only if the associated tetrahedron has a zero volume. This volume reads
 \begin{equation}
 V_{ijkl} = \frac{a \dotprod (b \crossprod c)}{6}
 \label{eqn:tetrahedron:volume}
@@ -860,7 +860,7 @@ Its derivative with respect to $x_i$ is then easily obtained from \eqnref{tetrah
 \end{equation}
 The derivatives with respect to $x_j, x_k, x_l$ are then obtained by circular permutations of $(i,j,k,l)$, taking advantage of the behaviour of \eqnref{tetrahedron:volume,tetrahedron:edges:choice1} with respect to permutations stated above.
 
-We will now consider $p$ sites $x_1, x_2, \cdots, x_p$ that we want to restrain to be coplanar, with $p>4$. We form the list $\mathcal{T}$ of tetrahedron $(x_i, x_{i+1}, x_{i+2}, x_{i+3})$ where $1 \le i \le p-3$. If the volume of the $i$-th and $i+1$-th tetrahedron are respectively zero, then $x_i, x_{i+1}, x_{i+2}, x_{i+3}, x_{i+4}$ are coplanar as the first 4 and the last 4 are respectively coplanar and those two quadruplets share a common triplet. Thus if all tetrahedrons in $\mathcal{T}$ have a zero volume, then all sites are coplanar, which leads to building a restraint as the sum of the restraint for each tetrahedron,
+We will now consider $p$ sites with Cartesian coordinate vectors $x_1, x_2, \cdots, x_p$ that we want to restrain to be coplanar, with $p>4$. We form the list $\mathcal{T}$ of tetrahedron $(x_i, x_{i+1}, x_{i+2}, x_{i+3})$ where $1 \le i \le p-3$. If the volume of the $i$-th and $i+1$-th tetrahedron are respectively zero, then $x_i, x_{i+1}, x_{i+2}, x_{i+3}, x_{i+4}$ are coplanar as the first 4 and the last 4 are respectively coplanar and those two quadruplets share a common triplet. Thus if all tetrahedrons in $\mathcal{T}$ have a zero volume, then all sites are coplanar, which leads to building a restraint as the sum of the restraint for each tetrahedron,
 \begin{equation}
 L_\text{flat} = \sum_{i=1}^{p-3} L_{i,i+1,i+2,i+3}
 \label{eqn:restraint:flatness:many}
