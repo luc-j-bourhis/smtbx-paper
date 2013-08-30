@@ -254,7 +254,7 @@ Indeed, after transforming every constraint on the model into a reparametrisatio
 \partialder{\tilde{Y}_c}{x} &= \partialder{Y_c}{y} \partialder{y}{x}.
 \label{eqn:chainrule}
 \end{align}
-The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallographic circles. In standard mathematical nomenclatures, it is called the Jacobian of the transformation $x \mapsto y$ and we will therefore denote it $J$.
+The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallographic circles.\footnote{The earliest appearance of that concept in crystallographic litterature, though not by that name, brought to the attention of the authors is \cite{Ramaseshan:1980aa}}. In standard mathematical nomenclatures, it is called the Jacobian of the transformation $x \mapsto y$ and we will therefore denote it $J$.
 
 The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $y_i$ depends on very few refined parameters $x_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, both of these costs scale as the number of non-zero elements in $J$ instead of $O(n^2)$ if $J$ were treated as a dense matrix.
 
