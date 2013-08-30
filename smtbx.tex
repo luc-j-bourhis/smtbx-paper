@@ -889,7 +889,13 @@ u &= x_A - x_B, \\
 \shortintertext{and the restraint term is then}
 L&(r_A, U_A, r_B, U_B) = w r^2.
 \end{align}
-Those formulae are valid whether using Cartesian or fractional coordinates, providing the adapted formula is used to compute $\norm{u}$.
+Those formulae are valid whether using Cartesian or fractional coordinates, providing the adapted formula is used to compute $\norm{u}$, i.e.
+\begin{align}
+\norm{u} &= \sqrt{\sum_i u_i^2}\\
+\shortintertext{in Cartesian coordinates and}
+\norm{u} &= \sqrt{\sum_i G_{ij} u_i u_j}
+\end{align}
+in fractional coordinates, where $G$ is the metric matrix.
 
 The computation of the derivatives of L with respect to the components of $U_A$ and $U_B$ proceeds in two steps. First, since $u^T U u = \sum_i U_{ii} u_i^2 + 2\sum_{i<j} U_{ij}u_i u_j$ where $U$ is either $U_A$ or $U_B$, 
 \begin{align}
