@@ -281,7 +281,7 @@ g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
 \end{align}
 is the residual for the $i$-th restraint. We take again advantage of the sparsity of $\tilde{D}_\restraints$ to efficiently implements those products.
 
-It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Giacovazzo:2002aa} suggest the normalization factor
+It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Rollett:1970ab} suggests the normalization factor
 \begin{equation}
 w_\restraints = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
 \label{eqn:giacovazzo_normalisation}
