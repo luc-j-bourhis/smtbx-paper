@@ -549,9 +549,9 @@ The formulae discussed in this appendix have been known for nearly a century and
 
 Since the structure factor of the entire unit cell is the sum over the contribution of each scatterer, we will focus on one such contribution only. We therefore consider a scatterer with  fractional coordinates $x$, a thermal displacement tensor $U^*$ in fractional coordinates and a chemical occupancy $s$ (i.e. this occupancy does not take crystallographic symmetries into account).  Its contribution $\Fuc(h)$ to the entire unit cell is obtained from its  structure factor $F(h)$  by the sum
 \begin{equation}
-\Fuc(h) = \sum_{\sym{R}{t} \in \cal{O}} F^{\sym{R}{t}}(h).
+\Fuc(h) = \sum_{\sym{R}{t} \in \mathcal{S}} F^{\sym{R}{t}}(h).
 \end{equation}
-$\cal{O}$ denotes the subset of symmetry operators $\sym{R}{t}$ of rotational part $R$ and translational part $t$ that generate the orbit of the position $x$ under the application of the entire set of symmetries in the space group of the structure whereas $F^{\sym{R}{t}}(h)$ is the transform of $F(h)$ under the symmetry $\sym{R}{t}$. For a spherical atomic model with an elastic scattering factor $f(h^2)$ that does not depend on the direction of $h$ and an inelastic scattering factor $f' + if''$ that does not depend on~$h$ (a property that holds for X-ray diffraction), $F$ reads\footnote{We will consistently denote a triplet $h$ of Miller indices as a row vector, whose transpose $h^T$ is therefore a column vector, and a triplet $x$ of fractional coordinates as a column vector. In this context, $h^2$ denotes the Euclidean square of $h$, that therefore involves the reciprocal metric matrix $M^*$ as $h^2 = h M^* h^T$.}
+$\mathcal{S}$ denotes the subset of symmetry operators $\sym{R}{t}$ of rotational part $R$ and translational part $t$ that generate the orbit of the position $x$ under the application of the entire set of symmetries in the space group of the structure whereas $F^{\sym{R}{t}}(h)$ is the transform of $F(h)$ under the symmetry $\sym{R}{t}$. For a spherical atomic model with an elastic scattering factor $f(h^2)$ that does not depend on the direction of $h$ and an inelastic scattering factor $f' + if''$ that does not depend on~$h$ (a property that holds for X-ray diffraction), $F$ reads\footnote{We will consistently denote a triplet $h$ of Miller indices as a row vector, whose transpose $h^T$ is therefore a column vector, and a triplet $x$ of fractional coordinates as a column vector. In this context, $h^2$ denotes the Euclidean square of $h$, that therefore involves the reciprocal metric matrix $M^*$ as $h^2 = h M^* h^T$.}
 
 \begin{equation}
 F(h) = s (f(h^2) + f' + i f'') \underbrace{e^{h U^* h^T} e^{i 2\pi h x}}_{G(h)}.
@@ -559,42 +559,42 @@ F(h) = s (f(h^2) + f' + i f'') \underbrace{e^{h U^* h^T} e^{i 2\pi h x}}_{G(h)}.
 
 If the thermal displacement is isotropic, the term $e^{h U^* h^T}$ is replaced by $e^{-2\pi^2 h^2 \uiso}$ and it is then factored out of $G(h)$.
 
-We are therefore left with computing the sum of the transforms of $G(h)$ under the symmetries in $\cal{O}$, the other terms forming a factor multiplying this sum. By the definition of a Fourier transform, that transform reads
+We are therefore left with computing the sum of the transforms of $G(h)$ under the symmetries in $\mathcal{S}$, the other terms forming a factor multiplying this sum. By the definition of a Fourier transform, that transform reads
 \begin{equation}
 G^{\sym{R}{t}}(h) = G(hR)e^{i 2\pi ht}
 \label{eqn:transformofG}
 \end{equation}
 Let us consider the case of centred space group first. The sum can be partioned as follow
 \begin{align}
- \sum_{\sym{R}{t} \in \cal{O}} G^{\sym{R}{t}}(h) &=  \sum_{\sym{R}{t} \in \cal{O'}} \sum_{\tau \in \cal{T}} G^{(R \mid t+\tau)}(h), \nonumber\\
-\shortintertext{where $\cal{T}$ is the set of all centring translations, including zero, whereas $\cal{O'}$ is the set of ``primitive'' symmetries. Then}
+ \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &=  \sum_{\sym{R}{t} \in \mathcal{S}'} \sum_{\tau \in \cal{T}} G^{(R \mid t+\tau)}(h), \nonumber\\
+\shortintertext{where $\cal{T}$ is the set of all centring translations, including zero, whereas $\mathcal{S}'$ is the set of ``primitive'' symmetries. Then}
 G^{(R \mid t + \tau)}(h) &= G(hR) e^{i2\pi ht} e^{i2\pi h\tau}, \nonumber \\
 \shortintertext{but $h\tau=0$ for any Miller indices $h$ by definition, and therefore denoting by $n_{\text{ltr}}$ the order of the group of lattice translations,}
-\sum_{\sym{R}{t} \in \cal{O}} G^{\sym{R}{t}}(h) &= n_{\text{ltr}} \sum_{\sym{R}{t} \in \cal{O'}} G^{\sym{R}{t}}(h)
+\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &= n_{\text{ltr}} \sum_{\sym{R}{t} \in \mathcal{S}'} G^{\sym{R}{t}}(h)
 \end{align}
 which shows that the centred case and the primitive case only differ by an overall multiplicative factor.
 
 Thus we will only consider a primitive unit cell in the following. Three cases are to be considered.
 \begin{enumerate}
 \item The space group is non-centric. Then there is no further simplification.
-\item The space group is centric but the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\cal{O}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
+\item The space group is centric but the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\mathcal{S}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
 \begin{align}
-\sum_{\sym{R}{t} \in \cal{O}} G^{\sym{R}{t}} &= 
+\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} &= 
 \underbrace{\sum_{\sym{R}{t} \in \cal{O^+}} G^{\sym{R}{t}} }_{\Sigma} 
-+ \sum_{\sym{R}{t} \in \cal{O}^+} G^{\inversion \sym{R}{t}}, \nonumber \\
++ \sum_{\sym{R}{t} \in \mathcal{S}^+} G^{\inversion \sym{R}{t}}, \nonumber \\
 \shortintertext{However the product involving the inversion simplifies as 
 $\inversion\sym{R}{t} = \sym{-R}{-t + t_{\bar{1}}}$ and therefore using \eqnref{transformofG},}
 G^{\inversion\sym{R}{t}} &= G(-hR) e^{-i2\pi ht} e^{i2\pi h t_{\bar{1}}}, \nonumber \\
  \shortintertext{but then from the very definition of $G(h)$ in \eqnref{transformofG},}
  G(-hR) &= G(hR)^*, \\
  \shortintertext{and therefore}
- \sum_{\sym{R}{t} \in \cal{O}} G^{\sym{R}{t}} &= \Sigma + \Sigma^* e^{i2\pi h t_{\bar{1}}}.
+ \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} &= \Sigma + \Sigma^* e^{i2\pi h t_{\bar{1}}}.
  \label{eqn:sumofGforcentricgroups}
 \end{align}
 
 \item If $h t_{\bar{1}}=0$, which holds true for every reflection if the space group is origin centric ($t_{\bar{1}}=0$), the previous case resolves to the real part of $\Sigma$ only,
 \begin{align}
- \sum_{\sym{R}{t} \in \cal{O}} G^{\sym{R}{t}} & = 2 \sum_{\sym{R}{t} \in \cal{O}^+}  e^{h R U^* (hR)^T} \cos(hRx + t).
+ \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} & = 2 \sum_{\sym{R}{t} \in \mathcal{S}^+}  e^{h R U^* (hR)^T} \cos(hRx + t).
 \end{align}
 The total sum over symmetries is therefore real, and its derivative will be so too, the former involving a cosine and the latter involving a sine for the derivatives with respect to $x$. 
 \end{enumerate}
