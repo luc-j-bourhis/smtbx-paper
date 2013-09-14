@@ -703,7 +703,7 @@ However, the best of those design matrix techniques, the QR decomposition, invol
 Olex2.refine provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms. This section will enumerate the constraints and provide the details of their implementation.
 
 \subsection{Shared site and shared $U$ constraint}
-These constraints are pretty straight forward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values of the reference atom.
+Two scatterers share the same site or the same ADP tensor. These constraints are pretty straightforward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values for the reference atom.
 
 \subsection{Riding atoms/group $U$ constraint}
 This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (SHELXL AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (SHELXL AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N etc, and Y is H, F, Cl etc. In general the transformation of the triplet of coordinates $r$ is written down like this:
