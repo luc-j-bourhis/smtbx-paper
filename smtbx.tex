@@ -696,7 +696,28 @@ However, the best of those design matrix techniques, the QR decomposition, invol
 
 \section{Constraints}
 \label{appendix:constraints}
-The smtbx provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms. This section will enumerate the constraints and provide the details of their implementation.
+Olex2.refine provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms, as well as their occupancy factors. This section will enumerate the constraints and provide the details of their implementation.
+
+\subsection{Occupancy constraints}
+The smtbx provides a generic tool to express any scalar parameter $v$ as an affine function of other scalar parameters $u_1, u_2, \cdots, u_s$,
+\begin{equation}
+  v = \sum_{i=1}^s a_i v_i + b,
+  \label{eqn:affinereparam}
+\end{equation}
+where the number of arguments $s$ as well as the coefficients $a_i$ and $b$ can be freely chosen.
+The common case of two atoms whose occupancies $o$ and $o'$ shall add up to 1 is easily handle by the case $s=1$, as $o' = 1 - o$. 
+
+Higher values of $s$ are useful to model a site partially occupied by different types of atoms when the requirement of full occupancy is complemented by other constraints. The example used in the SHELXL manual to illustrate the restraint command SUMP is such a case: a site is occupied by ions \ce{Na^+}, \ce{Ca^{2+}}, \ce{Al^{3+}} and \ce{K+} with an average charge of +2, leading to the restrictions on their occupancies:
+\begin{align}
+o_\ce{Na^+} + o_\ce{Ca^{2+}} + o_\ce{Al^{3+}} + o_\ce{K+} &= 1,\\
+o_\ce{Na^+} + 2o_\ce{Ca^{2+}} + 3o_\ce{Al^{3+}} + o_\ce{K+} &= +2.
+\end{align}
+Instead of enforcing those relations as restraints, as advocated in the SHELX documentation, we can solve those equations to get the explicit dependencies
+\begin{align}
+o_\ce{Na^+} &= o_\ce{Al^{3+}} - o_\ce{K+},\\
+o_\ce{Ca^{2+}} &= 1 - 2 o_\ce{Al^{3+}},
+\end{align}
+which can then readily be expressed as special cases of \eqnref{affinereparam}. Such a treatment is inherently more stable than one using restraints with the drawback that the feedback given by the size of the restraint term after refinement about the meaningfulness of those restrictions is lost.
 
 \subsection{Shared site and shared $U$ constraint}
 Two scatterers share the same site or the same ADP tensor. These constraints are pretty straightforward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values for the reference atom.
