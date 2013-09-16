@@ -118,6 +118,35 @@ During the last four decades, small molecule crystallographers have used a myria
 It could be said, therefore, that the analysis of single crystal X-ray (and neutron) diffraction data has reached a certain level of maturity and that there is no need for further program development. However there has been the very recent release of SHELXL 2013 and there is still considerable activity in this area in other groups around the world. A retro-fit of new ideas to the major programs is not always possible, except perhaps by the authors themselves viz a viz SHELX 2013 and an external programmer, however able, would not have dared to tinker with his excellent and succinct code.
 When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point - namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and it was to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for modification by others [\emph{mention the cctbx here}]. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for OLEX2 refine, openly available.\footnote{www.olex2.org}
 
+We decided to base the computational core of olex2.refine on a pre-existing project, the Computational Crystallography Toolbox (cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite \cite{Adams:2010ys}. We made that choice because of the solid and versatile tools it provided \cite{Grosse-Kunstleve:2003aa}, that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (sgtbx) that support every space group in any setting\footnote{Even rather unusual settings such as tripled cells can be built using the sgtbx}. Another key cctbx toolbox is the eltbx, that is concerned with scattering factor computations, for any atom or ion and any wavelength that could be encountered in practice. The cctbx also featured many of the restraints we needed, in the module cctbx.restraints. 
+
+For our project, we contributed to it a Small Molecule Toolbox (smtbx) that features, in particular, the constraint framework presented in details in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to cctbx.restraints that are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the cctbx and the smtbx use the Scientific Toolbox (scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the scitbx, that provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
+
+\begin{figure}
+\begin{tikzpicture}[auto, dependency/.style=draw,-latex, border/.style=draw,rounded corners]
+  \tikzstyle{every node}=[font=\small]
+  \matrix[row sep=0.3cm, column sep=0]
+  {
+    \node (olex2) {olex2.refine}; & \\
+    & \node[align=center] (smtbx) {Small Molecule \\ Toolbox \\ (smtbx)}; \\
+    \node[align=center] (cctbx) {Common Crystallography \\ Toolbox \\ (cctbx)}; & \\
+    & \node[align=center] (scitbx) {Scientific Toolbox \\ (scitbx)}; \\
+  };
+  \begin{scope}[every path/.style=dependency]
+  \path (olex2) -- (smtbx);
+  \path (olex2) -- (cctbx);
+  \path (smtbx) -- (cctbx);
+  \path (smtbx) -- (scitbx);
+  \path (cctbx) -- (scitbx);
+  \end{scope}
+  \node[border, fit={(cctbx.west) (smtbx.north east) (scitbx.south east)}, draw,
+        label=below:Computational Crystallography Toolbox (cctbx)] {};
+\end{tikzpicture}
+\caption{A high-level depiction of the software modules involved in olex2.refine: an arrow is drawn from each component pointing toward another component it uses.}
+\label{fig:software:modules}
+\end{figure}
+
+The program Olex2 relies either on SHELX or on the smtbx to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the smtbx and the cctbx to represent unit cell, reflections, crystal symmetry, constraints, restraints, etc. Once the smtbx has produced the desired results, they are sent back to Olex2 that converts them to its own representations, so at to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various actors that have just been described.  
 
 \section{Least-Squares Refinement}
 \newcommand{\data}{\text{data}}
@@ -153,8 +182,6 @@ where $B_\data$ and $B_\restraints$ are the so-called normal matrices associated
 \Secref{constraints} deals with the computation of the derivatives with respect to the refined parameters $x_1, \cdots, x_n$ from the derivatives with respect to the crystallographic parameters $y_1, \cdots, y_p$. The computation of the latter derivatives is expounded in \appendixref{structurefactorlinearisation} along with the formulae for the complex structure factors $F_c$.
 
 The computation of the normal equation terms $B_\data$ and $g_\data$ for the measured data is presented in details in \appendixref{leastsquaresminimisation} along with the procedure used to find the optimal value of $K$ whereas \secref{restraints} is devoted to the computation of $B_\restraints$ and $g_\restraints$.
-
-Finally the organisation of the software source code, and in particular the way it is modularised, is summarised in \appendixref{source:code:organisation}. 
 
 \section{Constraints}
 \label{sec:constraints}
@@ -507,37 +534,6 @@ where the transformation matrix $\mathcal{O}$ needed to transform the entire var
 
 \appendix
 
-\section{Organisation of the source code}
-\label{appendix:source:code:organisation}
-
-\begin{figure}
-\begin{tikzpicture}[auto, dependency/.style=draw,-latex, border/.style=draw,rounded corners]
-  \matrix[row sep=0.5cm, column sep=0]
-  {
-    \node (olex2) {olex2.refine}; & \\
-    & \node[align=center] (smtbx) {Small Molecule \\ Toolbox \\ (smtbx)}; \\
-    \node[align=center] (cctbx) {Common Crystallography \\ Toolbox \\ (cctbx)}; & \\
-    & \node[align=center] (scitbx) {Scientific Toolbox \\ (scitbx)}; \\
-  };
-  \begin{scope}[every path/.style=dependency]
-  \path (olex2) -- (smtbx);
-  \path (olex2) -- (cctbx);
-  \path (smtbx) -- (cctbx);
-  \path (smtbx) -- (scitbx);
-  \path (cctbx) -- (scitbx);
-  \end{scope}
-  \node[border, fit={(cctbx.west) (smtbx.north east) (scitbx.south east)}, draw,
-        label=below:Computational Crystallography Toolbox (cctbx)] {};
-\end{tikzpicture}
-\caption{A high-level depiction of the software modules involved in olex2.refine: an arrow is drawn from each component pointing toward another component it uses.}
-\label{fig:software:modules}
-\end{figure}
-
-The computational core of olex2.refine is based on the Computational Crystallography Toolbox, as pictured on \figref{software:modules}. For our project, we contributed to it a Small Molecule Toolbox (smtbx) that features, in particular, the constraint framework presented in details in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. The smtbx relies on many preexisting features of the cctbx, among which a toolbox for scattering factor computations (eltbx) and most importantly a comprehensive and robust toolbox to handle crystal symmetries (sgtbx). The cctbx also features all the restraints (cctbx.restraints), including those we have contributed as part of our project. Finally, both the cctbx and the smtbx use the Scientific Toolbox (scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the scitbx, that provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method presented in \appendixref{leastsquaresminimisation}.
-
-As shown on \figref{software:modules}, Olex2 converts its internal model of a structure into the objects used by the smtbx and the cctbx to represent unit cell, reflections, crystal symmetry, constraints, restraints, etc. 
-
-
 \section{Computation of structure factors and their gradient}
 \label{appendix:structurefactorlinearisation}
 
@@ -796,6 +792,7 @@ The same equations as for the free rotation of a rigid body described in \secref
 
 
 \section{Restraints and their derivatives}
+\label{appendix:restraints}
 
 Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:2012aa}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
 
