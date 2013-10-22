@@ -531,6 +531,8 @@ The variance-covariance matrix that is used in this case should be the one that 
 \end{equation}
 where the transformation matrix $\mathcal{O}$ needed to transform the entire variance-covariance matrix in one operation would be block diagonal, with the $3 \times 3$ orthogonalisation matrix $O$ repeated at the appropriate positions along the diagonal. This transformation can be computed efficiently using sparse matrix techniques.
 
+\section{Refinement results}
+Olex2.refine uses crystallographic information file (CIF, \cite{Hall:1991aa}) as main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. In the case of restrained refinement Olex2.refinement produces a tables describing the restraints using the CIF restraints dictionary. Olex2.refine CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (Shelx RES file) and the reflections can also be include into the final CIF for the deposition.
 
 \appendix
 
@@ -612,6 +614,15 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 \end{align}
 
 The smtbx provides code to compute derivatives for the both of these observables. However Olex2 currently only offers the choice to refine against $F^2$.
+
+\subsection{Extinction correction}
+Olex2.refine can refine extinction parameter defined identically to the one used in Shelxl:
+\begin{align}
+F_c^{'} = F_c(1+0.001\frac{F_c^{2}\lambda^3}{sin(2\theta)})^{-\frac{1}{4}} 
+\end{align}
+It is mentioned in the Shelxl manual that this parameter is not expressed exactly as in literature and is  empirical.
+For theory behind extinction see for example \cite{Becker:1974aa}.
+
 
 \section{Minimisation of Least-Squares with an overall scale factor}
 \label{appendix:leastsquaresminimisation}
