@@ -535,7 +535,7 @@ where the transformation matrix $\mathcal{O}$ needed to transform the entire var
 
 \section{Refinement results}
 
-Olex2.refine uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. Olex2.refine produces a table describing the restraints using the CIF restraints dictionary. Moreover Olex2.refine CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (Shelx RES file) and the reflections can also be include into the final CIF for the deposition. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
+Olex2.refine uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. Olex2.refine produces a table describing the restraints using the CIF restraints dictionary. Moreover Olex2.refine CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
 
 \section{Conclusion}
 
@@ -625,7 +625,7 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 The smtbx provides code to compute derivatives for the both of these observables. However Olex2 currently only offers the choice to refine against $F^2$.
 
 \subsection{Extinction correction}
-Olex2.refine models primary and secondary extinction with the same empirical correction used in ShelXL,
+Olex2.refine models primary and secondary extinction with the same empirical correction used in SHELXL,
 \begin{align}
 F'_c = F_c\left(1+0.001 x \frac{F_c^{2}\lambda^3}{\sin 2\theta}\right)^{-\frac{1}{4}},
 \end{align}
