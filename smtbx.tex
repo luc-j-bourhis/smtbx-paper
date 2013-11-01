@@ -494,10 +494,10 @@ where $r_{A}$ and $r_{B}$ are the Cartesian equivalents of $u$ and $v$. The deri
 \label{eqn:d_angle_d_gii}
 \end{equation}
 and
-\begin{equation}
-\partialder{\theta}{g_{ij}} = \frac{1}{\sin\theta} \left(\frac{u_i u_j \cos{\theta}}{\norm{r_{A}}^2} - \frac{u_i v_j + u_j v_i }{\norm{r_{A}}\norm{r_{B}}} +\frac{v_i v_j \cos{\theta}}{\norm{r_{B}}^2}\right),\ \text{for all $i<j$}.
+\begin{multline}
+\partialder{\theta}{g_{ij}} = \frac{1}{\sin\theta} \left(\frac{u_i u_j \cos{\theta}}{\norm{r_{A}}^2} - \frac{u_i v_j + u_j v_i }{\norm{r_{A}}\norm{r_{B}}} +\frac{v_i v_j \cos{\theta}}{\norm{r_{B}}^2}\right),\\ \text{for all $i<j$}.
 \label{eqn:d_angle_d_gij}
-\end{equation}
+\end{multline}
 
 \newcommand{\cell}{C}
 The derivative of the metrical matrix with respect to the unit cell parameters, 
@@ -532,7 +532,8 @@ The variance-covariance matrix that is used in this case should be the one that 
 where the transformation matrix $\mathcal{O}$ needed to transform the entire variance-covariance matrix in one operation would be block diagonal, with the $3 \times 3$ orthogonalisation matrix $O$ repeated at the appropriate positions along the diagonal. This transformation can be computed efficiently using sparse matrix techniques.
 
 \section{Refinement results}
-Olex2.refine uses crystallographic information file (CIF, \cite{Hall:1991aa}) as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. In the case of restrained refinement Olex2.refinement produces a tables describing the restraints using the CIF restraints dictionary. Olex2.refine CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (Shelx RES file) and the reflections can also be include into the final CIF for the deposition. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
+
+Olex2.refine uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. Olex2.refine produces a table describing the restraints using the CIF restraints dictionary. Moreover Olex2.refine CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (Shelx RES file) and the reflections can also be include into the final CIF for the deposition. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
 
 \appendix
 
@@ -616,12 +617,11 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 The smtbx provides code to compute derivatives for the both of these observables. However Olex2 currently only offers the choice to refine against $F^2$.
 
 \subsection{Extinction correction}
-Olex2.refine can refine extinction parameter defined identically to the one used in Shelxl:
+Olex2.refine models primary and secondary extinction with the same empirical correction used in ShelXL,
 \begin{align}
-F_c^{'} = F_c(1+0.001\frac{F_c^{2}\lambda^3}{sin(2\theta)})^{-\frac{1}{4}} 
+F'_c = F_c\left(1+0.001 x \frac{F_c^{2}\lambda^3}{\sin 2\theta}\right)^{-\frac{1}{4}},
 \end{align}
-It is mentioned in the Shelxl manual that this parameter is not expressed exactly as in literature and is  empirical.
-For theory behind extinction see for example \cite{Becker:1974aa}.
+where the so-called extension parameter $x$ is added to the set of refined parameters. As noted in ShelXL documentation, it is close to the work of \cite{Becker:1974aa} but not identical.
 
 
 \section{Minimisation of Least-Squares with an overall scale factor}
