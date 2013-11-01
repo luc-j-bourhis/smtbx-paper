@@ -456,12 +456,13 @@ where $\sigma_{xyz}(f)$ is the part coming from the uncertainties in the least s
 \end{equation}
 where $i,j=\lbrace{a,b,c,\alpha,\beta,\gamma\rbrace}$.
 
-This necessitates the calculation of the derivatives of the function with respect to the unit cell parameters. In order to do so, it is easier to calculate separately the derivatives of the function with respect to the elements of the metrical matrix, and also the derivatives of the metrical matrix with respect to the cell parameters. The former must be evaluated for every function, whereas the latter is constant for a given unit cell.
+This necessitates the calculation of the derivatives of the function with respect to the unit cell parameters. In order to do so, it is easier to calculate separately the derivatives of the function with respect to the elements of the metrical matrix, and also the derivatives of the metrical matrix with respect to the cell parameters, and then to use the chain rule
 
 \begin{equation}
-\partialder{f}{i} = \partialder{f}{g_{jk}}\partialder{g_{jk}}{i},\ i=a, b, c, \alpha, \beta, \gamma
+\partialder{f}{i} = \partialder{f}{g_{jk}}\partialder{g_{jk}}{i},\ i=a, b, c, \alpha, \beta, \gamma.
 \label{eqn:df_dcell}
 \end{equation}
+Indeed $\partialder{f}{g_{jk}}$ must be evaluated for every function, whereas $\partialder{g_{jk}}{i}$ is constant for a given unit cell.
 
 Now we consider the application of \eqnref{sigma_f} to determine the estimated s.u. in the length of the vector $u$, in fractional coordinates. The length, $D$, of the  vector $u$ is given by
 \begin{equation}
