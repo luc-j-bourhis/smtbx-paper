@@ -287,8 +287,11 @@ The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallogra
 
 The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $y_i$ depends on very few refined parameters $x_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, both of these costs scale as the number of non-zero elements in $J$ instead of $O(n^2)$ if $J$ were treated as a dense matrix.
 
+\clearpage
 \section{Restrained Least-Squares Refinement}
 \label{sec:restraints}
+
+In this section we will give an overview of the computations involved in restrained refinement. The mathematical formulae for each restraint objective and their derivatives can be found in \appendixref{restraints}.
 
 Since each restraint target $T_{c,i}$ only depends on a very small subset of the $y_j$ (e.g., in the case of a bond length, only the 6 coordinates of the two bonded atoms would play a role), the matrix of derivatives with respect to the crystallographic parameters
 \begin{equation}
