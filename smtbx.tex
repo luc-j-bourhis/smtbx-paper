@@ -334,10 +334,10 @@ The restraints framework was designed in such a way that it could be easily exte
 \section{Twinning}
 \label{sec:ls_twinning}
 
-As all other refinement programs, we have adopted the model of twins proposed by \cite{Jameson:1982aa} and \cite{Pratt:1971aa}. The sample is modelled as $d$ domains, each sizeable enough a single crystal to give rise to observable Bragg peaks. If peaks from different domains have too close Miller indices, the integration software analysing frames will be able to compute only the sum of the intensities of these superposed peaks. Data for the $r$-th reflection will therefore consist in an intensity $F_{o,r}^2$ and in a list of $s_r$ Miller indices $h_{r,1}, h_{r,2}, \cdots, h_{r,s_r}$ where $h_{r,i}$ is the triplet of Miller indices of the Bragg peak originating from diffraction by domain $i$. The model of the structure then predicts an intensity $I_{c,r}$ for $F_{o,r}^2$ that reads
+As all other refinement programs, we have adopted the model of twins proposed by \cite{Jameson:1982aa} and \cite{Pratt:1971aa}. The sample is modelled as $d$ domains, each sizeable enough a single crystal to give rise to observable Bragg peaks. If peaks from different domains have too close Miller indices, the integration software analysing frames will be able to compute only the sum of the intensities of these superposed peaks. Data for the $r$-th reflection will therefore consist in an intensity $F_{o,r}^2$ and in a list of $s_r$ Miller indices $h_{r,i_1}, h_{r,i_2}, \cdots, h_{r,i_{s_r}}$ where $h_{r,i}$ is the triplet of Miller indices of the Bragg peak originating from diffraction by domain $i$. The model of the structure then predicts an intensity $I_{c,r}$ for $F_{o,r}^2$ that reads
 \begin{align}
 \label{eqn:twinnedintensity}
-I_{c,r} &= \sum_{i=1}^{s_r} \alpha_i |F_c(h_{r,i})|^2\\
+I_{c,r} &= \sum_{l=1}^{s_r} \alpha_{i_l} |F_c(h_{r,i_l})|^2\\
 \intertext{where $\alpha_i$ is roughly the fraction of the sample volume occupied by twin domain $i$. The least-squares to minimise are then, adapting \eqnref{L:def} for a twinned structure,}
 L &= \sum_{r=1}^m w_r \left(F_{o,r}^2-K I_{c,r}\right)^2
 \intertext{where the weight $w_r$ is usually}
