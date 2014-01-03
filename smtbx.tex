@@ -334,82 +334,31 @@ The restraints framework was designed in such a way that it could be easily exte
 \section{Twinning}
 \label{sec:ls_twinning}
 
-A twinned crystal consists of two or more distinct domains of the same species that are joined together and related by some symmetry operation (other than the identity operator). The resulting observed diffraction pattern is a superposition of the diffraction pattern of each component after application of the appropriate symmetry operation for each twin component. Problems can sometimes arise in solving structures in the presence of twinning, and it is essential to include the contribution of any twin components in the refinement of the structural parameters in order to get the best possible result.
-
-Each twin component is defined by a rotation matrix (\emph{twin law}) which defines the relative orientation of the twin component to the major component, and the fractional contribution of that component to the total crystal volume.
-
-Twinned crystals can be grouped into four distinct types \cite{Herbst-Irmer:2002aa}:
-
-(a) Twinning by merohedry: The crystal posseses lower symmetry than the crystal system. The twin law belongs to the crystal system, but not to the crystal point group. As a result, the diffraction patterns from the crystal components overlap exactly, and the observed diffraction pattern may appear to have higher symmetry than is actually present. Racemic twinning, where both ``hands'' of a non-centrosymmetric structure are present is a special case of this subset, from which follows the definition of the Flack parameter \cite{Flack:1983sp}.
-
-(b) Twinning by pseudo-merohedry: The metric symmetry is higher than the crystal system of the structure. This kind of twinning is essentially the same as for (a), except that the twin law belongs to a higher symmetry crystal system than the structure. Common examples of this type of twinning include monoclinic structures where $ \beta \approx 90^\circ $ , or $ a \approx b $.
-
-(c) Twinning by reticular merohedry: Similarly to types \emph{a} and \emph{b}, the diffraction patterns are exactly superimposed, however the symmetry is such that some of the reflections of one component overlap with the systematic absences of the others and \emph{vice versa}. As a result, it may be possible to attempt structure solution using those reflections that contain a contribution from one component only. For examples of the treatment of such twins, see \cite{Herbst-Irmer:2002aa}.
-
-(d) Non-merohderal twinning: The previous types of twinning all require that the symmetry operator belongs to some crystallographic point group, and can be indexed on a single lattice. In contrast, the components of a non-merohedral twin are related by some arbitrary operator, and each component is indexed on a different lattice with a different orientation matrix. Some reflections may happen to overlap exactly, or be otherwise indistinguishable, while the majority of reflections can be identified as belonging entirely to one twin component. This type of twinning is observable directly in the diffraction pattern and can lead to problems with unit cell determination and indexing, however diffractometer software is becoming increasingly sophisticated in dealing with non-merohedral twinning.
-
-For the first three cases outlined above, where the reciprocal lattices are exactly superimposed, the observed diffracted intensity can be given as the sum over the intensities for all miller indices that contribute to a particular point in the diffraction pattern:
-\begin{equation}
-F_o^2 = \sum_i^{n}{\alpha_i F_{o_i}^2}
-\label{eqn:twin_eq},
-\end{equation}
-where $\alpha_i$ is the fractional contribution of twin component $i$ to the crystal. Since the sum over all the fractional contribution must be equal to one, $n-1$ of them can be refined, whereas the last one is expressed as a function of those $n-1$ independent parameters,
-\begin{equation}
-\alpha_n = 1 - \sum_i^{n-1}{\alpha}
-\label{eqn:twin_fractions}.
-\end{equation}
-
-For certain applications it may be necessary to obtain a set of observations that contain only the contribution from the major component. This is essential when calculating an electron density map, and may occasionally be necessary in order to solve a structure successfully. In addition, many early twinned structures were refined against such \emph{detwinned} datasets \cite{Grainger:1969aa,Murray-Rust:1973aa,Britton:1972aa}.
-
-In the simplified case of hemihedral twinning, two reflections combine in the following way 
+As all other refinement programs, we have adopted the model of twins proposed by \cite{Jameson:1982aa} and \cite{Pratt:1971aa}. The sample is modelled as $d$ domains, each sizeable enough a single crystal to give rise to observable Bragg peaks. If peaks from different domains have too close Miller indices, the integration software analysing frames will be able to compute only the sum of the intensities of these superposed peaks. Data for the $r$-th reflection will therefore consist in an intensity $F_{o,r}^2$ and in a list of $s_r$ Miller indices $h_{r,1}, h_{r,2}, \cdots, h_{r,s_r}$ where $h_{r,i}$ is the triplet of Miller indices of the Bragg peak originating from diffraction by domain $i$. The model of the structure then predicts an intensity $I_{c,r}$ for $F_{o,r}^2$ that reads
 \begin{align}
-I_1 &= (1 - \alpha) J_1 + \alpha J_2 \\
-I_2 &= \alpha J_1 + (1- \alpha) J_2
-\label{eqn:twin_frac}
-,
+\label{eqn:twinnedintensity}
+I_{c,r} &= \sum_{i=1}^{s_r} \alpha_i |F_c(h_{r,i})|^2\\
+\intertext{where $\alpha_i$ is roughly the fraction of the sample volume occupied by twin domain $i$. The least-squares to minimise are then, adapting \eqnref{L:def} for a twinned structure,}
+L &= \sum_{r=1}^m w_r \left(F_{o,r}^2-K I_{c,r}\right)^2
+\intertext{where the weight $w_r$ is usually}
+w_r &= w(F_{o,r}^2, \sigma(F_{o,r}^2), I_{c,r})\\
+\intertext{where $w$ would be the same function discussed in the context of \eqnref{L:def}. The minimisation of $L$ with respect to the model parameters embodied in $F_c$ and with respect to the $\alpha$'s is therefore subject to the constraint}
+1 &= \sum_{i=1}^d \alpha_i.
 \end{align}
-where $I_1$ and $I_2$ are the observed intensities produced by the superposition of the untwinned intensities, $J_1$ and $J_2$ with twin fraction $\alpha$.
-
-This can be solved algebraically \cite{Britton:1972aa,Grainger:1969aa,Zachariasen:1965aa} to give
-\footnote{This can be easily extended to a higer number of domains using methods for solving systems of linear equations.}
+The two most common cases consists in
+\begin{enumerate}
+\item the special case where there are exactly $d$ superposed peaks for each reflection, i.e., $s_r=d$ for every $r$, and where there is a symmetry operator $R$, the twin law, that generates the Miller indices for each domain $i > 1$, as
 \begin{align}
-J_1 &= I_1 + \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2) \\
-J_2 &= I_2 - \frac{\alpha}{1 - 2 \alpha} (I_1 - I_2)
-.
-\label{eqn:detwin_alg}
+h_{r,i}=Rh_{r,i-1};
 \end{align}
-These equations become singular as the value of $\alpha$ approaches $0.5$, however it is possible to \emph{detwin} the data using the proportionality of related intensities as calculated from the model
-\begin{equation}
-J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha} + I_2 \frac{F_a^2 \alpha}{F_a^2 \alpha + F_b^2 (1 - \alpha)}
-\label{eqn:detwin_prop}
-\end{equation}
-where $F_a^2$ and $F_b^2$ are the calculated intensities of reflections related by the twin law. This method has the drawback of being more biased towards the model, and it may be better to use the algebraic method if possible.
+in this case, the input consists solely of a list of $F_o(h)^2$ (as for a untwinned refinement but with $h=h_{r,1}$) and of $R$; or
+\item a file in the HKLF5 format: the non-redundant information it provides is exactly that which was described just before \eqnref{twinnedintensity}.
+\end{enumerate}
+The first case correspond to the taxonomies pseudo-merohedral and merohedral while the second case corresponds to a non-merohedral twin. 
 
-Alternatively the data can be reduced to the `prime' twin component by
-\begin{equation}
-J_1 = I_1 \frac{F_a^2 (1 - \alpha)}{F_a^2 (1 - \alpha) + F_b^2 \alpha}
-\label{eqn:detwin_prime}
-\end{equation}
-which is the equation used for Fourier map calculations for twinned structures in CRYSTALS, JANA \cite{Petricek:2000aa,Dusek:2001aa} and SHELXL. This formula is more trivially extended to multiply twinned crystals.
-%shelx manual page 6-5.
+\olexrefine\ can handle a more general case: when non-merohedral and merohedral twinning are simultaneously present. For example, one may have 4 domains 1, 2, 3 and 4. Domain 1 and 3 are related by a symmetry operator $R$, and so are domain 2 and 4, but the relative orientation of domain 1 and 2 does not correspond to any symmetry operator. Thus the measured frames exhibit 2 lattices of Bragg peaks, with some overlaps, and the integration software will then output a list of ($F_o^2$, $h_1$), ($F_o^2$, $h_2$) and ($F_o^2$, $h_1$, $h_2$). The refinement engine needs to expand this to a list of ($F_o^2$, $h_1$, $h_3=Rh_1$), ($F_o^2$, $h_2$, $h_4=Rh_2$), and ($F_o^2$, $h_1$, $h_2$, $h_3=Rh_1$, $h_4=Rh_2$). \olexrefine\ performs this task on the fly, while feeding Miller triplets to the code computing structure factors and their derivatives.
 
-Several methods have been described for estimating the twin fraction based purely on the statistics of the observed intensities \cite{Britton:1972aa,Murray-Rust:1973aa}. This approach is impossible as the value of $\alpha$ approaches $0.5$, since the separation of intensities in that case relies on \eqnref{detwin_prop} and the calculated intensities are not known in the absence of a structural model. In addition, covariance of the twin fraction with any other least-squares parameters is ignored.
-
-Most commonly used crystallographic refinement software \cite{Sheldrick:2008aa,Betteridge:2003ab} use the twin refinement method of \cite{Jameson:1982aa} and \cite{Pratt:1971aa}, where the original, unaltered, observed intensities are used, whilst the $F_c^2$ are calculated according to equation \eqnref{twin_eq}. It is this method of twin refinement that has been implemented within the smtbx.
-
-The derivatives of the squared structure factors with respect to the model parameters are calculated as
-\begin{equation}
-\partialder{F_c^2}{p_j} = \left(1-\sum_i^{n-1}{\alpha_i}\right) \partialder{F_{c_n}^2}{p_j} + \sum_i^{n-1}{\alpha_i \partialder{F_{c_i}^2}{p_j}}
-\label{eqn:twin_grads},
-\end{equation}
-and the derivatives with respect to the twin fractions, $\alpha_i$, given by
-\begin{equation}
-\partialder{F_c^2}{\alpha_i} = F_{c_i}^2 - F_{c_n}^2
-\label{eqn:twin_fraction_grads}.
-\end{equation}
-
-
-
+The theory and phenomenology of twinning extends far beyond our exposition but from the narrow point of view of refinement, our presentation is sufficient, since, in this paper, we do not concern ourselves with the computation of the twin law or with the indexing of superposed lattices.
 
 
 \section{Standard Uncertainties}
