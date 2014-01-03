@@ -108,7 +108,7 @@ Supply a synopsis of the paper for inclusion in the Table of Contents.
 \end{synopsis}
 
 \begin{abstract}
-This paper describes the mathematical basis for Olex.refine, the new refinement engine which is integrated within the Olex2 program. We provide precise and clear equations for every computation performed by this engine, including structure factors and their derivatives, constraints, restraints and twinning, as well as a general overview of the different components of the engine and their relations to each others.
+This paper describes the mathematical basis for \olexrefine, the new refinement engine which is integrated within the Olex2 program. We provide precise and clear equations for every computation performed by this engine, including structure factors and their derivatives, constraints, restraints and twinning, as well as a general overview of the different components of the engine and their relations to each others.
 \end{abstract}
 
 \section{Introduction}
@@ -488,11 +488,11 @@ where the transformation matrix $\mathcal{O}$ needed to transform the entire var
 
 \section{Refinement results}
 
-Olex2.refine uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. Olex2.refine produces a table describing the restraints using the CIF restraints dictionary. Moreover Olex2.refine CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
+\olexrefine\ uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. \olexrefine\ produces a table describing the restraints using the CIF restraints dictionary. Moreover \olexrefine\ CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
 
 \section{Conclusion}
 
-We have presented herein the full mathematical derivations of the concepts used within Olex2.refine. This new refinement engine is feature-wise on par with the major players in the field such as SHELXL and Crystals. It actually provides a richer wealth of constraints than those classic suites. On the one hand, Olex2.refine is immediately useful to the practising crystallographer, through the program Olex2 which lets the user transparently switch between different refinement engines. On the other hand, it can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, Olex2.refine is largely based on the Small Molecule Toolbox (smtbx) that is part of the Computational Crystallography Toolbox (cctbx), which is usable as a library for the Python programming language, thus providing great expressivity, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained therein how the smtbx added constrained L.S. refinement from scratch to the cctbx and how it added many restraints as well, thus opening new fields to the cctbx.
+We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on par with the major players in the field such as SHELXL and Crystals. It actually provides a richer wealth of constraints than those classic suites. On the one hand, \olexrefine\ is immediately useful to the practising crystallographer, through the program Olex2 which lets the user transparently switch between different refinement engines. On the other hand, it can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (smtbx) that is part of the Computational Crystallography Toolbox (cctbx), which is usable as a library for the Python programming language, thus providing great expressivity, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained therein how the smtbx added constrained L.S. refinement from scratch to the cctbx and how it added many restraints as well, thus opening new fields to the cctbx.
 
 \appendix
 
@@ -575,7 +575,7 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 The smtbx provides code to compute derivatives for the both of these observables. However Olex2 currently only offers the choice to refine against $F^2$.
 
 \subsection{Extinction correction}
-Olex2.refine models primary and secondary extinction with the same empirical correction used in SHELXL,
+\olexrefine\ models primary and secondary extinction with the same empirical correction used in SHELXL,
 \begin{align}
 F'_c = F_c\left(1+0.001 x \frac{F_c^{2}\lambda^3}{\sin 2\theta}\right)^{-\frac{1}{4}},
 \end{align}
@@ -663,7 +663,7 @@ However, the best of those design matrix techniques, the QR decomposition, invol
 
 \section{Constraints}
 \label{appendix:constraints}
-Olex2.refine provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms, as well as their occupancy factors. This section will enumerate the constraints and provide the details of their implementation.
+\olexrefine\ provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms, as well as their occupancy factors. This section will enumerate the constraints and provide the details of their implementation.
 
 \subsection{Occupancy constraints}
 The smtbx provides a generic tool to express any scalar parameter $v$ as an affine function of other scalar parameters $u_1, u_2, \cdots, u_s$,
