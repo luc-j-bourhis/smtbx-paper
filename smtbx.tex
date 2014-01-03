@@ -610,7 +610,7 @@ We could then simply use $\tilde{K}$ as a starting value for a combined refineme
 However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \cite[and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously, but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
 \begin{align}
 \partialder{L(x, \tilde{K})}{x_j} &= \partialder{L}{x_j}(x, \tilde{K}),\ 1 \le j \le n, \\
-\shortintertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{K}{x_j}$ but in this case it is zero because of the definition of $\tilde{K}$. In this expression,}
+\shortintertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{\tilde{K}}{x_j}$ but in this case it is zero because of the definition of $\tilde{K}$. In this expression,}
 \partialder{L}{x_j} &= 2 r \dotprod \partialder{r}{x_j}.
 \end{align}
 Thus, the first-order derivative is exactly the same as it would have been with an independent parameter $K$. We then need the second-order derivatives
