@@ -338,11 +338,11 @@ As all other refinement programs, we have adopted the model of twins proposed by
 \begin{align}
 \label{eqn:twinnedintensity}
 I_{c,r} &= \sum_{l=1}^{s_r} \alpha_{i_l} |F_c(h_{r,i_l})|^2\\
-\intertext{where $\alpha_i$ is roughly the fraction of the sample volume occupied by twin domain $i$. The least-squares to minimise are then, adapting \eqnref{L:def} for a twinned structure,}
+\shortintertext{where $\alpha_i$ is roughly the fraction of the sample volume occupied by twin domain $i$. The least-squares to minimise are then, adapting \eqnref{L:def} for a twinned structure,}
 L &= \sum_{r=1}^m w_r \left(F_{o,r}^2-K I_{c,r}\right)^2
-\intertext{where the weight $w_r$ is usually}
+\shortintertext{where the weight $w_r$ is usually}
 w_r &= w(F_{o,r}^2, \sigma(F_{o,r}^2), I_{c,r})\\
-\intertext{where $w$ would be the same function discussed in the context of \eqnref{L:def}. The minimisation of $L$ with respect to the model parameters embodied in $F_c$ and with respect to the $\alpha$'s is therefore subject to the constraint}
+\shortintertext{where $w$ would be the same function discussed in the context of \eqnref{L:def}. The minimisation of $L$ with respect to the model parameters embodied in $F_c$ and with respect to the $\alpha$'s is therefore subject to the constraint}
 1 &= \sum_{i=1}^d \alpha_i.
 \end{align}
 The two most common cases consists in
@@ -498,7 +498,6 @@ We have presented herein the full mathematical derivations of the concepts used 
 
 \section{Computation of structure factors and their gradient}
 \label{appendix:structurefactorlinearisation}
-
 The formulae discussed in this appendix have been known for nearly a century and have been implemented in all known refinement programs. However it seems to the authors that, during the last decades, the computation for a given Miller index~$h$ of $F_c(h)$ and its gradient $\grad{F_c(h)}$ with respect to crystallographic parameters has very rarely been presented in all the minute details necessary to implement those formulae in a program, which justifies this appendix in our humble opinion.
 
 \subsection{Scattering factor of one atom}
@@ -585,11 +584,9 @@ where the so-called extension parameter $x$ is added to the set of refined param
 
 \section{Minimisation of Least-Squares with an overall scale factor}
 \label{appendix:leastsquaresminimisation}
-
 In this appendix, we are concerned with the minimisation of $L_\data(x, K)$ as defined in \eqnref{L:def}. We will drop the label `data' throughout this appendix for clarity. We will denote by $(x^*, K^*)$ the values of those parameters at which $L(x,K)$ reaches the minimum we are interested in.
 
 It is well known that the overall scale factor tends to be highly correlated with the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. An analytical formula therefore exists for the value of $K$ that minimises that polynomial. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
-
 \begin{align}
 Y \dotprod Y' &= \sum_h w(h) Y(h) Y'(h), \\
 \shortintertext{and the associated norm $\norm{Y}$,}
@@ -784,7 +781,6 @@ The same equations as for the free rotation of a rigid body described in \secref
 
 \section{Restraints and their derivatives}
 \label{appendix:restraints}
-
 Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:2012aa}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
 
 \subsection{Restraints involving symmetry}
