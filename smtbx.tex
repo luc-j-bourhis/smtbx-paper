@@ -724,7 +724,7 @@ The counter-argument goes even further as the normal matrix is actually not nece
  
 However, the best of those design matrix techniques, the QR decomposition, involves about twice as many floating point operations as the method based on the normal equations. That is the actual motivation for our choosing the latter and therefore abiding to a long crystallographic tradition.
 
-It should be noted that for singular or nearly singular problems, one could use solve the L.S. problem by using singular value filtering on the design matrix, which is the most robust technique. On the other hand, if one computes the normal matrix, therefore squaring the singularities, it is of very practical use to solve the L.S. problem with eigenvalue filtering.
+It should be noted that for singular or nearly singular problems, one could use solve the L.S. problem by using singular value filtering on the design matrix, which is the most robust technique. On the other hand, if one computes the normal matrix, therefore squaring the singularities, solving the L.S. problem with eigenvalue filtering is of little practical interest.
 
 \section{Constraints}
 \label{appendix:constraints}
