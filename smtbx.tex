@@ -165,7 +165,7 @@ Therefore it might be claimed that the analysis of single crystal X-ray (and neu
 
 When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point - namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for modification by others. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for \olexrefine.\footnote{www.olex2.org}
 
-We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite \citeasnoun{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \citeasnoun{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (sgtbx) that support every space group in any setting.\footnote{Even rather unusual settings such as tripled cells can be built using the sgtbx} Another key cctbx toolbox is the eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The cctbx also featured many of the restraints we needed, in the module cctbx.restraints. 
+We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite \citeasnoun{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \citeasnoun{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (sgtbx) that support every space group in any setting, even rather unusual settings such as tripled cells. Another key cctbx toolbox is the eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The cctbx also featured many of the restraints we needed, in the module cctbx.restraints. 
 
 \begin{figure}
 \begin{tikzpicture}[auto, dependency/.style=draw,-latex, border/.style=draw,rounded corners]
@@ -238,11 +238,15 @@ It is however traditional to do the opposite, by reducing the number of paramete
 \begin{align}
 x_\ce{H} = x_\ce{C} + d \frac{x_\ce{C} - x_\ce{X}}{\norm{x_\ce{C} - x_\ce{X}}},
 \end{align} 
-where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_\ce{C}$, $x_\ce{X}$ and $x_\ce{H}$ is replaced by a function $\tilde{Y}_c$ of $x_\ce{C}$ and $x_\ce{X}$ but not of $x_\ce{H}$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_\ce{C}, x_\ce{X}) = Y_c(x_\ce{C}, x_\ce{X}, x_\ce{H}(x_\ce{C}, x_\ce{X}))$ and we will say that $x_\ce{H}(x_\ce{C}, x_\ce{X})$ is a reparametrisation of $x_\ce{H}$, whose arguments are $x_\ce{C}$ and $x_\ce{X}$. The derivatives for the remaining variables are then obtained with the chain rule,\footnote{For a column vector $x=\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}$, $\partialder{F}{x}$ will always denote the row vector $\left(\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\right)$. Given another column vector $y=\begin{pmatrix}y_1\\ y_2\\ y_3\end{pmatrix}$, $\partialder{y}{x}$ will always denote the matrix $\left(\partialder{y_i}{x_j}\right)_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.}
+where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_\ce{C}$, $x_\ce{X}$ and $x_\ce{H}$ is replaced by a function $\tilde{Y}_c$ of $x_\ce{C}$ and $x_\ce{X}$ but not of $x_\ce{H}$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_\ce{C}, x_\ce{X}) = Y_c(x_\ce{C}, x_\ce{X}, x_\ce{H}(x_\ce{C}, x_\ce{X}))$ and we will say that $x_\ce{H}(x_\ce{C}, x_\ce{X})$ is a reparametrisation of $x_\ce{H}$, whose arguments are $x_\ce{C}$ and $x_\ce{X}$. 
+
+The derivatives for the remaining variables are obtained with the chain rule,
 \begin{align}
 \partialder{\tilde{Y_c}}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{C}}, \\
 \partialder{\tilde{Y_c}}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{X}}. \nonumber
 \end{align}
+We use the following compact notations for derivatives: for a column vector $x=\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}$, $\partialder{F}{x}$ will always denote the row vector $\left(\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\right)$. Given another column vector $y=\begin{pmatrix}y_1\\ y_2\\ y_3\end{pmatrix}$, $\partialder{y}{x}$ will always denote the matrix $\left(\partialder{y_i}{x_j}\right)_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.
+
 It should be noted that it is customary to work within the ``riding" approximation,
 \begin{align}
 \partialder{x_\ce{H}}{x_\ce{X}} = 0,\ \partialder{x_\ce{H}}{x_\ce{C}} = \identity,
@@ -267,12 +271,12 @@ has its coordinates $x=(x_1, x_2, x_3)$ constrained by the relation $M x = x$, w
 x_1 = u_1,\ x_2 = u_2,\ x_3 = u_1,
 \label{eqn:specialposexamplereparam}
 \end{align}
-the observable $Y_c$ becoming now a function of the vector of newly introduced refinable parameters $u = (u_1, u_2)$. There is a general algorithm implemented in the cctbx that for any special position returns a matrix $Z$ so that the reparametrisation takes this form,\footnote{This algorithm first determines the space group symmetries that leaves the site invariant. The resulting system of linear equations, which read $M x = x$ in our example, is then reduced to a triangular form from which the matrix $Z$ and the vector $z$ are then readily obtained.}
+the observable $Y_c$ becoming now a function of the vector of newly introduced refinable parameters $u = (u_1, u_2)$. There is a general algorithm implemented in the cctbx that for any special position returns a matrix $Z$ so that the reparametrisation takes this form,
 \begin{align}
 x = Z u + z
 \end{align}
-where $Z$ is a $3 \times 2$ or $3 \times 1$ matrix and $z$ is a 3-vector. This algorithm does not therefore try to determine which components of $u$, if any, are also components of $x$. This is why we have presented the reparametrisation for our example in this general form instead of keeping $x_1$ and $x_2$ as refinable parameters, which would sound more intuitive in the first place.
-This matrix $Z$ is the matrix of constraints for the position of that atom. 
+where $Z$ is a $3 \times 2$ or $3 \times 1$ matrix and $z$ is a 3-vector. This algorithm first determines the space group symmetries that leaves the site invariant. The resulting system of linear equations, which read $M x = x$ in our example, is then reduced to a triangular form from which the matrix $Z$ and the vector $z$ are then readily obtained. This algorithm does not therefore try to determine which components of $u$, if any, are also components of $x$. This is why we have presented the reparametrisation for our example in this general form instead of keeping $x_1$ and $x_2$ as refinable parameters, which would sound more intuitive in the first place.
+This matrix $Z$ is the matrix of constraints for the position of that atom.
 
 The anisotropic displacement tensor $U$ is subject to symmetry constraints as well. In our example, it must satisfy
 \begin{align}
@@ -343,7 +347,7 @@ d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\
 \end{align}
 Thus a new derivative with respect to the new refinable parameter $\phi$ is introduced by this reparametrisation.
 
-The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above.\footnote{This example is not particularly common but it is a simple illustration of the concept we want to introduce.} In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One type of disorder could be modelled by first applying the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_\ce{C}$ and $x_\ce{X}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
+The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above. This example is not particularly common but it is a simple illustration of the concept we want to introduce. In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One type of disorder could be modelled by first applying the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_\ce{C}$ and $x_\ce{X}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
 \begin{align}
 \partialder{x_\ce{H0}}{u} = \partialder{x_\ce{H0}}{x_\ce{C}}\partialder{x_\ce{C}}{u} = 2
 \end{align}
@@ -404,11 +408,11 @@ which is known as the design matrix for the restraints, is very sparse. We there
 \end{align}
 which is computed by forming the product of $D$ and the constraint matrix. Thus the restraints are initially built up without any knowledge of the constraint matrix. This greatly simplifies their implementation and it simplifies their use in a refinement program that does not use constraints. This organisation of the computation does not incur any inefficiency as the product~\eqnref[name=]{constraints:applied:torestraints} is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$. 
 
-The two terms in the normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix product and matrix-vector product,\footnote{$D^T$ denotes the transpose of $D$.}
+The two terms in the normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix product and matrix-vector product,
 \begin{align}
 B_\restraints &= \tilde{D}_\restraints^T W \tilde{D}_\restraints\\
 g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
-\shortintertext{where $W$ is the diagonal matrix featuring the restraints weights, and where}
+\shortintertext{where $D^T$ denotes the transpose of $D$ and where $W$ is the diagonal matrix featuring the restraints weights, and where}
 \Delta T_i &= T_{o,i} - T_{c,i}
 \end{align}
 is the residual for the $i$-th restraint. We take again advantage of the sparsity of $\tilde{D}_\restraints$ to efficiently implement those products.
@@ -479,7 +483,7 @@ is the normal matrix for the constrained least-squares minimisation. However, we
 \label{eqn:constrained:variance:matrix}
 \end{align} 
 
-We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms.\footnote{For most constraints, the s.u. of Hydrogen coordinates are equal to the s.u. of the atom they ride on but e.g. for a rotating \ce{-CH_3}, they differ because the s.u. of the azimuthal angle increases the s.u. of the Hydrogen coordinates that comes from riding only.} 
+We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. For most constraints, the s.u. of Hydrogen coordinates are equal to the s.u. of the atom they ride on but e.g. for a rotating \ce{-CH_3}, they differ because the s.u. of the azimuthal angle increases the s.u. of the Hydrogen coordinates that comes from riding only.
 
 \subsection{Derived parameters}
 
