@@ -487,11 +487,12 @@ We would like to stress an important consequence of this formula: constrained pa
 
 \subsection{Derived parameters}
 
-We will now discuss the s.u. of derived parameters. Such a parameter is a function $f$ of a set of atomic parameters $p_i$ and its variance can be derived using the same heuristic as above in a linear approximation where $\delta f \approx \sum_i \partialder{f}{p_i} \delta p_i$ by computing $\var{f}$ as the mean of $(\delta f)^2$. This leads to the formula which, to the best of our knowledge, appeared for the first time in the crystallographic literature in \cite{Sands:1966bh},
+We will now discuss the s.u. of derived parameters. Such a parameter is a function $f$ of a set of atomic parameters $p_i$ and its variance can be derived using the same heuristic as above in a linear approximation where $\delta f \approx \sum_i \partialder{f}{p_i} \delta p_i$ by computing $\var{f}$ as the mean of $(\delta f)^2$. This leads to
 \begin{equation}
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}.
 \label{eqn:sigma_f}
 \end{equation}
+An early occurence of this formula can be found in \cite{Sands:1966bh}.
 
 As a result of this formula and of the consequence of \eqnref{constrained:variance:matrix} stated after it, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. This correct behaviour unfortunately triggers many alerts when a structure refined with Olex2 is checked with PLATON. 
 
