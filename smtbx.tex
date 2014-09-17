@@ -281,6 +281,7 @@ This matrix $Z$ is the matrix of constraints for the position of that atom.
 The anisotropic displacement tensor $U$ is subject to symmetry constraints as well. In our example, it must satisfy
 \begin{align}
 M U M^T = U,
+\label{eqn:special:pos:adp:constraint}
 \end{align}
 where $M^T$ denotes the transpose of the matrix $M$ \textbookref. Any number of such matrix equations can always be rewritten as a system of equations whose most general form reads
 \begin{align}
@@ -292,7 +293,8 @@ U_{12}\\
 U_{13}\\
 U_{23}\\
 \end{bmatrix} = 0.\label{eqn:exampleofadpconstraints}\\
-\shortintertext{where P has 6 columns and $6n$ rows, where n is the number of symmetry elements other than the identity involved in the special position. In our example} P &= \begin{bmatrix}
+\shortintertext{where P has 6 columns and $6n$ rows, where n is the number of symmetry elements other than the identity involved in the special position (indeed \eqnref{special:pos:adp:constraint} being trivial for $M=\identity$, it can safely be discarded). In our example,} 
+P &= \begin{bmatrix}
 -1 & 0 & 1 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0 & 0\\
 1 & 0 & -1 & 0 & 0 & 0\\
