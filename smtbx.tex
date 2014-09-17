@@ -111,7 +111,7 @@ refcmd=\ref{#1}
 
 \addtolength{\parskip}{0ex plus 0.5ex minus 0.5ex}
 
-\title{The Anatomy of a Comprehensive Constrained, Restrained, Refinement Program for the Modern Computing Environment -- Olex2 Disected}
+\title{The Anatomy of a Comprehensive Constrained, Restrained, Refinement Program for the Modern Computing Environment -- Olex2 Dissected}
 \shorttitle{\olexrefine}  % Abbreviated title for use in running heads
 
      % Authors' names and addresses. Use \cauthor for the main (contact) author.
@@ -140,6 +140,8 @@ refcmd=\ref{#1}
 \shortauthor{Bourhis, Dolomanov, Gildea, Howard and Puschmann} % abbreviated author list for use in running heads
 
 \keyword{small molecules}\keyword{refinement}\keyword{constraints}\keyword{restraints}\keyword{least-squares}
+
+\newcommand{\latinit}[1]{\textit{#1}}
 
 \maketitle
 
@@ -190,9 +192,9 @@ When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} w
 
 We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite \cite{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \cite{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (sgtbx) that support every space group in any setting\footnote{Even rather unusual settings such as tripled cells can be built using the sgtbx}. Another key cctbx toolbox is the eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The cctbx also featured many of the restraints we needed, in the module cctbx.restraints. 
 
-For our project, we contributed to it a Small Molecule Toolbox (smtbx) that features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to cctbx.restraints that are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the cctbx and the smtbx use the Scientific Toolbox (scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the scitbx that provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
+For our project, we contributed to it a Small Molecule Toolbox (smtbx) which features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to cctbx.restraints which are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the cctbx and the smtbx use the Scientific Toolbox (scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the scitbx which provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
 
-The program Olex2 relies either on SHELX or on the smtbx to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the smtbx and the cctbx to represent unit cell, reflections, crystal symmetry, constraints, restraints, etc. Once the smtbx has produced the desired results they are sent back to Olex2 which converts them to its own representations, so at to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various modules and programs that have just been described.  
+The program Olex2 relies either on SHELX or on the smtbx to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the smtbx and the cctbx to represent unit cell, reflections, crystal symmetry, constraints, restraints, \latinit{etc}. Once the smtbx has produced the desired results they are sent back to Olex2 which converts them to its own representations, so at to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various modules and programs that have just been described.  
 
 \section{Least-Squares Refinement}
 \newcommand{\data}{\text{data}}
@@ -208,7 +210,7 @@ L = &\underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\data} \\
 \end{equation}
 where $Y$ denotes either $F$ or $F^2$, and $K$ is an overall, unknown, scale factor that places the computed $Y_c$ on the same scale as the measured $Y_o$. The first sum over $h$ runs over a set of $m$ non-equivalent reflections that have been observed. Each observation is given an appropriate weight, $w_h$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, though more complex weighting schemes are usually used. In the most general case, $w_h$ is a function of $Y_{o,h}$, $\sigma(Y_{o,h})$, $Y_{c,h}$ and $h$ itself, whereas the most common weighting schemes exhibit only a dependence on the first three.
 
-These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:1963aa}, where additional information, such as target values for bond lengths, angles etc. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002aa,Watkin:2008aa}). This term $L_\restraints$ may of course be absent. Conversely, the data term could be absent in a refinement against geometrical terms only (c.f. the program DLS-76 \cite{Baerlocher:1978aa} for example).
+These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:1963aa}, where additional information, such as target values for bond lengths, angles \latinit{etc}. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002aa,Watkin:2008aa}). This term $L_\restraints$ may of course be absent. Conversely, the data term could be absent in a refinement against geometrical terms only (\latinit{c.f.} the program DLS-76 \cite{Baerlocher:1978aa} for example).
 
 In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, atomic displacement parameters (ADPs), and chemical occupancy in routine refinements) that each component of $Y_c$ and $T_c$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y)$ and $T_c(y)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately, as will be explained later.
 
@@ -258,7 +260,7 @@ implemented in all refinement programs, including Olex2.
 
 It is not always the case that all three coordinates of an atom are removed from the refinement by constraints. For example, an atom in the plane of the mirror $z,y,x$ whose matrix reads
 \begin{align}
-\begin{bmatrix}
+M=\begin{bmatrix}
 0 & 0 & 1\\
 0 & 1 & 0\\
 1 & 0 & 0
@@ -269,7 +271,7 @@ has its coordinates $x=(x_1, x_2, x_3)$ constrained by the relation $M x = x$, w
 x_1 = u_1,\ x_2 = u_2,\ x_3 = u_1,
 \label{eqn:specialposexamplereparam}
 \end{align}
-the observable $Y_c$ becoming now a function of the vector of newly introduced refinable parameters $u = (u_1, u_2)$. There is a general algorithm implemented in the cctbx that for any special position returns a matrix $Z$ so that the reparametrisation takes this form,\footnote{This algorithm first determines the space group symmetries that leaves invariant the site. The resulting system of linear equations, which read $M x = x$ in our example, is then reduced to a triangular form from which the matrix $Z$ and the vector $z$ are then readily obtained.}
+the observable $Y_c$ becoming now a function of the vector of newly introduced refinable parameters $u = (u_1, u_2)$. There is a general algorithm implemented in the cctbx that for any special position returns a matrix $Z$ so that the reparametrisation takes this form,\footnote{This algorithm first determines the space group symmetries that leaves the site invariant. The resulting system of linear equations, which read $M x = x$ in our example, is then reduced to a triangular form from which the matrix $Z$ and the vector $z$ are then readily obtained.}
 \begin{align}
 x = Z u + z
 \end{align}
@@ -349,7 +351,7 @@ The last important concept is that of the chaining or composition of reparametri
 \begin{equation}
 \partialder{x_\ce{H0}}{u} = \partialder{x_\ce{H0}}{x_\ce{C}}\partialder{x_\ce{C}}{u} = 2
 \end{equation}
-in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_\ce{H0}$, $x_\ce{H1}$, $x_\ce{H2}$, $x_\ce{C}$, $x_\ce{X}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, i.e. the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_\ce{C}$ has only one argument, $u$, whereas $x_\ce{H0}$ has three arguments, $x_\ce{C}$, $x_\ce{X}$ and $\phi$. The smtbx implements reparametrisations by explicitly building such a graph.
+in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_\ce{H0}$, $x_\ce{H1}$, $x_\ce{H2}$, $x_\ce{C}$, $x_\ce{X}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, \latinit{i.e.} the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_\ce{C}$ has only one argument, $u$, whereas $x_\ce{H0}$ has three arguments, $x_\ce{C}$, $x_\ce{X}$ and $\phi$. The smtbx implements reparametrisations by explicitly building such a graph.
 
 \begin{figure}
 \begin{tikzpicture}[grow=left, every node/.style={circle,draw}, edge from parent/.style={-latex,draw}]
@@ -368,7 +370,7 @@ A crystallographic refinement may involve many such reparametrisations. By pieci
 
 \subsection{Constraint matrix}
 
-There is a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix\footnote{This method is also known as the Gauss-Newton algorithm.} (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and Conjugate Gradient L.S. (CGLS) as in SHELXL.  The macro-molecular community later introduced the Limited-memory Broyden-Fletcher-Goldfarb-Shanno method (LBFGS), \emph{phenix.refine} \cite{Afonine:2012aa}, and a sparse Gauss-Newton algorithm, REFMAC \cite[section 4 and references therein]{Murshudov:2011aa}. All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
+There are a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix\footnote{This method is also known as the Gauss-Newton algorithm.} (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and Conjugate Gradient L.S. (CGLS) as in SHELXL.  The macro-molecular community later introduced the Limited-memory Broyden-Fletcher-Goldfarb-Shanno method (LBFGS), \emph{phenix.refine} \cite{Afonine:2012aa}, and a sparse Gauss-Newton algorithm, REFMAC \cite[section 4 and references therein]{Murshudov:2011aa}. All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
 
 Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- e.g. a coordinate of the pivot atom on which another atom rides, and of course any parameter that is not involved in any constraint --  is also a component $x_l$ of $x$, i.e. 
 \begin{equation}
@@ -476,7 +478,7 @@ B_{ij} &= \partialder{r}{x_i} \dotprod \partialder{r}{x_j}
 is the normal matrix for the constrained least-squares minimisation. However, we are interested in the variance matrix $\var{y}$ for the crystallographic parameters of the model, not in $\var{x}$. For small variations, we have the linear relation
 \begin{align}
 \delta y &\approx J \delta x\\
-\shortintertext{and therefore, using the well-known heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation around the minimum assumed implicitly assumed throughout crystallographic refinement,}
+\shortintertext{and therefore, using the well-known heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation around the minimum implicitly assumed throughout crystallographic refinement,}
 \var{y} &= J\, \var{x} J^T.
 \label{eqn:constrained:variance:matrix}
 \end{align} 
@@ -485,7 +487,7 @@ We would like to stress an important consequence of this formula: constrained pa
 
 \subsection{Derived parameters}
 
-We will now discuss the s.u. of derived parameters. Such a parameter is a function $f$ of a set of atomic parameters $p_i$ and its variance can be derived using the same heuristic as above in a linear approximation where $\delta f \approx \sum_i \partialder{f}{p_i} \delta p_i$ by computing $\var{f}$ as the mean of $(\delta f)^2$. This leads to the formula which, to the best of our knowledge, appeared for the first time in the crystallographic litterature in \cite{Sands:1966bh},
+We will now discuss the s.u. of derived parameters. Such a parameter is a function $f$ of a set of atomic parameters $p_i$ and its variance can be derived using the same heuristic as above in a linear approximation where $\delta f \approx \sum_i \partialder{f}{p_i} \delta p_i$ by computing $\var{f}$ as the mean of $(\delta f)^2$. This leads to the formula which, to the best of our knowledge, appeared for the first time in the crystallographic literature in \cite{Sands:1966bh},
 \begin{equation}
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}.
 \label{eqn:sigma_f}
@@ -588,15 +590,13 @@ The variance-covariance matrix that is used in this case should be the one that 
 \end{equation}
 where the transformation matrix $\mathcal{O}$ needed to transform the entire variance-covariance matrix in one operation would be block diagonal, with the $3 \times 3$ orthogonalisation matrix $O$ repeated at the appropriate positions along the diagonal. This transformation can be computed efficiently using sparse matrix techniques.
 
-align
-
 \section{Refinement results}
 
 \olexrefine\ uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. \olexrefine\ produces a table describing the restraints using the CIF restraints dictionary. Moreover \olexrefine\ CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
 
 \section{Conclusion}
 
-We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. On the one hand, \olexrefine\ is immediately useful to the practising crystallographer, through the program Olex2 which lets the user transparently switch between different refinement engines. On the other hand, it can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (smtbx) that is part of the Computational Crystallography Toolbox (cctbx), which is usable as a library for the Python programming language, thus providing great expressivity, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained therein how the smtbx added constrained L.S. refinement from scratch to the cctbx and how it added many restraints as well, thus opening new fields to the cctbx.
+We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. On the one hand, \olexrefine\ is immediately useful to the practising crystallographer, through the program Olex2 which lets the user transparently switch between different refinement engines. On the other hand, it can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (smtbx) that is part of the Computational Crystallography Toolbox (cctbx), which is usable as a library for the Python programming language, thus providing great expressivity, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained herein how the smtbx added constrained L.S. refinement from scratch to the cctbx and how it added many restraints as well, thus opening new fields to the cctbx.
 
 \appendix
 
@@ -604,7 +604,7 @@ We have presented herein the full mathematical derivations of the concepts used 
 \label{appendix:structurefactorlinearisation}
 The formulae discussed in this appendix have been known for nearly a century and have been implemented in all known refinement programs. However it seems to the authors that, during the last decades, the computation for a given Miller index~$h$ of $F_c(h)$ and its gradient $\grad{F_c(h)}$ with respect to crystallographic parameters has very rarely been presented in all the minute details necessary to implement those formulae in a program, justifying this appendix in our humble opinion. The reader might wish to compare it with the detailled algorithms given in \cite{Rollet:Editor:1965}.
 
-\subsection{Scattering factor of one atom}
+\subsection{Structure factor of one atom}
 
 \newcommand{\Fuc}{F_{\text{uc}}}
 
@@ -764,7 +764,7 @@ The counter-argument goes even further as the normal matrix is actually not nece
  
 However, the best of those design matrix techniques, the QR decomposition, involves about twice as many floating point operations as the method based on the normal equations. That is the actual motivation for our choosing the latter and therefore abiding to a long crystallographic tradition.
 
-It should be noted that for singular or nearly singular problems, one could use solve the L.S. problem by using singular value filtering on the design matrix, which is the most robust technique. On the other hand, if one computes the normal matrix, therefore squaring the singularities, solving the L.S. problem with eigenvalue filtering is of little practical interest.
+It should be noted that for singular or nearly singular problems, one could solve the L.S. problem by using singular value filtering on the design matrix, which is the most robust technique. On the other hand, if one computes the normal matrix, therefore squaring the singularities, solving the L.S. problem with eigenvalue filtering is of little practical interest.
 
 \section{Constraints}
 \label{appendix:constraints}
@@ -795,7 +795,7 @@ which can then readily be expressed as special cases of \eqnref{affinereparam}.
 Two scatterers share the same site or the same ADP tensor. These constraints are pretty straightforward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values for the reference atom.
 
 \subsection{Riding atoms/group $U$ constraint}
-This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (SHELXL AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (SHELXL AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N etc, and Y is H, F, Cl etc. In general the transformation of the triplet of coordinates $r$ is written down like this:
+This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (SHELXL AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (SHELXL AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N \latinit{etc}, and Y is H, F, Cl \latinit{etc}. In general the transformation of the triplet of coordinates $r$ is written down like this:
 \begin{equation}
 r' = s(r-r_{p}) + r_{p}, \label{eqn:isometry}
 \end{equation}
@@ -837,7 +837,7 @@ R'_\alpha =
 
 \subsection{Pivoted rotation of a rigid body}
 \label{sec:pivoted:rotated:group}
-This constrained is suitable for groups which can be rotated around a given direction (SHELXL AFIX 7). For groups \ce{XY_n} with $1\leq n \leq 4$ and X being B,C,N, etc, and Y being H, F, Cl etc, the distances from X to Y can also be refined (SHELXL AFIX 8). The coordinate transformation is
+This constrained is suitable for groups which can be rotated around a given direction (SHELXL AFIX 7). For groups \ce{XY_n} with $1\leq n \leq 4$ and X being B,C,N, \latinit{etc}, and Y being H, F, Cl \latinit{etc}, the distances from X to Y can also be refined (SHELXL AFIX 8). The coordinate transformation is
 \begin{align}
 r' &= sR(r-r_p) + r_{p},\\
 \shortintertext{and its derivatives are}
