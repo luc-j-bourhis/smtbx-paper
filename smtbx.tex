@@ -614,11 +614,11 @@ Since the structure factor of the entire unit cell is the sum over the contribut
 \end{align}
 $\mathcal{S}$ denotes the subset of symmetry operators $\sym{R}{t}$ of rotational part $R$ and translational part $t$ that generate the orbit of the position $x$ under the application of the entire set of symmetries in the space group of the structure whereas $F^{\sym{R}{t}}(h)$ is the transform of $F(h)$ under the symmetry $\sym{R}{t}$. For a spherical atomic model with an elastic scattering factor $f(h^2)$ that does not depend on the direction of $h$ and an inelastic scattering factor $f' + if''$ that does not depend on~$h$ (a property that holds for X-ray diffraction), $F$ reads
 \begin{align}
-F(h) = s (f(h^2) + f' + i f'') \underbrace{e^{h U h^T} e^{i 2\pi h x}}_{G(h)}.
+F(h) = s (f(h^2) + f' + i f'') \underbrace{e^{-h U h^T} e^{i 2\pi h x}}_{G(h)}.
 \end{align}
 We will consistently denote a triplet $h$ of Miller indices as a row vector, whose transpose $h^T$ is therefore a column vector, and a triplet $x$ of fractional coordinates as a column vector. In this context, $h^2$ denotes the Euclidean square of $h$, that therefore involves the reciprocal metric matrix $M^*$ as $h^2 = h M^* h^T$.
 
-If the thermal displacement is isotropic, the term $e^{h U h^T}$ is replaced by $e^{-2\pi^2 h^2 \uiso}$ and it is then factored out of $G(h)$.
+If the thermal displacement is isotropic, the term $e^{-h U h^T}$ is replaced by $e^{-2\pi^2 h^2 \uiso}$ and it is then factored out of $G(h)$.
 
 We are therefore left with computing the sum of the transforms of $G(h)$ under the symmetries in $\mathcal{S}$, the other terms forming a factor multiplying this sum. By the definition of a Fourier transform, that transform reads
 \begin{align}
@@ -658,7 +658,7 @@ G^{\inversion\sym{R}{t}} &= G(-hR) e^{-i2\pi ht} e^{i2\pi h t_{\bar{1}}}, \nonum
 
 \item If $h t_{\bar{1}}=0$, which holds true for every reflection if the space group is origin centric ($t_{\bar{1}}=0$), the previous case resolves to the real part of $\Sigma$ only,
 \begin{align}
- \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} & = 2 \sum_{\sym{R}{t} \in \mathcal{S}^+}  e^{h R U (hR)^T} \cos(hRx + t).
+ \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} & = 2 \sum_{\sym{R}{t} \in \mathcal{S}^+}  e^{-h R U (hR)^T} \cos(hRx + t).
 \end{align}
 The total sum over symmetries is therefore real, and its derivative will be so too, the former involving a cosine and the latter involving a sine for the derivatives with respect to $x$. 
 \end{enumerate}
