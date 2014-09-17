@@ -142,7 +142,7 @@ refcmd=\ref{#1}
 \keyword{small molecules}\keyword{refinement}\keyword{constraints}\keyword{restraints}\keyword{least-squares}
 
 \newcommand{\latinit}[1]{\textit{#1}}
-\newcommand{\textbookref}{(see e.g. \cite{Giacovazzo:2011aa})}
+\newcommand{\textbookref}{(see e.g. \citeasnoun{Giacovazzo:2011aa})}
 
 \maketitle
 
@@ -159,7 +159,7 @@ This paper describes the mathematical basis for \olexrefine, the new refinement 
 \section{Introduction}
 \label{sec:introduction}
   
-During the last four decades, small molecule crystallographers have used a myriad of stand-alone routines and various comprehensive software packages, most notably those written by George Sheldrick \cite{Sheldrick:2008aa,Sheldrick:1997aa} and that designed by Bob Carruthers and John Rollett, then maintained and enhanced by David Watkin \cite{Betteridge:2003ab}. These latter two packages have dominated the citations in all publications containing crystal structure analyses for many years now.
+During the last four decades, small molecule crystallographers have used a myriad of stand-alone routines and various comprehensive software packages, most notably those written by George Sheldrick \citeasnoun{Sheldrick:2008aa} and \citeasnoun{Sheldrick:1997aa} and that designed by Bob Carruthers and John Rollett, then maintained and enhanced by David Watkin \citeasnoun{Betteridge:2003ab}. These latter two packages have dominated the citations in all publications containing crystal structure analyses for many years now.
 
 Therefore it might be claimed that the analysis of single crystal X-ray (and neutron) diffraction data has reached a certain level of maturity and that there is no need for further program development. Nonetheless there is still considerable activity in this area in various groups around the world and there has been a new release, SHELX 2013, from Sheldrick  recently. A retro-fit of new ideas to these older programs is not always possible, except perhaps by the authors themselves. 
 
@@ -191,7 +191,7 @@ Therefore it might be claimed that the analysis of single crystal X-ray (and neu
 
 When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point - namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for modification by others. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for \olexrefine.\footnote{www.olex2.org}
 
-We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite \cite{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \cite{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (sgtbx) that support every space group in any setting\footnote{Even rather unusual settings such as tripled cells can be built using the sgtbx}. Another key cctbx toolbox is the eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The cctbx also featured many of the restraints we needed, in the module cctbx.restraints. 
+We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite \citeasnoun{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \citeasnoun{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (sgtbx) that support every space group in any setting\footnote{Even rather unusual settings such as tripled cells can be built using the sgtbx}. Another key cctbx toolbox is the eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The cctbx also featured many of the restraints we needed, in the module cctbx.restraints. 
 
 For our project, we contributed to it a Small Molecule Toolbox (smtbx) which features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to cctbx.restraints which are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the cctbx and the smtbx use the Scientific Toolbox (scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the scitbx which provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
 
@@ -211,7 +211,7 @@ L = &\underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\data} \\
 \end{equation}
 where $Y$ denotes either $F$ or $F^2$, and $K$ is an overall, unknown, scale factor that places the computed $Y_c$ on the same scale as the measured $Y_o$. The first sum over $h$ runs over a set of $m$ non-equivalent reflections that have been observed. Each observation is given an appropriate weight, $w_h$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, though more complex weighting schemes are usually used. In the most general case, $w_h$ is a function of $Y_{o,h}$, $\sigma(Y_{o,h})$, $Y_{c,h}$ and $h$ itself, whereas the most common weighting schemes exhibit only a dependence on the first three.
 
-These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \cite{Waser:1963aa}, where additional information, such as target values for bond lengths, angles \latinit{etc}. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \cite{Giacovazzo:2002aa,Watkin:2008aa}). This term $L_\restraints$ may of course be absent. Conversely, the data term could be absent in a refinement against geometrical terms only (\latinit{c.f.} the program DLS-76 \cite{Baerlocher:1978aa} for example).
+These X-ray observations can be supplemented with the use of `observations of restraint', as suggested by \citeasnoun{Waser:1963aa}, where additional information, such as target values for bond lengths, angles \latinit{etc}. is included in the minimisation. This is the origin of the second term of the sum where $T_o$ is the target value for our restraint, and $T_c$ is the value of the target function calculated using the current model (see, for example \citeasnoun{Giacovazzo:2002aa} and \citeasnoun{Watkin:2008aa}). This term $L_\restraints$ may of course be absent. Conversely, the data term could be absent in a refinement against geometrical terms only (\latinit{c.f.} the program DLS-76 \citeasnoun{Baerlocher:1978aa} for example).
 
 In \eqnref{L:def}, the crystallographic parameters (i.e. atomic positions, atomic displacement parameters (ADPs), and chemical occupancy in routine refinements) that each component of $Y_c$ and $T_c$ depends upon will be collectively denoted as the vector $y=(y_1, \cdots, y_p)$ and we can therefore denote those dependencies with the compact notations $Y_c(y)$ and $T_c(y)$. The parameters that are actually refined may be a different set $x_1, \cdots, x_n$, collectively denoted as a vector $x$. We assume that the dependency of $y$ upon $x$ is known analytically. Since the scale factor $K$ is unknown, our problem is the minimisation of $L$ with respect to all of $K, x_1, \cdots, x_n$. We will  denotes that dependency as $L(y(x), K)$, or more tersely when we do not need to remember the crystallographic parameter vector $y$, as $L(x, K)$. These notations reflect the important fact that we treat the scale factor $K$ separately, as will be explained later.
 
@@ -371,7 +371,7 @@ A crystallographic refinement may involve many such reparametrisations. By pieci
 
 \subsection{Constraint matrix}
 
-There are a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix\footnote{This method is also known as the Gauss-Newton algorithm.} (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and Conjugate Gradient L.S. (CGLS) which SHELXL offers as an option along with full-matrix.  The macro-molecular community later introduced the Limited-memory Broyden-Fletcher-Goldfarb-Shanno method (LBFGS), \emph{phenix.refine} \cite{Afonine:2012aa}, and a sparse Gauss-Newton algorithm, REFMAC \cite[section 4 and references therein]{Murshudov:2011aa}. All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
+There are a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix\footnote{This method is also known as the Gauss-Newton algorithm.} (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and Conjugate Gradient L.S. (CGLS) which SHELXL offers as an option along with full-matrix.  The macro-molecular community later introduced the Limited-memory Broyden-Fletcher-Goldfarb-Shanno method (LBFGS), \emph{phenix.refine} \citeasnoun{Afonine:2012aa}, and a sparse Gauss-Newton algorithm, REFMAC \citeasnoun[section 4 and references therein]{Murshudov:2011aa}. All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
 
 Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- e.g. a coordinate of the pivot atom on which another atom rides, and of course any parameter that is not involved in any constraint --  is also a component $x_l$ of $x$, i.e. 
 \begin{equation}
@@ -389,7 +389,7 @@ Indeed, after transforming every constraint on the model into a reparametrisatio
 \partialder{\tilde{Y}_c}{x} &= \partialder{Y_c}{y} \partialder{y}{x}.
 \label{eqn:chainrule}
 \end{align}
-The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallographic circles.\footnote{The earliest appearance of that concept in crystallographic litterature, though not by that name, brought to the attention of the authors is \cite{Larson:1980aa}} In standard mathematical nomenclatures, it is called the Jacobian of the transformation $x \mapsto y$ and we will therefore denote it $J$.
+The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallographic circles.\footnote{The earliest appearance of that concept in crystallographic litterature, though not by that name, brought to the attention of the authors is \citeasnoun{Larson:1980aa}} In standard mathematical nomenclatures, it is called the Jacobian of the transformation $x \mapsto y$ and we will therefore denote it $J$.
 
 The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $y_i$ depends on very few refined parameters $x_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, both of these costs scale as the number of non-zero elements in $J$ instead of $O(n^2)$ if $J$ were treated as a dense matrix.
 
@@ -418,16 +418,16 @@ g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
 \end{align}
 is the residual for the $i$-th restraint. We take again advantage of the sparsity of $\tilde{D}_\restraints$ to efficiently implement those products.
 
-It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \cite{Rollett:1970ab} suggests the normalization factor
+It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \citeasnoun{Rollett:1970ab} suggests the normalization factor
 \begin{equation}
 w_\restraints = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
 \label{eqn:giacovazzo_normalisation}
 \end{equation}
-This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \cite{Sheldrick:1997aa}.
+This is better known as the square of the \emph{goodness of fit}, $\chi^2$. This normalising factor also allows the restraints to have greater influence when the fit of the model to the data is poor (and the goodness of fit is greater than unity), whilst their influence lessens as the fit improves \citeasnoun{Sheldrick:1997aa}.
 
 \subsection{Implementation}
 
-The choice of the minimisation algorithm has a significant impact on the organisation of the computation of restraints. Indeed, a generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \cite{Afonine:2012aa} requires at each iteration only the function value $L$ and the derivatives $\partialder{L}{x}$. The derivatives $\partialder{L_\data}{x}$ and $\partialder{L_\restraints}{x}$ can be calculated separately before combining their sum to obtain $\partialder{L}{x}$. In contrast, for full-matrix least-squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where, by the chain rule,
+The choice of the minimisation algorithm has a significant impact on the organisation of the computation of restraints. Indeed, a generic minimiser such as the LBFGS minimiser used in \emph{phenix.refine} \citeasnoun{Afonine:2012aa} requires at each iteration only the function value $L$ and the derivatives $\partialder{L}{x}$. The derivatives $\partialder{L_\data}{x}$ and $\partialder{L_\restraints}{x}$ can be calculated separately before combining their sum to obtain $\partialder{L}{x}$. In contrast, for full-matrix least-squares we need the matrices of partial derivatives $\partialder{F_c}{x}$ and $\partialder{T_c}{x}$. Therefore, depending on the optimisation method used, we must be able to compute both $\partialder{L}{x}$ and $\partialder{T_c}{x}$ where, by the chain rule,
 \begin{align}
 \partialder{L_\restraints}{x} &= \partialder{L}{T_c} \partialder{T_c}{x} \nonumber\\
                              &= 2 w \left(T_o - T_c \right) \partialder{T_c}{x}.
@@ -439,7 +439,7 @@ The restraints framework was designed in such a way that it could be easily exte
 \section{Twinning}
 \label{sec:ls_twinning}
 
-As all other refinement programs, we have adopted the model of twins proposed by \cite{Jameson:1982aa} and \cite{Pratt:1971aa}. The sample is modelled as $d$ domains, each sizeable enough a single crystal to give rise to observable Bragg peaks. If peaks from different domains fall very close in reciprocal space, the integration software analysing frames will be able to compute only the sum of the intensities of these superposed peaks. Data for the $r$-th reflection will therefore consist in an intensity $F_{o,r}^2$ and in a list of $s_r$ Miller indices $h_{r,i_1}, h_{r,i_2}, \cdots, h_{r,i_{s_r}}$ where $h_{r,i}$ is the triplet of Miller indices of the Bragg peak originating from diffraction by domain $i$. The model of the structure then predicts an intensity $I_{c,r}$ for $F_{o,r}^2$ that reads
+As all other refinement programs, we have adopted the model of twins proposed by \citeasnoun{Jameson:1982aa} and \citeasnoun{Pratt:1971aa}. The sample is modelled as $d$ domains, each sizeable enough a single crystal to give rise to observable Bragg peaks. If peaks from different domains fall very close in reciprocal space, the integration software analysing frames will be able to compute only the sum of the intensities of these superposed peaks. Data for the $r$-th reflection will therefore consist in an intensity $F_{o,r}^2$ and in a list of $s_r$ Miller indices $h_{r,i_1}, h_{r,i_2}, \cdots, h_{r,i_{s_r}}$ where $h_{r,i}$ is the triplet of Miller indices of the Bragg peak originating from diffraction by domain $i$. The model of the structure then predicts an intensity $I_{c,r}$ for $F_{o,r}^2$ that reads
 \begin{align}
 \label{eqn:twinnedintensity}
 I_{c,r} &= \sum_{l=1}^{s_r} \alpha_{i_l} |F_c(h_{r,i_l})|^2\\
@@ -493,7 +493,7 @@ We will now discuss the s.u. of derived parameters. Such a parameter is a functi
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}.
 \label{eqn:sigma_f}
 \end{equation}
-An early occurence of this formula can be found in \cite{Sands:1966bh}.
+An early occurence of this formula can be found in \citeasnoun{Sands:1966bh}.
 
 As a result of this formula and of the consequence of \eqnref{constrained:variance:matrix} stated after it, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. This correct behaviour unfortunately triggers many alerts when a structure refined with Olex2 is checked with PLATON. 
 
@@ -574,7 +574,7 @@ The derivative of the metrical matrix with respect to the unit cell parameters,
 \end{align}
 
 \subsection{Symmetry}
-The variance-covariance matrix that is obtained from the inversion of the least-squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \cite{Sands:1966bh} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \eqnref{sigma_f} are mapped back to the original parameters.
+The variance-covariance matrix that is obtained from the inversion of the least-squares normal matrix contains the variance and covariance of all the refined parameters. Frequently, it is necessary to compute functions that involve parameters that are related by some symmetry operator of the space group to the original parameters. \citeasnoun{Sands:1966bh} suggests that the symmetry should be applied to the variance-covariance matrix to obtain a new variance-covariance matrix for the symmetry generated atoms. Alternatively, and it is this method that is used here, the original variance-covariance matrix can be used if the derivatives in \eqnref{sigma_f} are mapped back to the original parameters.
 
 Let the function $f$ depend on the Cartesian site $y_c$ that is generated by the symmetry operator $\mat{R}_c$ from the original Cartesian site $x_c$, \emph{i.e.}
 \begin{align}
@@ -594,7 +594,7 @@ where the transformation matrix $\mathcal{O}$ needed to transform the entire var
 
 \section{Refinement results}
 
-\olexrefine\ uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. \olexrefine\ produces a table describing the restraints using the CIF restraints dictionary. Moreover \olexrefine\ CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. It should be noted that the constraints and restraints unique to \olexrefine, i.e. not featured by SHELX, are saved in REM sections (using an XML format). This has the advantage that they can be read back by Olex2 while providing a ``.res file'' that can also be refined with SHELX, albeit with potentially a different model. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
+\olexrefine\ uses CIF \citeasnoun{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. \olexrefine\ produces a table describing the restraints using the CIF restraints dictionary. Moreover \olexrefine\ CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. It should be noted that the constraints and restraints unique to \olexrefine, i.e. not featured by SHELX, are saved in REM sections (using an XML format). This has the advantage that they can be read back by Olex2 while providing a ``.res file'' that can also be refined with SHELX, albeit with potentially a different model. As a part of this work a CIF handling toolbox \citeasnoun{Gildea:2011aa} was added to cctbx.
 
 \section{Conclusion}
 
@@ -604,7 +604,7 @@ We have presented herein the full mathematical derivations of the concepts used 
 
 \section{Computation of structure factors and their gradient}
 \label{appendix:structurefactorlinearisation}
-The formulae discussed in this appendix have been known for nearly a century and have been implemented in all known refinement programs. However it seems to the authors that, during the last decades, the computation for a given Miller index~$h$ of $F_c(h)$ and its gradient $\grad{F_c(h)}$ with respect to crystallographic parameters has very rarely been presented in all the minute details necessary to implement those formulae in a program, justifying this appendix in our humble opinion. The reader might wish to compare it with the detailled algorithms given in \cite{Rollet:Editor:1965}.
+The formulae discussed in this appendix have been known for nearly a century and have been implemented in all known refinement programs. However it seems to the authors that, during the last decades, the computation for a given Miller index~$h$ of $F_c(h)$ and its gradient $\grad{F_c(h)}$ with respect to crystallographic parameters has very rarely been presented in all the minute details necessary to implement those formulae in a program, justifying this appendix in our humble opinion. The reader might wish to compare it with the detailled algorithms given in \citeasnoun{Rollet:Editor:1965}.
 
 \subsection{Structure factor of one atom}
 
@@ -688,7 +688,7 @@ The smtbx provides code to compute derivatives for the both of these observables
 \begin{align}
 F'_c = F_c\left(1+0.001 x \frac{F_c^{2}\lambda^3}{\sin 2\theta}\right)^{-\frac{1}{4}},
 \end{align}
-where the so-called extinction parameter $x$ is added to the set of refined parameters. As noted in SHELXL documentation, it is close to the work of \cite{Becker:1974aa} but not identical.
+where the so-called extinction parameter $x$ is added to the set of refined parameters. As noted in SHELXL documentation, it is close to the work of \citeasnoun{Becker:1974aa} but not identical.
 
 
 \section{Minimisation of Least-Squares with an overall scale factor}
@@ -716,7 +716,7 @@ L(x, \tilde{K}) &= \norm{Y_o}^2 - \tilde{K}^2 \norm{Y_c(x)}^2.
 \end{align}
 We could then simply use $\tilde{K}$ as a starting value for a combined refinement of $x$ and $K$, i.e. the minimisation of $L(x, K)$ with the independent vector $(x, K)$ of parameters.
 
-However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \cite[and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously, but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
+However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \citeasnoun[and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously, but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
 \begin{align}
 \partialder{L(x, \tilde{K})}{x_j} &= \partialder{L}{x_j}(x, \tilde{K}),\ 1 \le j \le n, \\
 \shortintertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{\tilde{K}}{x_j}$ but in this case it is zero because of the definition of $\tilde{K}$. In this expression,}
@@ -765,7 +765,7 @@ The traditional argument is to show that the normal matrix is typically one to t
 
 However, in the extreme case of a structure with about 1000 atoms in the asymmetric unit, the design matrix stored in double precision only requires 40 to 120 Mb of memory, assuming constraints reducing the number of refinable parameters by a factor 2, as opposed to around 2 Mb for the normal matrix. They would therefore both easily fit in the main memory of a modern PC which comes with many Gigabytes of RAM.
 
-The counter-argument goes even further as the normal matrix is actually not necessary either to solve the least-square problem or to compute estimated standard deviations for geometric quantities, which are necessary to publish a structure. Indeed, there are well-known mathematical techniques based only on the design matrix to solve these two problems, c.f. for example \cite{Bjorck:1996fk}, section 2.8.3 for s.u. computations and section 2.4.3 for the solution of the least-squares.
+The counter-argument goes even further as the normal matrix is actually not necessary either to solve the least-square problem or to compute estimated standard deviations for geometric quantities, which are necessary to publish a structure. Indeed, there are well-known mathematical techniques based only on the design matrix to solve these two problems, c.f. for example \citeasnoun{Bjorck:1996fk}, section 2.8.3 for s.u. computations and section 2.4.3 for the solution of the least-squares.
  
 However, the best of those design matrix techniques, the QR decomposition, involves about twice as many floating point operations as the method based on the normal equations. That is the actual motivation for our choosing the latter and therefore abiding to a long crystallographic tradition.
 
@@ -891,7 +891,7 @@ The same equations as for the free rotation of a rigid body described in \secref
 
 \section{Restraints and their derivatives}
 \label{appendix:restraints}
-Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \cite{Afonine:2012aa}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
+Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \citeasnoun{Afonine:2012aa}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \citeasnoun{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
 
 \subsection{Restraints involving symmetry}
 
@@ -968,11 +968,11 @@ The minimum number of degrees of freedom necessary to model $p$ points in a plan
 
 \subsection{Restraints on Atomic Displacement Parameters}
 
-We will discuss three types of restraints on anisotropic displacement parameters \cite{Rollett:1970ab}, similar to restraints implemented in SHELXL and REFMAC \cite{Murshudov:1999aa}.
+We will discuss three types of restraints on anisotropic displacement parameters \citeasnoun{Rollett:1970ab}, similar to restraints implemented in SHELXL and REFMAC \citeasnoun{Murshudov:1999aa}.
 
 \subsubsection{Rigid-bond restraint}
 
-In a `rigid-bond' restraint the components of the anisotropic displacement parameters of two atoms in the direction of the vector connecting those two atoms are restrained to be equal. This corresponds to Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa} for testing whether anisotropic displacement parameters are physically reasonable \cite{Sheldrick:1997aa} and is in general appropriate for bonded and 1,3-separated pairs of atoms and should hold true for most covalently bonded systems.
+In a `rigid-bond' restraint the components of the anisotropic displacement parameters of two atoms in the direction of the vector connecting those two atoms are restrained to be equal. This corresponds to Hirshfeld's `rigid-bond' test \citeasnoun{Hirshfeld:1976aa} for testing whether anisotropic displacement parameters are physically reasonable \citeasnoun{Sheldrick:1997aa} and is in general appropriate for bonded and 1,3-separated pairs of atoms and should hold true for most covalently bonded systems.
 
 Since the mean-square displacement of an atom of thermal displacement tensor $U$ along an normalised vector $u$ is $u^T U u$, the restraint residual for two atoms A and B at respective positions $x_A$ and $x_B$ and with respective thermal displacement tensors $U_A$ and $U_B$ reads
 \begin{align}
@@ -1011,7 +1011,7 @@ The derivatives of $L(r_A, U_A, r_B, U_B)$ with respect to the positions $r_A$ a
 
 \subsubsection{ADP similarity restraint}
 \label{ADP:similarity}
-The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least-squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain. This is equivalent to a SHELXL SIMU restraint \cite{Sheldrick:1997aa}.
+The anisotropic displacement parameters of two atoms are restrained to have the same $U_{ij}$ components. Since this is only a rough approximation to reality, this restraint should be given a smaller weight in the least-squares minimisation than for a rigid-bond restraint and is suitable for use in larger structures with a poor data to parameter ratio. Applied correctly, this restraint permits a gradual increase and change in direction of the anisotropic displacement parameters along a side-chain. This is equivalent to a SHELXL SIMU restraint \citeasnoun{Sheldrick:1997aa}.
 The weighted least-squares residual is defined as
 \begin{equation}
 \label{eqn:ADP:restraints:similarity}
@@ -1038,7 +1038,7 @@ Here we minimise the difference between the ADP's $\mat{U}$, and the isotropic e
 \shortintertext{and}
 U_\text{iso} &= \tfrac{1}{3} \tr \mat{U}.
 \end{align}
-Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \cite{Sheldrick:1997aa}. As in \eqnref{ADP:restraints:similarity}, we define a restraint term invariant under rotations, as $L = \tr (U-U_\text{eq})(U-U_\text{eq})^T$, or explicitly,
+Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \citeasnoun{Sheldrick:1997aa}. As in \eqnref{ADP:restraints:similarity}, we define a restraint term invariant under rotations, as $L = \tr (U-U_\text{eq})(U-U_\text{eq})^T$, or explicitly,
 \begin{align}
 \label{eqn:ADP:restraints:isotropic}
 L &= w \left( \sum_i (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij}-U_{eq,ij})^2 \right),\\
