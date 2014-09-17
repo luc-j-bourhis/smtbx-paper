@@ -449,7 +449,7 @@ w_r &= w(F_{o,r}^2, \sigma(F_{o,r}^2), I_{c,r})\\
 1 &= \sum_{i=1}^d \alpha_i.
 \end{align}
 
-There is a special case that is common and therefore important, where there are exactly $d$ superposed peaks for each reflection, i.e., $s_r=d$ for every $r$, and where there is a symmetry operator $R$, the twin law, that generates the Miller indices for each domain $i > 1$, as
+There is a special case that is common and therefore important, where there are exactly $d$ superposed peaks for each reflection, i.e., $s_r=d$ for every $r$, and where there is a linear operator $R$, the twin law, that generates the Miller indices for each domain $i > 1$, as
 \begin{align}
 h_{r,i}=Rh_{r,i-1};
 \end{align}
@@ -457,7 +457,7 @@ in this case, the input consists solely of a list of $F_o(h)^2$ (as for a untwin
 
 The general case would be handled by using a reflection file in the HKLF5 format by SHELXL users. Such a file is created by the integration software and this approach can deal with the most complex situations. By contrast, CRYSTALS always requires a list of twin laws.
 
-\olexrefine\ can handle a more general case: when non-merohedral and merohedral twinning are simultaneously present. For example, one may have 4 domains 1, 2, 3 and 4. Domain 1 and 3 are related by a symmetry operator $R$, and so are domain 2 and 4, but the relative orientation of domain 1 and 2 does not correspond to any symmetry operator. Thus the measured frames exhibit 2 lattices of Bragg peaks, with some overlaps, and the integration software will then output a list of ($F_o^2$, $h_1$), ($F_o^2$, $h_2$) and ($F_o^2$, $h_1$, $h_2$). The refinement engine needs to expand this to a list of ($F_o^2$, $h_1$, $h_3=Rh_1$), ($F_o^2$, $h_2$, $h_4=Rh_2$), and ($F_o^2$, $h_1$, $h_2$, $h_3=Rh_1$, $h_4=Rh_2$). \olexrefine\ performs this task on the fly, while passing Miller triplets to the code computing structure factors and their derivatives.
+\olexrefine\ can handle a more general case: when non-merohedral and merohedral twinning are simultaneously present. For example, one may have 4 domains 1, 2, 3 and 4. Domain 1 and 3 are related by a twin law $R$, and so are domain 2 and 4, but the relative orientation of domain 1 and 2 does not correspond to any twin law. Thus the measured frames exhibit 2 lattices of Bragg peaks, with some overlaps, and the integration software will then output a list of ($F_o^2$, $h_1$), ($F_o^2$, $h_2$) and ($F_o^2$, $h_1$, $h_2$). The refinement engine needs to expand this to a list of ($F_o^2$, $h_1$, $h_3=Rh_1$), ($F_o^2$, $h_2$, $h_4=Rh_2$), and ($F_o^2$, $h_1$, $h_2$, $h_3=Rh_1$, $h_4=Rh_2$). \olexrefine\ performs this task on the fly, while passing Miller triplets to the code computing structure factors and their derivatives.
 
 The theory and phenomenology of twinning extends far beyond our exposition but from the narrow point of view of refinement, our presentation is sufficient, since, in this paper, we do not concern ourselves with the computation of the twin law or with the indexing of superposed lattices.
 
