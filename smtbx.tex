@@ -631,10 +631,13 @@ Let us consider the case of centred space group first. The sum can be partioned 
  \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &=  \sum_{\sym{R}{t} \in \mathcal{S}'} \sum_{\tau \in \cal{T}} G^{(R \mid t+\tau)}(h), \nonumber\\
 \shortintertext{where $\cal{T}$ is the set of all centring translations, including zero, and $\mathcal{S}'$ is the set of ``primitive'' symmetries. Then}
 G^{(R \mid t + \tau)}(h) &= G(hR) e^{i2\pi ht} e^{i2\pi h\tau}, \nonumber \\
-\shortintertext{but $h\tau=0$ for any Miller indices $h$ by definition, and therefore denoting by $n_{\text{ltr}}$ the order of the group of lattice translations,}
+\shortintertext{but $h\tau=0\ \text{modulo}\ 1$ for any Miller indices $h$ compatible with the centring conditions, and therefore denoting by $n_{\text{ltr}}$ the order of the group of lattice translations,}
 \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &= n_{\text{ltr}} \sum_{\sym{R}{t} \in \mathcal{S}'} G^{\sym{R}{t}}(h)
 \end{align}
-which shows that the centred case and the primitive case only differ by an overall multiplicative factor.
+We assume that all reflections are compatible with the centring conditions. As a result,
+the centred case and the primitive case only differ by an overall multiplicative factor.
+
+This assumption can be invalid in the refinement of some pseudo-merohedral twins. Indeed, a reflection $h$ corresponding to one twin domain may satisfy the centring condition whereas the corresponding reflection $h'$ from another domain may not do so. \olexrefine\ does not currently support this case.   
 
 Thus we will only consider a primitive unit cell in the following. Three cases are to be considered.
 \begin{enumerate}
