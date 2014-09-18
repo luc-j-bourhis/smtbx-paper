@@ -1097,16 +1097,25 @@ The volumes of the thermal ellipsoids of two atoms A and B may be restrained to 
 L_{A} = w  \left(V_{A}-\frac{V_{A}+V_{B}}{2}\right)^2 = w \left( \frac{V_{A}-V_{B}}{2}\right) ^2.
 \end{align}
 
-The volume of the thermal ellipsoid can be expressed as follows:
+The harmonic anisotropic displacement of an atom is described by a multivariate normal distribution of covariant matrix $U$ (see e.g. \citeasnoun{Trueblood:1996aa}), which is the anisotropic displacement tensor of that atom. Therefore, the probability distribution function is
 \begin{align}
-V &= \frac{4}{3}\pi \sqrt{\det U},
+p(x) = \frac{1}{\sqrt{(2\pi)^3 \det U}} e^{-\frac{1}{2}x^T U^{-1} x}.\nonumber
+\end{align}
+The surface of constant probability $p$ is therefore an ellipsoid of equation
+\begin{align}
+x^T A x &= 1,\nonumber\\
 \shortintertext{where}
-\det U &= 2 U_{13} U_{23} U_{12} + U_{11} U_{22} U_{33} \nonumber\\
-          & - U_{11} U_{23}^2 - U_{22} U_{13}^2 - U_{33} U_{12}^2
+A &= \frac{U^{-1}}{-2 \log\left( p \sqrt{(2\pi)^3 \det U} \right)}\nonumber.
+\end{align}
+In order to arrive at a simple formula, we fix the probability $p$ such that the denominator is equal to 1, i.e.
+\begin{align}
+p = \frac{1}{\sqrt{(2\pi)^3 e \det U}}.
 \end{align}
 
-The derivatives of $V$ with respect to the elements of $U$ are therefore
+The volume of an ellipsoid with such an equation is given by $\frac{4}{3}\pi \sqrt{\det A^{-1}}$, i.e. with the chosen value of $p$,
 \begin{align}
+V &= \frac{4\pi}{3}\sqrt{\det U},\\
+\shortintertext{whose derivatives read}
 \begin{bmatrix}
  \partialder{V}{U_{11}}\\[0.5em]
  \partialder{V}{U_{22}}\\[0.5em]
@@ -1125,6 +1134,8 @@ U_{11} U_{22}-U_{12}^2\\
 2 (U_{12}U_{13}- U_{23} U_{11} )
 \end{bmatrix}.
 \end{align}
+
+We would like to emphasize once more that our choice of ellipsoid whose volume to restraint lacks physical or mathematical motivations. It is only driven by simplicity. It is interesting to contrast the thermal ellipsoid volume restraint with the $U_\text{eq}$ similarity restraint. Indeed, the former restrains the sum of the eigenvalues of $U$ whereas the latter restrains the product of those eigenvalues. They are therefore complementary.
 
 \ack{Acknowledgements}
 
