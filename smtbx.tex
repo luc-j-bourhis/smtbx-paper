@@ -11,7 +11,6 @@
 \usepackage{bbold}
 \usepackage{amsmath}
 \usepackage{refstyle}
-\usepackage{nomencl}
 \usepackage[version=3]{mhchem}
 \newref{eqn}{%
 name={eqn~},
@@ -903,7 +902,7 @@ The same equations as for the free rotation of a rigid body described in \secref
 
 \section{Restraints and their derivatives}
 \label{appendix:restraints}
-Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \citeasnoun{Afonine:2012aa}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs)\nomenclature[zadp]{ADP}{Anisotropic Displacement Parameter} including restraints based on Hirshfeld's `rigid-bond' test \citeasnoun{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
+Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine} \citeasnoun{Afonine:2012aa}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs) including restraints based on Hirshfeld's `rigid-bond' test \citeasnoun{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
 
 \subsection{Restraints involving symmetry}
 
