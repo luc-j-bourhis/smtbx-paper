@@ -9,7 +9,7 @@
 %\documentclass[preprint]{iucr}
 
 \usepackage{bbold}
-\usepackage{mathtools}
+\usepackage{amsmath}
 \usepackage{refstyle}
 \usepackage{nomencl}
 \usepackage[version=3]{mhchem}
@@ -304,9 +304,9 @@ P &= \begin{bmatrix}
 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 1 & 0 & -1
 \end{bmatrix}\\
-\shortintertext{and \eqnref{exampleofadpconstraints} reduces to}
+\intertext{and \eqnref{exampleofadpconstraints} reduces to}
 U_{11} &= U_{33}\text{ and } U_{12} = U_{23},\\
-\shortintertext{leading to the constraint matrix}
+\intertext{leading to the constraint matrix}
 \begin{bmatrix}
 U_{11}\\
 U_{22}\\
@@ -388,7 +388,7 @@ Indeed, after transforming every constraint on the model into a reparametrisatio
  From the known analytical expression of $Y_c(x)$, one computes the derivatives of $\partialder{Y_c}{y_i}$ (the reader is referred to \appendixref{structurefactorlinearisation} for a detailed presentation of those computations). The minimisation algorithm then only needs the derivatives of
 \begin{align}
 \tilde{Y}_c(x) &= Y_c(y(x)) \\
- \shortintertext{with respect to each $x_i$, which are easily obtained by a simple application of the chain rule,}
+ \intertext{with respect to each $x_i$, which are easily obtained by a simple application of the chain rule,}
 \partialder{\tilde{Y}_c}{x} &= \partialder{Y_c}{y} \partialder{y}{x}.
 \label{eqn:chainrule}
 \end{align}
@@ -416,7 +416,7 @@ The two terms in the normal equations~\eqnref[name=]{generalnormalequations} com
 \begin{align}
 B_\restraints &= \tilde{D}_\restraints^T W \tilde{D}_\restraints\\
 g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
-\shortintertext{where $D^T$ denotes the transpose of $D$ and where $W$ is the diagonal matrix featuring the restraints weights, and where}
+\intertext{where $D^T$ denotes the transpose of $D$ and where $W$ is the diagonal matrix featuring the restraints weights, and where}
 \Delta T_i &= T_{o,i} - T_{c,i}
 \end{align}
 is the residual for the $i$-th restraint. We take again advantage of the sparsity of $\tilde{D}_\restraints$ to efficiently implement those products.
@@ -446,11 +446,11 @@ As all other refinement programs, we have adopted the model of twins proposed by
 \begin{align}
 \label{eqn:twinnedintensity}
 I_{c,r} &= \sum_{l=1}^{s_r} \alpha_{i_l} |F_c(h_{r,i_l})|^2\\
-\shortintertext{where $\alpha_i$ is the fraction of the sample volume occupied by twin domain $i$. The least-squares to minimise are then, adapting \eqnref{L:def} for a twinned structure,}
+\intertext{where $\alpha_i$ is the fraction of the sample volume occupied by twin domain $i$. The least-squares to minimise are then, adapting \eqnref{L:def} for a twinned structure,}
 L &= \sum_{r=1}^m w_r \left(F_{o,r}^2-K I_{c,r}\right)^2
-\shortintertext{where the weight $w_r$ is usually}
+\intertext{where the weight $w_r$ is usually}
 w_r &= w(F_{o,r}^2, \sigma(F_{o,r}^2), I_{c,r})\\
-\shortintertext{where $w$ would be the same function discussed in the context of \eqnref{L:def}. The minimisation of $L$ with respect to the model parameters embodied in $F_c$ and with respect to the $\alpha$'s is therefore subject to the constraint}
+\intertext{where $w$ would be the same function discussed in the context of \eqnref{L:def}. The minimisation of $L$ with respect to the model parameters embodied in $F_c$ and with respect to the $\alpha$'s is therefore subject to the constraint}
 1 &= \sum_{i=1}^d \alpha_i.
 \end{align}
 
@@ -475,13 +475,13 @@ The theory and phenomenology of twinning extends far beyond our exposition but f
 In this section, we will discuss the rigorous computation of standard uncertainties (s.u.) of and correlation between the parameters of a constrained model. As pointed out in \appendixref{leastsquaresminimisation} in the comment about \eqnref{gaussnewtonaslinearls}, the variance matrix for the refined parameters $x$ is
 \begin{align}
 \var{x} &= B^{-1}\\
-\shortintertext{where}
+\intertext{where}
 B_{ij} &= \partialder{r}{x_i} \dotprod \partialder{r}{x_j}
 \end{align}
 is the normal matrix for the constrained least-squares minimisation. However, we are interested in the variance matrix $\var{y}$ for the crystallographic parameters of the model, not in $\var{x}$. For small variations, we have the linear relation
 \begin{align}
 \delta y &\approx J \delta x\\
-\shortintertext{and therefore, using the well-known heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation around the minimum implicitly assumed throughout crystallographic refinement,}
+\intertext{and therefore, using the well-known heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation around the minimum implicitly assumed throughout crystallographic refinement,}
 \var{y} &= J\, \var{x} J^T.
 \label{eqn:constrained:variance:matrix}
 \end{align} 
@@ -547,7 +547,7 @@ Similarly, for the angle between two vectors in fractional coordinates, $u$ and 
 \begin{align}
 \theta &= \arccos \frac{u^T\mat{G}v}{\norm{u^T\mat{G}u}\norm{v^T\mat{G}v}} \\
 %\label{eqn:angle_frac}
-\shortintertext{or}
+\intertext{or}
 \theta &= \arccos \frac{r_{A}\cdot r_{B}}{\norm{r_{A}}\norm{r_{B}}}
 \label{eqn:angle_cart},
 \end{align}
@@ -566,7 +566,7 @@ and
 The derivative of the metrical matrix with respect to the unit cell parameters, 
 \begin{align}
 \cell =& (a, b, c, \alpha, \beta, \gamma)\\
-\shortintertext{needed in order to apply equation \eqnref{df_dcell}, are given below:}
+\intertext{needed in order to apply equation \eqnref{df_dcell}, are given below:}
 \partialder{g_{11}}{\cell} =& \left(2 a,0,0,0,0,0\right) \\ \nonumber
 \partialder{g_{22}}{\cell} =& \left(0,2 b,0,0,0,0\right) \\ \nonumber
 \partialder{g_{33}}{\cell} =& \left(0,0,2 c,0,0,0\right) \\ \nonumber
@@ -581,7 +581,7 @@ The variance-covariance matrix that is obtained from the inversion of the least-
 Let the function $f$ depend on the Cartesian site $y_c$ that is generated by the symmetry operator $\mat{R}_c$ from the original Cartesian site $x_c$, \emph{i.e.}
 \begin{align}
 y_c &= \mat{R}_c x_c.\\
-\shortintertext{Then the gradient with respect to the original site can be obtained by}
+\intertext{Then the gradient with respect to the original site can be obtained by}
 \partialder{f(y_c)}{x_c} &= \partialder{f(y_c)}{y_c} \mat{R}_c
 \label{eqn:symmetry_derivative}.
 \end{align}
@@ -661,9 +661,9 @@ However the product involving the inversion simplifies as
 $\inversion\sym{R}{t} = \sym{-R}{-t + t_{\bar{1}}}$ and therefore using \eqnref{transformofG},
 \begin{align}
 G^{\inversion\sym{R}{t}} &= G(-hR) e^{-i2\pi ht} e^{i2\pi h t_{\bar{1}}}, \nonumber \\
- \shortintertext{but then from the very definition of $G(h)$ in \eqnref{transformofG},}
+ \intertext{but then from the very definition of $G(h)$ in \eqnref{transformofG},}
  G(-hR) &= G(hR)^*, \\
- \shortintertext{and therefore}
+ \intertext{and therefore}
  \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} &= \Sigma + \Sigma^* e^{i2\pi h t_{\bar{1}}}.
  \label{eqn:sumofGforcentricgroups}
 \end{align}
@@ -685,11 +685,11 @@ Our code also provides two options to compute the sines and cosines: either by u
 Having computed the unit cell structure factor $F_c$ and its derivatives, we need to compute the derivatives of $\modulus{F_c}^2$ and perhaps as well $\modulus{F_c} = \sqrt{\modulus{F_c}^2}$ if performing a refinement against $F$. Since $\modulus{F_c}^2 = F_c F_c^*$ where $z^*$ denotes the complex conjugate of the complex number $z$, for any crystallographic parameter $\xi$,
 \begin{align}
 \partialder{\modulus{F_c}^2}{\xi} &= F_c^* \partialder{F_c}{\xi} + F_c \partialder{F_c^*}{\xi} \nonumber \\
-\shortintertext{but since the parameter $\xi$ is always real in practice,}
+\intertext{but since the parameter $\xi$ is always real in practice,}
 \partialder{F_c^*}{\xi} &= \left( \partialder{F_c}{\xi} \right)^* \\
-\shortintertext{and therefore}
+\intertext{and therefore}
 \partialder{\modulus{F_c}^2}{\xi} &= 2\re\left( F_c^* \partialder{F_c}{\xi}\right) \\
-\shortintertext{where $\re$ denotes the real part. Then,}
+\intertext{where $\re$ denotes the real part. Then,}
 \partialder{\modulus{F_c}}{\xi} &= \frac{1}{\modulus{F_c}} \re\left( F_c^* \partialder{F_c}{\xi}\right)
 \end{align}
 
@@ -710,20 +710,20 @@ In this appendix, we are concerned with the minimisation of $L_\data(x, K)$ as d
 It is well known that the overall scale factor tends to be highly correlated with the thermal displacements. As a result, a starting value of $K$ far from $K^*$ tends to destabilise the fit and at the very least will increase the number of iterations necessary to converge to the minimum. It is however easy to compute a reasonable approximation of $K^*$. Indeed, as a function of $K$ only, keeping all the other parameters $x$ fixed, $L(x, K)$ is a second-order polynomial. An analytical formula therefore exists for the value of $K$ that minimises that polynomial. Using the geometrical interpretation of least-squares is the fastest manner to demonstrate this formula and leads to the most compact formula. We therefore introduce the scalar product of two sets of observables,
 \begin{align}
 Y \dotprod Y' &= \sum_h w(h) Y(h) Y'(h), \\
-\shortintertext{and the associated norm $\norm{Y}$,}
+\intertext{and the associated norm $\norm{Y}$,}
 \norm{Y}^2 &= \sum_h w(h) Y(h)^2, \\
-\shortintertext{as well as the residual vector}
+\intertext{as well as the residual vector}
 r(x, K) &= Y_o - K Y_c(x).
 \label{eqn:lsresidualdef}
 \end{align}
 With those notations, $L(x, K)$ which reads
 \begin{align}
 L(x, K) &= \norm{r(x, K)}^2, \\
-\shortintertext{reaches a minimum at}
+\intertext{reaches a minimum at}
 \tilde{K} &= \frac{Y_c \dotprod Y_o}{\norm{Y_c}^2},
 \label{eqn:tildeK}
 \\
-\shortintertext{while keeping $x$ fixed, and the value at the minimum reads}
+\intertext{while keeping $x$ fixed, and the value at the minimum reads}
 L(x, \tilde{K}) &= \norm{Y_o}^2 - \tilde{K}^2 \norm{Y_c(x)}^2.
 \end{align}
 We could then simply use $\tilde{K}$ as a starting value for a combined refinement of $x$ and $K$, i.e. the minimisation of $L(x, K)$ with the independent vector $(x, K)$ of parameters.
@@ -731,7 +731,7 @@ We could then simply use $\tilde{K}$ as a starting value for a combined refineme
 However, we chose to minimise $L(x, \tilde{K})$ instead, which is a function of $x$ only since $\tilde{K}$ is completely determined by $x$. This is a special case of a technique called separable least-squares \citeasnoun[and references therein]{Nielsen:2000fr} that  converges to the same minimum as previously, but with fewer iterations for the same cost per iteration. In order to carry out that minimisation, we first need to compute the first-order derivatives,
 \begin{align}
 \partialder{L(x, \tilde{K})}{x_j} &= \partialder{L}{x_j}(x, \tilde{K}),\ 1 \le j \le n, \\
-\shortintertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{\tilde{K}}{x_j}$ but in this case it is zero because of the definition of $\tilde{K}$. In this expression,}
+\intertext{where the chain rule would normally mandate a second term $\partialder{L}{K}(x, \tilde{K})\partialder{\tilde{K}}{x_j}$ but in this case it is zero because of the definition of $\tilde{K}$. In this expression,}
 \partialder{L}{x_j} &= 2 r \dotprod \partialder{r}{x_j}.
 \end{align}
 Thus, the first-order derivative is exactly the same as it would have been with an independent parameter $K$. We then need the second-order derivatives
@@ -819,7 +819,7 @@ r' = s(r-r_{p}) + r_{p}, \label{eqn:isometry}
 where s is the distance scaling component ($s=1$ if not refined) and $r_{p}$ is the pivot atom centre. In the case when $s$ is refined, the corresponding derivative of the transformation is:
 \begin{align}
 \partialder{r'}{s} &= r-r_{p} \\
-\shortintertext{whereas}
+\intertext{whereas}
 \partialder{r'}{r} &= s \identity
 \end{align}
 
@@ -828,7 +828,7 @@ where s is the distance scaling component ($s=1$ if not refined) and $r_{p}$ is 
 This constraint relates the ADP's of one atom to the ADP's of another atom as rotated by a fixed or refined angle around a given direction. The direction can be defined as a static vector, best line or best plane normal. Considering atoms A and B, the relation between their ADP tensor $U_A$ and $U_B$ reads
 \begin{align}
 U_{B} &= RU_{A}R^{T}, \\
-\shortintertext{where $R$ is the rotation matrix}
+\intertext{where $R$ is the rotation matrix}
 R &=
   \begin{bmatrix} 
     txx + c_\alpha && tyx + zs_\alpha && tzx - ys_\alpha \\
@@ -857,7 +857,7 @@ R'_\alpha =
 This constrained is suitable for groups which can be rotated around a given direction (SHELXL AFIX 7). For groups \ce{XY_n} with $1\leq n \leq 4$ and X being B,C,N, \latinit{etc}, and Y being H, F, Cl \latinit{etc}, the distances from X to Y can also be refined (SHELXL AFIX 8). The coordinate transformation is
 \begin{align}
 r' &= sR(r-r_p) + r_{p},\\
-\shortintertext{and its derivatives are}
+\intertext{and its derivatives are}
 \partialder{r'}{\alpha} &= sR'_\alpha(r - r_p),\\ 
 \partialder{r'}{s} &= R(r-r_p),
 \end{align}
@@ -919,9 +919,9 @@ The distances between two or more atom pairs are restrained to be equal by minim
 \begin{align}
 \label{eqn:bond_similarity}
 L &= \mean{r - \mean{r}}^2,\\
-\shortintertext{where $r=(r_1, \cdots, r_n)$ are the Euclidean distances between the atoms of each pair. The mean is defined as}
+\intertext{where $r=(r_1, \cdots, r_n)$ are the Euclidean distances between the atoms of each pair. The mean is defined as}
 \mean{\xi} &= \sum_i \omega_i \xi_i, \\
-\shortintertext{where}
+\intertext{where}
 \omega_i &= \frac{w_i}{\sum_j w_j},
 \end{align}
 and where $w_i$ is therefore the weight for the $i$-th pair.
@@ -929,7 +929,7 @@ and where $w_i$ is therefore the weight for the $i$-th pair.
 The computation of the derivatives is easier with the alternate form of this variance, 
 \begin{align}
 L &= \mean{r^2} - \mean{r}^2 = \sum_i \omega_i r_i^2 - \left(\sum_i \omega_i r_i\right)^2.\\
-\shortintertext{The derivative of $L$ with respect to a distance $r_i$ is then}
+\intertext{The derivative of $L$ with respect to a distance $r_i$ is then}
 \partialder{L}{r_i} &= 2 \omega_i(r_i - \mean{r}).
 \end{align}
 
@@ -990,15 +990,15 @@ Since the mean-square displacement of an atom of thermal displacement tensor $U$
 \begin{align}
 \label{eqn:rigid_bond}
 r &= \frac{u^T (U_A - U_B) u}{\norm{u}},\\
-\shortintertext{where}
+\intertext{where}
 u &= x_A - x_B, \\
-\shortintertext{and the restraint term is then}
+\intertext{and the restraint term is then}
 L&(r_A, U_A, r_B, U_B) = w r^2.
 \end{align}
 Those formulae are valid whether using Cartesian or fractional coordinates, providing the adapted formula is used to compute $\norm{u}$, i.e.
 \begin{align}
 \norm{u} &= \sqrt{\sum_i u_i^2}\\
-\shortintertext{in Cartesian coordinates and}
+\intertext{in Cartesian coordinates and}
 \norm{u} &= \sqrt{\sum_i G_{ij} u_i u_j}
 \end{align}
 in fractional coordinates, where $G$ is the metric matrix.
@@ -1038,7 +1038,7 @@ L = w \left( \sum_i (U_{A,ii} - U_{B,ii})^2 + 2 \sum_{i < j} (U_{A,ij} - U_{B,ij
 Therefore the gradients of the residual with respect to diagonal elements are then
 \begin{align}
 \partialder{L}{U_{A,ii}} &= 2w(U_{A,ii} - U_{B,ii}),\\
-\shortintertext{whereas the gradient with respect to the off-diagonal elements are}
+\intertext{whereas the gradient with respect to the off-diagonal elements are}
 \partialder{L}{U_{A,ij}} &=  4w(U_{A,ij} - U_{B,ij}),
 \end{align}
 and then the same equation with $B \leftrightarrow A$.
@@ -1047,14 +1047,14 @@ and then the same equation with $B \leftrightarrow A$.
 Here we minimise the difference between the ADP's $\mat{U}$, and the isotropic equivalent, defined in Cartesian coordinates by
 \begin{align}
 \mat{U}_\text{eq} &= U_\text{iso}\identity, \\
-\shortintertext{and}
+\intertext{and}
 U_\text{iso} &= \tfrac{1}{3} \tr \mat{U}.
 \end{align}
 Again, this is an approximate restraint and as such should have a comparatively small weight. A common use for this restraint would be for solvent water, where the two restraints discussed previously would be inappropriate \citeasnoun{Sheldrick:1997aa}. As in \eqnref{ADP:restraints:similarity}, we define a restraint term invariant under rotations, as $L = \tr (U-U_\text{eq})(U-U_\text{eq})^T$, or explicitly,
 \begin{align}
 \label{eqn:ADP:restraints:isotropic}
 L &= w \left( \sum_i (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij}-U_{eq,ij})^2 \right),\\
-\shortintertext{which simplifies in Cartesian coordinates into}
+\intertext{which simplifies in Cartesian coordinates into}
 L &= w \left( \sum_i (U_{ii} - U_\text{iso})^2 + 2 \sum_{i<j} U_{ij}^2 \right)
 \end{align}
 
@@ -1071,7 +1071,7 @@ By mere inspection, we can seethat the derivatives of the residual with respect 
 The ADP of two atoms A and B may be restrained to have the same $U_\text{eq}$. The restraint term for atom A reads
 \begin{align}
 L_\text{A} &= w  \left(U_\text{A,eq}-\frac{U_\text{A,eq}+U_\text{B,eq}}{2}\right)^2 \\
-\shortintertext{or in Cartesian coordinates}
+\intertext{or in Cartesian coordinates}
 L_\text{A} &= w \left( \sum_{i=1}^3 \frac{U_{\text{A},ii} - U_{\text{B},ii}}{6} \right) ^2.
 \end{align}
 This restraint is therefore invariant under rotation.
@@ -1105,7 +1105,7 @@ p(x) = \frac{1}{\sqrt{(2\pi)^3 \det U}} e^{-\frac{1}{2}x^T U^{-1} x}.\nonumber
 The surface of constant probability $p$ is therefore an ellipsoid of equation
 \begin{align}
 x^T A x &= 1,\nonumber\\
-\shortintertext{where}
+\intertext{where}
 A &= \frac{U^{-1}}{-2 \log\left( p \sqrt{(2\pi)^3 \det U} \right)}\nonumber.
 \end{align}
 In order to arrive at a simple formula, we fix the probability $p$ such that the denominator is equal to 1, i.e.
@@ -1116,7 +1116,7 @@ p = \frac{1}{\sqrt{(2\pi)^3 e \det U}}.
 The volume of an ellipsoid with such an equation is given by $\frac{4}{3}\pi \sqrt{\det A^{-1}}$, i.e. with the chosen value of $p$,
 \begin{align}
 V &= \frac{4\pi}{3}\sqrt{\det U},\\
-\shortintertext{whose derivatives read}
+\intertext{whose derivatives read}
 \begin{bmatrix}
  \partialder{V}{U_{11}}\\[0.5em]
  \partialder{V}{U_{22}}\\[0.5em]
