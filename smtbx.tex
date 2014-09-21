@@ -143,7 +143,7 @@ refcmd=\ref{#1}
 \keyword{small molecules}\keyword{refinement}\keyword{constraints}\keyword{restraints}\keyword{least-squares}
 
 \newcommand{\latinit}[1]{\textit{#1}}
-\newcommand{\textbookref}{(see e.g. \citeasnoun{Giacovazzo:2011aa})}
+\newcommand{\textbookref}{(see \latinit{e.g.} \citeasnoun{Giacovazzo:2011aa})}
 
 \maketitle
 
@@ -352,7 +352,7 @@ d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\
 \end{align}
 Thus a new derivative with respect to the new refinable parameter $\phi$ is introduced by this reparametrisation.
 
-The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above. This example is not particularly common but it is a simple illustration of the concept we want to introduce. In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One type of disorder could be modelled by first applying the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_\ce{C}$ and $x_\ce{X}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, e.g.
+The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above. This example is not particularly common but it is a simple illustration of the concept we want to introduce. In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One type of disorder could be modelled by first applying the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_\ce{C}$ and $x_\ce{X}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, \latinit{e.g.}
 \begin{align}
 \partialder{x_\ce{H0}}{u} = \partialder{x_\ce{H0}}{x_\ce{C}}\partialder{x_\ce{C}}{u} = 2
 \end{align}
@@ -369,7 +369,7 @@ in the riding approximation. This composition of reparametrisation may be repres
 \end{figure}
 
 
-As models become more complex, e.g. hydrogen atoms riding on the atoms of a rigid body whose rotation centre is tied to an atom whose coordinates are refined, the reparametrisation graph becomes deeper. We decided not to put arbitrary limits on that graph. Indeed we could have made a closed list of reparametrisations and of reparametrisation combinations  that our framework would accept but instead we decided to write our code so that it could correctly handle the computation of parameter values and of partial derivatives for arbitrary reparametrisations, combined in arbitrary ways. This framework is therefore open as new type of reparametrisations can be added, without the need to change the basic infrastructure in any way, and without the risk of breaking existing reparametrisations. This has proven very useful to the authors as this enabled them to incrementally add the wealth of constraints now available, some of which are unique to \olexrefine, as discussed in \appendixref{constraints}. Furthermore, it enables third parties to develop their own constraints without the need for the involvement of the original authors beyond documenting how the reparametrisation framework works.
+As models become more complex, \latinit{e.g.} hydrogen atoms riding on the atoms of a rigid body whose rotation centre is tied to an atom whose coordinates are refined, the reparametrisation graph becomes deeper. We decided not to put arbitrary limits on that graph. Indeed we could have made a closed list of reparametrisations and of reparametrisation combinations  that our framework would accept but instead we decided to write our code so that it could correctly handle the computation of parameter values and of partial derivatives for arbitrary reparametrisations, combined in arbitrary ways. This framework is therefore open as new type of reparametrisations can be added, without the need to change the basic infrastructure in any way, and without the risk of breaking existing reparametrisations. This has proven very useful to the authors as this enabled them to incrementally add the wealth of constraints now available, some of which are unique to \olexrefine, as discussed in \appendixref{constraints}. Furthermore, it enables third parties to develop their own constraints without the need for the involvement of the original authors beyond documenting how the reparametrisation framework works.
 
 A crystallographic refinement may involve many such reparametrisations. By piecing them all together, we obtain one reparametrisation that expresses all refinable crystallographic parameters as a smaller vector of independent parameters that shall then be refined. Our framework safeguards that piecewise construction in several ways. First, at most one reparametrisation may be applied to any given parameter. An attempt to add a reparametrisation to a parameter that is already subject to one would be rejected by our framework as an error. Then if a cycle were found in the dependency graph, the framework would also reject the parametrisation. This would happen when at least one parameter, through a series of reparametrisation combinations, depends upon itself. Thus our framework safeguards against incorrect user inputs, and also against bugs in our own code that automatically builds constraints.
 
@@ -377,7 +377,7 @@ A crystallographic refinement may involve many such reparametrisations. By pieci
 
 There are a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix\footnote{This method is also known as the Gauss-Newton algorithm.} (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and Conjugate Gradient L.S. (CGLS) which SHELXL offers as an option along with full-matrix.  The macro-molecular community later introduced the Limited-memory Broyden-Fletcher-Goldfarb-Shanno method (LBFGS), \emph{phenix.refine} \citeasnoun{Afonine:2012aa}, and a sparse Gauss-Newton algorithm, REFMAC \citeasnoun[section 4 and references therein]{Murshudov:2011aa}. All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. The fact that no higher-order derivatives are used greatly simplifies the implementation of constrained least-squares.
 
-Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- e.g. a coordinate of the pivot atom on which another atom rides, and of course any parameter that is not involved in any constraint --  is also a component $x_l$ of $x$, i.e. 
+Indeed, after transforming every constraint on the model into a reparametrisation as explained and exemplified in the previous section and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- \latinit{e.g.} a coordinate of the pivot atom on which another atom rides, and of course any parameter that is not involved in any constraint --  is also a component $x_l$ of $x$, i.e. 
 \begin{align}
 \partialder{y_k}{x_j} = \begin{cases} 
    1& \text{if $j=l$},\\
@@ -402,7 +402,7 @@ The computation of $J$ takes advantage of the fact that it is a very sparse matr
 
 In this section we will give an overview of the computations involved in restrained refinement. The mathematical formulae for each restraint objective and their derivatives can be found in \appendixref{restraints}.
 
-Since each restraint target $T_{c,i}$ only depends on a very small subset of the $y_j$ (e.g., in the case of a bond length, only the 6 coordinates of the two bonded atoms would play a role), the matrix of derivatives with respect to the crystallographic parameters
+Since each restraint target $T_{c,i}$ only depends on a very small subset of the $y_j$ (\latinit{e.g.}, in the case of a bond length, only the 6 coordinates of the two bonded atoms would play a role), the matrix of derivatives with respect to the crystallographic parameters
 \begin{align}
 D_\restraints = \partialder{T_c}{y} = \left[\partialder{T_{c,i}}{y_j}\right]_{i,j},
 \end{align}
@@ -487,7 +487,7 @@ is the normal matrix for the constrained least-squares minimisation. However, we
 \label{eqn:constrained:variance:matrix}
 \end{align} 
 
-We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. For most constraints, the s.u. of Hydrogen coordinates are equal to the s.u. of the atom they ride on but e.g. for a rotating \ce{-CH_3}, they differ because the s.u. of the azimuthal angle increases the s.u. of the Hydrogen coordinates that comes from riding only.
+We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. For most constraints, the s.u. of Hydrogen coordinates are equal to the s.u. of the atom they ride on but \latinit{e.g.} for a rotating \ce{-CH_3}, they differ because the s.u. of the azimuthal angle increases the s.u. of the Hydrogen coordinates that comes from riding only.
 
 \subsection{Derived parameters}
 
@@ -1095,7 +1095,7 @@ The volumes of the thermal ellipsoids of two atoms A and B may be restrained to 
 L_{A} = w  \left(V_{A}-\frac{V_{A}+V_{B}}{2}\right)^2 = w \left( \frac{V_{A}-V_{B}}{2}\right) ^2.
 \end{align}
 
-The harmonic anisotropic displacement of an atom is described by a multivariate normal distribution of covariant matrix $U$ (see e.g. \citeasnoun{Trueblood:1996aa}), which is the anisotropic displacement tensor of that atom. Therefore, the probability distribution function is
+The harmonic anisotropic displacement of an atom is described by a multivariate normal distribution of covariant matrix $U$ (see \latinit{e.g.} \citeasnoun{Trueblood:1996aa}), which is the anisotropic displacement tensor of that atom. Therefore, the probability distribution function is
 \begin{align}
 p(x) = \frac{1}{\sqrt{(2\pi)^3 \det U}} e^{-\frac{1}{2}x^T U^{-1} x}.\nonumber
 \end{align}
