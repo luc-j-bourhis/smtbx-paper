@@ -634,22 +634,18 @@ G^{\sym{R}{t}}(h) = G(hR)e^{i 2\pi ht}
 \end{align}
 Let us consider the case of non-primitive unit cells first. The sum can be partioned as follow
 \begin{align}
- \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &=  \sum_{\sym{R}{t} \in \mathcal{S}'} \sum_{\tau \in \cal{T}} G^{(R \mid t+\tau)}(h), \nonumber
+ \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &=  \sum_{\sym{R}{t} \in \mathcal{S}'} \sum_{\tau \in \cal{T}} G^{(R \mid t+\tau)}(h), \nonumber\\
+\intertext{where $\cal{T}$ is the set of all centring translations, including zero, and $\mathcal{S}'$ is the set of ``primitive'' symmetries. Then with \eqnref{transformofG} we can factorise the sum as}
+\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &= 
+\left( \sum_{\tau \in \cal{T}} e^{i2\pi h\tau} \right)
+\left( \sum_{\sym{R}{t} \in \mathcal{S}'} G(hR) e^{i2\pi ht} \right).
+\label{eqn:structurefactor:centring:factorisation}
 \end{align}
-where $\cal{T}$ is the set of all centring translations, including zero, and $\mathcal{S}'$ is the set of ``primitive'' symmetries. Then
-\begin{align}
-G^{(R \mid t + \tau)}(h) &= G(hR) e^{i2\pi ht} e^{i2\pi h\tau}, \nonumber
-\end{align}
-but $h\tau=0\ \text{modulo}\ 1$ for any Miller indices $h$ compatible with the centring conditions, and therefore denoting by $n_{\text{ltr}}$ the order of the group of lattice translations,
-\begin{align}
-\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &= n_{\text{ltr}} \sum_{\sym{R}{t} \in \mathcal{S}'} G^{\sym{R}{t}}(h)
-\end{align}
-We assume that all reflections are compatible with the centring conditions. As a result,
-the centred case and the primitive case only differ by an overall multiplicative factor.
+The first term of the right-hand side does not depend upon the scatterer and it can therefore be precomputed. Commonly, Miller indices satisfy the centring conditions $h\tau = 0 \mod 1$. In this case, this term is equal to the number of centring translations. However this assumption can be invalid in the refinement of some pseudo-merohedral twins since Miller indices satisfying a centring condition may be transformed by the twin law in Miller indices which do not satisfy it.
 
-This assumption can be invalid in the refinement of some pseudo-merohedral twins. Indeed, a reflection $h$ corresponding to one twin domain may satisfy the centring condition whereas the corresponding reflection $h'$ from another domain may not do so. \olexrefine\ does not currently support this case.   
+It should be noted that \citeasnoun{Rollet:Editor:1965} already advocated to skip the computation of the terms in $\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h)$ corresponding to non-zero centring translations and then to multiply the result by 2. However our framework can handle any group $\cal{T}$, not only to those with $+1/2$ translations. It would work for ```tripled''' cells \latinit{e.g.}
 
-Thus we will only consider a primitive unit cell in the following. Three cases are to be considered.
+Thus we are left with the computation of the second term of the right-hand side of \eqnref{structurefactor:centring:factorisation}. This is equivalent to treat the case of a primitive unit cell. Three cases are to be considered.
 \begin{enumerate}
 \item The space group is non-centric. Then there is no further simplification.
 \item The space group is centric but the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\mathcal{S}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
