@@ -787,7 +787,7 @@ It should be noted that for singular or nearly singular problems, one could solv
 \subsection{Occupancy constraints}
 The smtbx provides a generic tool to express any scalar parameter $v$ as an affine function of other scalar parameters $u_1, u_2, \cdots, u_s$,
 \begin{align}
-  v = \sum_{i=1}^s a_i v_i + b,
+  v = \sum_{i=1}^s a_i u_i + b,
   \label{eqn:affinereparam}
 \end{align}
 where the number of arguments $s$ as well as the coefficients $a_i$ and $b$ can be freely chosen.
