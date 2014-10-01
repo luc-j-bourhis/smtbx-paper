@@ -109,6 +109,7 @@ refcmd=\ref{#1}
 \begin{document}
 
 \newcommand{\olexrefine}{\emph{olex2.refine}}
+\newcommand{\Olexrefine}{\emph{Olex2.refine}}
 \newcommand{\phenixrefine}{\emph{phenix.refine}}
 \newcommand{\cctbx}{\emph{cctbx}}
 \newcommand{\cctbxrestraints}{\emph{cctbx.restraints}}
@@ -612,7 +613,7 @@ where the transformation matrix $\mathcal{O}$ needed to transform the entire var
 
 \section{Conclusion}
 
-We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. On the one hand, \olexrefine\ is immediately useful to the practising crystallographer, through the program Olex2 which lets the user transparently switch between different refinement engines. On the other hand, it can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (\smtbx) that is part of the Computational Crystallography Toolbox (\cctbx), which is usable as a library for the Python programming language, thus providing great expressiveness, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained herein how the \smtbx\ added constrained L.S. refinement from scratch to the \cctbx\ and how it added many restraints as well, thus opening new fields to the \cctbx.
+We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. \Olexrefine\ is immediately useful to the practising crystallographer since it is presently available from the program Olex2 by default. It can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (\smtbx) that is part of the Computational Crystallography Toolbox (\cctbx), which is usable as a library for the Python programming language, thus providing great expressiveness, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained herein how the \smtbx\ added constrained L.S. refinement from scratch to the \cctbx\ and how it added many restraints as well, thus opening new fields to the \cctbx.
 
 \appendix
 
