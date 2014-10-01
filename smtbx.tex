@@ -115,6 +115,7 @@ refcmd=\ref{#1}
 \newcommand{\cctbxrestraints}{\emph{cctbx.restraints}}
 \newcommand{\smtbx}{\emph{smtbx}}
 \newcommand{\scitbx}{\emph{scitbx}}
+\newcommand{\lstbx}{\emph{lstbx}}
 \newcommand{\sgtbx}{\emph{sgtbx}}
 \newcommand{\gltbx}{\emph{gltbx}}
 \newcommand{\eltbx}{\emph{eltbx}}
@@ -201,7 +202,7 @@ We decided to base the computational core of \olexrefine\ on a pre-existing proj
 \label{fig:software:modules}
 \end{figure}
 
-For our project, we contributed to it a Small Molecule Toolbox (\smtbx) which features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to \cctbx, restraints which are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the \cctbx\ and the \smtbx\ use the Scientific Toolbox (\scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the \scitbx\ which provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
+For our project, we contributed to it a Small Molecule Toolbox (\smtbx) which features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to \cctbx, restraints which are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the \cctbx\ and the \smtbx\ use the Scientific Toolbox (\scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (\lstbx) to the \scitbx\ which provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
 
 The program Olex2 relies either on SHELX or on the \smtbx\ to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the \smtbx\ and the \cctbx\ to represent unit cell, reflections, crystal symmetry, constraints, restraints, \latinit{etc}. Once the \smtbx\ has produced the desired results they are sent back to Olex2 which converts them to its own representations, so as to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various modules and programs that have just been described.  
 
