@@ -226,7 +226,7 @@ where $B_\data$ and $B_\restraints$ are the so-called normal matrices associated
 
 The rest of the paper is organised as follow.
 
-\Secref{constraints} deals with the computation of the derivatives with respect to the refined parameters $x_1, \cdots, x_n$ from the derivatives with respect to the crystallographic parameters $y_1, \cdots, y_p$. The computation of the latter derivatives is expounded in \appendixref{structurefactorlinearisation} along with the formulae for the complex structure factors $F_c$. \Appendixref{constraints} details the computation of the value and derivatives of constrained parameters for each constraint featured by \olexrefine. \Secref{restraints} is devoted to the general principles of the computation of $B_\restraints$ and $g_\restraints$. It is completed by \appendixref{restraints} which gives the formulae for each restraint featured by \olexrefine. \Secref{ls_twinning} deals with the refinement of twinned structures. \Secref{errors} details the computation of standard uncertainties (s.u.), emphasizing the influence of constraints. \Secref{refinement:results} gives a very quick overview of the output of the results of a refinement. \Appendixref{leastsquaresminimisation} presents the method used to find the optimal scale factor $K$, and then the optimal value of all the other refined parameters.
+\Secref{constraints} deals with the computation of the derivatives with respect to the refined parameters $x_1, \cdots, x_n$ from the derivatives with respect to the crystallographic parameters $y_1, \cdots, y_p$. The computation of the latter derivatives is expounded in \appendixref{structurefactorlinearisation} along with the formulae for the complex structure factors $F_c$. \Appendixref{constraints} details the computation of the value and derivatives of constrained parameters for each constraint featured by \olexrefine. \Secref{restraints} is devoted to the general principles of the computation of $B_\restraints$ and $g_\restraints$. It is completed by \appendixref{restraints} which gives the formulae for each restraint featured by \olexrefine. \Secref{ls_twinning} deals with the refinement of twinned structures. \Secref{errors} details the computation of standard uncertainties (s.u.), emphasising the influence of constraints. \Secref{refinement:results} gives a very quick overview of the output of the results of a refinement. \Appendixref{leastsquaresminimisation} presents the method used to find the optimal scale factor $K$, and then the optimal value of all the other refined parameters.
 
 \section{Constraints}
 \label{sec:constraints}
@@ -393,7 +393,7 @@ Indeed, after transforming every constraint on the model into a reparametrisatio
 \partialder{\tilde{Y}_c}{x} &= \partialder{Y_c}{y} \partialder{y}{x}.
 \label{eqn:chainrule}
 \end{align}
-The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallographic circles.\footnote{The earliest appearance of that concept in crystallographic litterature, though not by that name, brought to the attention of the authors is by \citeasnoun{Larson:1980aa}} In standard mathematical nomenclatures, it is called the Jacobian of the transformation $x \mapsto y$ and we will therefore denote it $J$.
+The matrix $\partialder{y}{x}$ is known as the constraint matrix in crystallographic circles.\footnote{The earliest appearance of that concept in crystallographic literature, though not by that name, brought to the attention of the authors is by \citeasnoun{Larson:1980aa}} In standard mathematical nomenclatures, it is called the Jacobian of the transformation $x \mapsto y$ and we will therefore denote it $J$.
 
 The computation of $J$ takes advantage of the fact that it is a very sparse matrix. This stems from the fact that any given crystallographic parameter $y_i$ depends on very few refined parameters $x_j$, as amply illustrated in the previous section. We take advantage of this property to drastically reduce the memory cost of $J$ and the cost of computing each of its non-zero coefficients. More precisely, both of these costs scale as the number of non-zero elements in $J$ instead of $O(n^2)$ if $J$ were treated as a dense matrix.
 
@@ -422,7 +422,7 @@ g_\restraints &= \tilde{D}_\restraints^T \Delta T,\\
 \end{align}
 is the residual for the $i$-th restraint. We take again advantage of the sparsity of $\tilde{D}_\restraints$ to efficiently implement those products.
 
-It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \citeasnoun{Rollett:1970ab} suggests the normalization factor
+It would be desirable to place the weights of the restraints on the same scale as the typical residual, such that a restraint will have a similar strength for the same weight in different structures. \citeasnoun{Rollett:1970ab} suggests the normalisation factor
 \begin{align}
 w_\restraints = \frac{1}{m-n} \sum_{h}{ w_h (Y_{o,h} - K Y_{c,h})^2}.
 \label{eqn:giacovazzo_normalisation}
@@ -496,7 +496,7 @@ We will now discuss the s.u. of derived parameters. Such a parameter is a functi
 \sigma^2(f) = \sum_{i,j}{\left(\partialder{f}{p_i}\right) \left(\partialder{f}{p_j}\right) cov(p_i,p_j)}.
 \label{eqn:sigma_f}
 \end{align}
-An early occurence of this formula can be found in \citeasnoun{Sands:1966bh}.
+An early occurrence of this formula can be found in \citeasnoun{Sands:1966bh}.
 
 As a result of this formula and of the consequence of \eqnref{constrained:variance:matrix} stated after it, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. This correct behaviour unfortunately triggers many alerts when a structure refined with Olex2 is checked with PLATON. 
 
@@ -632,7 +632,7 @@ We are therefore left with computing the sum of the transforms of $G(h)$ under t
 G^{\sym{R}{t}}(h) = G(hR)e^{i 2\pi ht}
 \label{eqn:transformofG}
 \end{align}
-Let us consider the case of non-primitive unit cells first. The sum can be partioned as follow
+Let us consider the case of non-primitive unit cells first. The sum can be partitioned as follow
 \begin{align}
  \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &=  \sum_{\sym{R}{t} \in \mathcal{S}'} \sum_{\tau \in \cal{T}} G^{(R \mid t+\tau)}(h), \nonumber\\
 \intertext{where $\cal{T}$ is the set of all centring translations, including zero, and $\mathcal{S}'$ is the set of ``primitive'' symmetries. Then with \eqnref{transformofG} we can factorise the sum as}
@@ -834,7 +834,7 @@ R &=
   \end{bmatrix}
   \label{eqn:rotmat}
 \end{align}
-with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, and where the rotation direction is represented by a normal $(x,y,z)$ and where $\alpha$ is the rotation angle around this direction. This transforms is trivally rewritten as a linear transform of $(U_{A,11}, U_{A,22}, U_{A,33}, U_{A,12}, U_{A,13}, U_{A,23})$ into $(U_{B,11}, U_{B,22}, U_{B,33}, U_{B,12}, U_{B,13}, U_{B,23})$, whose matrix is therefore the Jacobian needed for the chain rule \eqnref{chainrule}. If the rotation angle is refined, then the derivative of this transformation by the angle is:
+with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, and where the rotation direction is represented by a normal $(x,y,z)$ and where $\alpha$ is the rotation angle around this direction. This transforms is trivially rewritten as a linear transform of $(U_{A,11}, U_{A,22}, U_{A,33}, U_{A,12}, U_{A,13}, U_{A,23})$ into $(U_{B,11}, U_{B,22}, U_{B,33}, U_{B,12}, U_{B,13}, U_{B,23})$, whose matrix is therefore the Jacobian needed for the chain rule \eqnref{chainrule}. If the rotation angle is refined, then the derivative of this transformation by the angle is:
 \begin{align}
 \partialder{U_{B}}{\alpha} = RUR_\alpha^{\prime T} + R'_\alpha U R^{T},
 \end{align}
@@ -1055,7 +1055,7 @@ L &= w \left( \sum_i (U_{ii} - U_{eq,ii})^2 + 2 \sum_{i<j} (U_{ij}-U_{eq,ij})^2 
 L &= w \left( \sum_i (U_{ii} - U_\text{iso})^2 + 2 \sum_{i<j} U_{ij}^2 \right)
 \end{align}
 
-By mere inspection, we can seethat the derivatives of the residual with respect to the off-diagonal elements are in Cartesian coordinates
+By mere inspection, we can see that the derivatives of the residual with respect to the off-diagonal elements are in Cartesian coordinates
 \begin{align}
 \partialder{L}{U_{ij}} = \begin{cases}
  2 w (U_{ii} - U_\text{iso}) & \text{if $i=j$,}\\
@@ -1133,7 +1133,7 @@ U_{11} U_{22}-U_{12}^2\\
 \end{bmatrix}.
 \end{align}
 
-We would like to emphasize once more that our choice of ellipsoid whose volume to restraint lacks physical or mathematical motivations. It is only driven by simplicity. It is interesting to contrast the thermal ellipsoid volume restraint with the $U_\text{eq}$ similarity restraint. Indeed, the former restrains the sum of the eigenvalues of $U$ whereas the latter restrains the product of those eigenvalues. They are therefore complementary.
+We would like to emphasise once more that our choice of ellipsoid whose volume to restraint lacks physical or mathematical motivations. It is only driven by simplicity. It is interesting to contrast the thermal ellipsoid volume restraint with the $U_\text{eq}$ similarity restraint. Indeed, the former restrains the sum of the eigenvalues of $U$ whereas the latter restrains the product of those eigenvalues. They are therefore complementary.
 
 \ack{Acknowledgements}
 
