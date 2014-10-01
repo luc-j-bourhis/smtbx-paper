@@ -108,7 +108,15 @@ refcmd=\ref{#1}
 
 \begin{document}
 
-\newcommand{\olexrefine}{Olex2.refine}
+\newcommand{\olexrefine}{olex2.refine}
+\newcommand{\cctbx}{\emph{cctbx}}
+\newcommand{\cctbxrestraints}{\emph{cctbx.restraints}}
+\newcommand{\smtbx}{\emph{smtbx}}
+\newcommand{\scitbx}{\emph{scitbx}}
+\newcommand{\sgtbx}{\emph{sgtbx}}
+\newcommand{\gltbx}{\emph{gltbx}}
+\newcommand{\eltbx}{\emph{eltbx}}
+\newcommand{\uctbx}{\emph{uctbx}}
 
 \addtolength{\parskip}{0ex plus 0.5ex minus 0.5ex}
 
@@ -166,7 +174,7 @@ Therefore it might be claimed that the analysis of single crystal X-ray (and neu
 
 When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point - namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for modification by others. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for \olexrefine.\footnote{www.olex2.org}
 
-We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite of \citeasnoun{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \cite{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (sgtbx) that support every space group in any setting, even rather unusual settings such as tripled cells. Another key cctbx toolbox is the eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The cctbx also featured many of the restraints we needed, in the module cctbx.restraints. 
+We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (\cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite of \citeasnoun{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \cite{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (\sgtbx) that support every space group in any setting, even rather unusual settings such as tripled cells. Another key \cctbx\ toolbox is the \eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The \cctbx\ also featured many of the restraints we needed, in the module \cctbxrestraints. 
 
 \begin{figure}
 \begin{tikzpicture}[auto, dependency/.style=draw,-latex, border/.style=draw,rounded corners]
@@ -174,9 +182,9 @@ We decided to base the computational core of \olexrefine\ on a pre-existing proj
   \matrix[row sep=0.3cm, column sep=0]
   {
     \node (olex2) {\olexrefine}; & \\
-    & \node[align=center] (smtbx) {Small Molecule \\ Toolbox \\ (smtbx)}; \\
-    \node[align=center] (cctbx) {Common Crystallography \\ Toolbox \\ (cctbx)}; & \\
-    & \node[align=center] (scitbx) {Scientific Toolbox \\ (scitbx)}; \\
+    & \node[align=center] (smtbx) {Small Molecule \\ Toolbox \\ (\smtbx)}; \\
+    \node[align=center] (cctbx) {Common Crystallography \\ Toolbox \\ (\cctbx)}; & \\
+    & \node[align=center] (scitbx) {Scientific Toolbox \\ (\scitbx)}; \\
   };
   \begin{scope}[every path/.style=dependency]
   \path (olex2) -- (smtbx);
@@ -192,9 +200,9 @@ We decided to base the computational core of \olexrefine\ on a pre-existing proj
 \label{fig:software:modules}
 \end{figure}
 
-For our project, we contributed to it a Small Molecule Toolbox (smtbx) which features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to cctbx.restraints which are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the cctbx and the smtbx use the Scientific Toolbox (scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the scitbx which provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
+For our project, we contributed to it a Small Molecule Toolbox (\smtbx) which features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to \cctbx, restraints which are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the \cctbx\ and the \smtbx\ use the Scientific Toolbox (\scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (lstbx) to the \scitbx\ which provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
 
-The program Olex2 relies either on SHELX or on the smtbx to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the smtbx and the cctbx to represent unit cell, reflections, crystal symmetry, constraints, restraints, \latinit{etc}. Once the smtbx has produced the desired results they are sent back to Olex2 which converts them to its own representations, so as to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various modules and programs that have just been described.  
+The program Olex2 relies either on SHELX or on the \smtbx\ to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the \smtbx\ and the \cctbx\ to represent unit cell, reflections, crystal symmetry, constraints, restraints, \latinit{etc}. Once the \smtbx\ has produced the desired results they are sent back to Olex2 which converts them to its own representations, so as to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various modules and programs that have just been described.  
 
 \section{Least-Squares Refinement}
 \newcommand{\data}{\text{data}}
@@ -272,7 +280,7 @@ has its coordinates $x=(x_1, x_2, x_3)$ constrained by the relation $M x = x$, w
 x_1 = u_1,\ x_2 = u_2,\ x_3 = u_1,
 \label{eqn:specialposexamplereparam}
 \end{align}
-the observable $Y_c$ becoming now a function of the vector of newly introduced refinable parameters $u = (u_1, u_2)$. There is a general algorithm implemented in the cctbx that for any special position returns a matrix $Z$ so that the reparametrisation takes this form,
+the observable $Y_c$ becoming now a function of the vector of newly introduced refinable parameters $u = (u_1, u_2)$. There is a general algorithm implemented in the \cctbx\ that for any special position returns a matrix $Z$ so that the reparametrisation takes this form,
 \begin{align}
 x = Z u + z
 \end{align}
@@ -330,7 +338,7 @@ v_4
 \end{bmatrix}
 \end{align} 
 Then one would refine $(v_1, v_2, v_3, v_4)$ instead of the $U_{ij}$.
-The cctbx provides an algorithm that computes this matrix $P$ for any special positions, and then reduces it to triangular form in order to determine the constraint matrix for the ADP.
+The \cctbx\ provides an algorithm that computes this matrix $P$ for any special positions, and then reduces it to triangular form in order to determine the constraint matrix for the ADP.
 
 In other cases, a reparametrisation will make some crystallographic parameters disappear while introducing new refinable parameters. A typical example is that of a tetrahedral \ce{X-CH3} as the geometrical constraints leave one degree of freedom, a rotation about the axis \ce{X-C}. Thus the reparametrisation expresses the coordinates of the hydrogen atoms $H_0$, $H_1$ and $H_2$ as functions of the coordinates of the carbon atoms, and of an angle $\phi$ modelling that rotation,
 \newcommand{\hydrogenphiarg}{\!\left(\phi\!+\!n \frac{2\pi}{3}\right)}
@@ -356,7 +364,7 @@ The last important concept is that of the chaining or composition of reparametri
 \begin{align}
 \partialder{x_\ce{H0}}{u} = \partialder{x_\ce{H0}}{x_\ce{C}}\partialder{x_\ce{C}}{u} = 2
 \end{align}
-in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_\ce{H0}$, $x_\ce{H1}$, $x_\ce{H2}$, $x_\ce{C}$, $x_\ce{X}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, \latinit{i.e.} the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_\ce{C}$ has only one argument, $u$, whereas $x_\ce{H0}$ has three arguments, $x_\ce{C}$, $x_\ce{X}$ and $\phi$. The smtbx implements reparametrisations by explicitly building such a graph.
+in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_\ce{H0}$, $x_\ce{H1}$, $x_\ce{H2}$, $x_\ce{C}$, $x_\ce{X}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, \latinit{i.e.} the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_\ce{C}$ has only one argument, $u$, whereas $x_\ce{H0}$ has three arguments, $x_\ce{C}$, $x_\ce{X}$ and $\phi$. The \smtbx\ implements reparametrisations by explicitly building such a graph.
 
 \begin{figure}
 \begin{tikzpicture}[grow=left, every node/.style={circle,draw}, edge from parent/.style={-latex,draw}]
@@ -598,11 +606,11 @@ where the transformation matrix $\mathcal{O}$ needed to transform the entire var
 \section{Refinement results}
 \label{sec:refinement:results}
 
-\olexrefine\ uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. \olexrefine\ produces a table describing the restraints using the CIF restraints dictionary. Moreover \olexrefine\ CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. It should be noted that the constraints and restraints unique to \olexrefine, i.e. not featured by SHELX, are saved in REM sections (using an XML format). This has the advantage that they can be read back by Olex2 while providing a ``.res file'' that can also be refined with SHELX, albeit with potentially a different model. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to cctbx.
+\olexrefine\ uses CIF \cite{Hall:1991aa} as its main output. The CIF contains information regarding the space group, the data indicators such as merging indices, the refinement indicators such as the R factors, goodness of fit, residual electron density, refinement convergence indicators and tabulated structure information including tables of atomic parameters, bonds and angles. \olexrefine\ produces a table describing the restraints using the CIF restraints dictionary. Moreover \olexrefine\ CIF always contains a verbal description of the refinement model - hydrogen atom treatment, constraints, restraints and their targets. Optionally, the refinement model file (SHELX RES file) and the reflections can also be include into the final CIF for the deposition. It should be noted that the constraints and restraints unique to \olexrefine, \latinit{i.e.} not featured by SHELX, are saved in REM sections (using an XML format). This has the advantage that they can be read back by Olex2 while providing a ``.res file'' that can also be refined with SHELX, albeit with potentially a different model. As a part of this work a CIF handling toolbox \cite{Gildea:2011aa} was added to \cctbx.
 
 \section{Conclusion}
 
-We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. On the one hand, \olexrefine\ is immediately useful to the practising crystallographer, through the program Olex2 which lets the user transparently switch between different refinement engines. On the other hand, it can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (smtbx) that is part of the Computational Crystallography Toolbox (cctbx), which is usable as a library for the Python programming language, thus providing great expressiveness, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained herein how the smtbx added constrained L.S. refinement from scratch to the cctbx and how it added many restraints as well, thus opening new fields to the cctbx.
+We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. On the one hand, \olexrefine\ is immediately useful to the practising crystallographer, through the program Olex2 which lets the user transparently switch between different refinement engines. On the other hand, it can also be used independently of Olex2, as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (\smtbx) that is part of the Computational Crystallography Toolbox (\cctbx), which is usable as a library for the Python programming language, thus providing great expressiveness, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained herein how the \smtbx\ added constrained L.S. refinement from scratch to the \cctbx\ and how it added many restraints as well, thus opening new fields to the \cctbx.
 
 \appendix
 
@@ -673,9 +681,9 @@ The total sum over symmetries is therefore real, and its derivative will be so t
 \end{enumerate}
 
 In order to avoid redundant computations, our code distinguishes these three cases. One piece of code handles the case of centrosymmetric space groups using only real numbers to compute $\Sigma$ (an equivalent optimisation was presented in \citeasnoun{Rollet:Editor:1965}). Another piece of code handles the other two cases, first computing $\Sigma$ using complex number algebra and then using \eqnref{sumofGforcentricgroups} if the space group is centric and $h t_{\bar{1}} \neq 0$ (an optimisation not found in \citeasnoun{Rollet:Editor:1965}). Another optimisation we applied is to precompute the terms $hR$ and $e^{i2\pi t}$ appearing in \eqnref{transformofG} as well as the test for the condition $h t_{\bar{1}}=0$ before the loop over all scatterers in the asymmetric unit (an optimisation already advocated by \citeasnoun{Rollet:Editor:1965}). In all three cases, the computation of $\cos(hRx + t)$ and $\sin(hRx + t)$ is the most costly operation. This is mitigated by computing the structure factor and its derivatives together, as the cosine and sine then only need to be computed once for each reflection and scatterer.
-This optimisation is the reason why we have written our own new code into the smtbx instead of reusing the original code in the cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines being computed twice. This is rather well suited to the optimisation algorithm used in \emph{phenix.refine} (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares as is prevalent in small molecule crystallography.  
+This optimisation is the reason why we have written our own new code into the \smtbx\ instead of reusing the original code in the \cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines being computed twice. This is rather well suited to the optimisation algorithm used in \emph{phenix.refine} (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares as is prevalent in small molecule crystallography.  
 
-Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a cctbx function that interpolates between tabulated values of sines and cosines. The latter is much faster but less precise. Olex2 uses the former as Crystals and SHELXL uses the standard FORTRAN sin and cos functions. It should be noted that \citeasnoun{Rollet:Editor:1965} used an approximation of trigonometric functions by Chebyshev polynomials, which used to be employed by Crystals.
+Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a \cctbx\ function that interpolates between tabulated values of sines and cosines. The latter is much faster but less precise. Olex2 uses the former as Crystals and SHELXL uses the standard FORTRAN sin and cos functions. It should be noted that \citeasnoun{Rollet:Editor:1965} used an approximation of trigonometric functions by Chebyshev polynomials, which used to be employed by Crystals.
 
 \subsection{Derivatives of $\modulus{F}^2$ and $\modulus{F}$}
 
@@ -690,7 +698,7 @@ Having computed the unit cell structure factor $F_c$ and its derivatives, we nee
 \partialder{\modulus{F_c}}{\xi} &= \frac{1}{\modulus{F_c}} \re\left( F_c^* \partialder{F_c}{\xi}\right)
 \end{align}
 
-The smtbx provides code to compute derivatives for the both of these observables. However Olex2 currently only offers the choice to refine against $F^2$.
+The \smtbx\ provides code to compute derivatives for the both of these observables. However Olex2 currently only offers the choice to refine against $F^2$.
 
 \subsection{Extinction correction}
 \olexrefine\ models primary and secondary extinction with the same empirical correction used in SHELXL,
@@ -785,7 +793,7 @@ It should be noted that for singular or nearly singular problems, one could solv
 \olexrefine\ provides constraints to influence the position(s) or the ADP('s) of an atom or a group of atoms, as well as their occupancy factors. This section will enumerate the constraints and provide the details of their implementation.
 
 \subsection{Occupancy constraints}
-The smtbx provides a generic tool to express any scalar parameter $v$ as an affine function of other scalar parameters $u_1, u_2, \cdots, u_s$,
+The \smtbx\ provides a generic tool to express any scalar parameter $v$ as an affine function of other scalar parameters $u_1, u_2, \cdots, u_s$,
 \begin{align}
   v = \sum_{i=1}^s a_i u_i + b,
   \label{eqn:affinereparam}
@@ -806,7 +814,7 @@ o_\ce{Ca^{2+}} &= 1 - 2 o_\ce{Al^{3+}},
 which can then readily be expressed as special cases of \eqnref{affinereparam}.
 
 \subsection{Shared site and shared $U$ constraint}
-Two scatterers share the same site or the same ADP tensor. These constraints are pretty straightforward to implement within the smtbx framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values for the reference atom.
+Two scatterers share the same site or the same ADP tensor. These constraints are pretty straightforward to implement within the \smtbx\ framework. Values of dependent parameters and the corresponding rows of the Jacobian are set equal to the values for the reference atom.
 
 \subsection{Riding atoms/group $U$ constraint}
 This constraint defined a group as riding on the given, pivot, atom, \emph{i.e.} the coordinates of the groups are given the same shifts as to the pivot atom (SHELXL AFIX 3). Moreover the distances from the atom to the atoms of the group can be refined (SHELXL AFIX 4), which is applicable to groups like \ce{XY_n} for $1 \leq n \leq 4$ where X is B, C, N \latinit{etc}, and Y is H, F, Cl \latinit{etc}. In general the transformation of the triplet of coordinates $r$ is written down like this:
@@ -900,7 +908,7 @@ The same equations as for the free rotation of a rigid body described in \secref
 
 \section{Restraints and their derivatives}
 \label{appendix:restraints}
-Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the cctbx as part of the macromolecular refinement program \emph{phenix.refine}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs) including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
+Possible restraints on the stereochemistry or geometry of atomic positions include restraints on bond distances, angles and dihedral angles, chiral volume and planarity. These restraints are used extensively in macromolecular crystallography, and hence were already implemented within the \cctbx\ as part of the macromolecular refinement program \emph{phenix.refine}. With the exception of the bond distance restraint, these restraints were not able to accept symmetry equivalent atoms. Since this is more frequently required in small molecule crystallography, these restraints have now been extended to allow for symmetry. We have also implemented other restraints commonly used in small molecule structure refinement, such as a bond similarity restraint, and restraints on anisotropic displacement parameters (ADPs) including restraints based on Hirshfeld's `rigid-bond' test \cite{Hirshfeld:1976aa}, similarity restraints and isotropic ADP restraints.
 
 \subsection{Restraints involving symmetry}
 
