@@ -515,7 +515,6 @@ PLATON plays a very important role in detecting common flaws in the crystallogra
 \subsubsection{Incorporating s.u. of unit cell parameters}
 
 Derived parameters such as bond lengths and angles are a function of both the least-squares atomic parameters and the unit cell parameters. As such, the s.u. of a derived parameter is likewise a function of both the atomic and unit cell parameters as well as their respective s.u. If the s.u. in atomic parameters are considered to be totally uncorrelated with the s.u. in the cell parameters (\latinit{i.e.} their covariance is zero), then the s.u. in a derived parameter can be considered as comprising two independent sources of uncertainties:
-
 \begin{align}
 \sigma^2(f) = \sigma^2_{cell}(f) + \sigma^2_{xyz}(f)
 \label{eqn:sigma_d},
@@ -528,7 +527,6 @@ where $\sigma_{xyz}(f)$ is the part coming from the uncertainties in the least s
 where $i,j=\lbrace{a,b,c,\alpha,\beta,\gamma\rbrace}$.
 
 This necessitates the calculation of the derivatives of the function with respect to the unit cell parameters. In order to do so, it is easier to calculate separately the derivatives of the function with respect to the elements of the metrical matrix, and also the derivatives of the metrical matrix with respect to the cell parameters, and then to use the chain rule
-
 \begin{align}
 \partialder{f}{i} = \partialder{f}{g_{jk}}\partialder{g_{jk}}{i},\ i=a, b, c, \alpha, \beta, \gamma.
 \label{eqn:df_dcell}
@@ -543,7 +541,6 @@ D = (u^T \mat{G} u)^\frac{1}{2}
 where $\mat{G}$ is the metrical matrix \textbookref.
 
 The derivatives of the distance, $D$, with respect to the elements of the metrical matrix, $\mat{G}$, are given by
-
 \begin{align}
 \partialder{D}{g_{ii}} = \frac{1}{2} \frac{u_i^2}{D}
 \label{eqn:d_distance_d_gii}
@@ -598,7 +595,6 @@ y_c &= \mat{R}_c x_c.\\
 \end{align}
 
 The variance-covariance matrix that is used in this case should be the one that is transformed to Cartesian coordinates. The variance-covariance matrix for Cartesian coordinates can be obtained from that for fractional coordinates by the transformation
-
 \begin{align}
 \mat{V}_{c} = \mat{\mathcal{O}} \mat{V}_{f} \mat{\mathcal{O}}^{T}.
 \label{eqn:vcv_cart}
