@@ -210,7 +210,7 @@ The program Olex2 relies either on SHELX or on the \smtbx\ to refine structures.
 \newcommand{\data}{\text{data}}
 \newcommand{\restraints}{\text{restraints}}
 
-A small molecule structure refinement typically minimises the weighted least-squares function
+A small molecule structure refinement typically minimises the weighted least-squares (LS) function
 \begin{align}
 L = \underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\data} + \underbrace{\sum_{\text{restraint } i} w_i \left( T_{o,i} - T_{c,i} \right)^2}_{L_\restraints}
 \label{eqn:L:def}
@@ -608,7 +608,7 @@ where the transformation matrix $\mathcal{O}$ needed to transform the entire var
 
 \section{Conclusion}
 
-We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. \Olexrefine\ is immediately useful to the practising crystallographer since it is presently available from the program Olex2 by default. It can also be used independently as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (\smtbx) that is part of the Computational Crystallography Toolbox (\cctbx), which is usable as a library for the Python programming language, thus providing great expressiveness, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained herein how the \smtbx\ added constrained L.S. refinement from scratch to the \cctbx\ and how it added many restraints as well, thus opening new fields to the \cctbx.
+We have presented herein the full mathematical derivations of the concepts used within \olexrefine. This new refinement engine is feature-wise on a par with the established software in the field such as SHELXL and CRYSTALS. It actually provides a richer wealth of constraints than those classic suites. \Olexrefine\ is immediately useful to the practising crystallographer since it is presently available from the program Olex2 by default. It can also be used independently as a library of components to write short scripts as well as more complex programs, dealing with any aspect of small molecule refinement. Indeed, \olexrefine\ is largely based on the Small Molecule Toolbox (\smtbx) that is part of the Computational Crystallography Toolbox (\cctbx), which is usable as a library for the Python programming language, thus providing great expressiveness, conciseness and ease of coding combined with an immense wealth of tools covering all of crystallography. We have explained herein how the \smtbx\ added constrained least-squares refinement from scratch to the \cctbx\ and how it added many restraints as well, thus opening new fields to the \cctbx.
 
 \appendix
 
@@ -977,7 +977,7 @@ We will now consider $p$ sites with Cartesian coordinate vectors $x_1, x_2, \cdo
 L_\text{flat} = \sum_{i=1}^{p-3} L_{i,i+1,i+2,i+3}
 \label{eqn:restraint:flatness:many}
 \end{align}
-This method is identical to the FLAT restraint in SHELXL, perhaps up to differing implementation details. 
+This method is identical to the FLAT restraint in SHELXL, perhaps apart from differing implementation details. 
 
 The minimum number of degrees of freedom necessary to model $p$ points in a plane is $2p+3$: $2p$ for the coordinates in the plane, plus 2 angles for the orientation of the plane, plus one for the distance of the origin to the plane. Since this number of degrees of freedom is exactly the unconstrained and unrestrained number of degrees of freedom $3p$ minus the number of restraints in the sum of \eqnref{restraint:flatness:many}, this restraint $L_\text{flat}$ is therefore optimal.
 
@@ -1032,7 +1032,7 @@ The weighted least-squares residual is defined as
 \label{eqn:ADP:restraints:similarity}
 L = w \sum_{i=1}^3 \sum_{j=1}^3 (U_{A,ij} - U_{B,ij})^2,
 \end{align}
-which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Delta U \Delta U^T$ makes it clear that it is invariant under any rotation $R$, since it transforms $\Delta U$ into $R\Delta U R^T$.
+which, denoting $\Delta U=U_A - U_B$ the matrix of deltas, is the trace of $\Delta U \Delta U^T$, making it clear that it is invariant under any rotation $R$, since it transforms $\Delta U$ into $R\Delta U R^T$.
 
 Since $\mat{U}$ is symmetric, \latinit{i.e.} $U_{ij} = U_{ji}$, \eqnref{ADP:restraints:similarity} can be rewritten as
 \begin{align}
@@ -1139,7 +1139,7 @@ U_{11} U_{22}-U_{12}^2\\
 \end{bmatrix}.
 \end{align}
 
-We would like to emphasise once more that our choice of ellipsoid whose volume to restraint lacks physical or mathematical motivations. It is only driven by simplicity. It is interesting to contrast the thermal ellipsoid volume restraint with the $U_\text{eq}$ similarity restraint. Indeed, the former restrains the sum of the eigenvalues of $U$ whereas the latter restrains the product of those eigenvalues. They are therefore complementary.
+We would like to emphasise once more that our choice of ellipsoid whose volume we wish to restrain lacks physical or mathematical motivations. It is only driven by simplicity. It is interesting to contrast the thermal ellipsoid volume restraint with the $U_\text{eq}$ similarity restraint. Indeed, the former restrains the sum of the eigenvalues of $U$ whereas the latter restrains the product of those eigenvalues. They are therefore complementary.
 
 \ack{Acknowledgements}
 
