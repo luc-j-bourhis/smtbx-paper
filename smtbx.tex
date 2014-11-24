@@ -1,17 +1,7 @@
-%------------------------------------------------------------------------------
-% Template file for the submission of papers to IUCr journals in LaTeX2e
-% using the iucr document class
-% Copyright 1999-2012 International Union of Crystallography
-% Version 1.5 (7 March 2012)
-%------------------------------------------------------------------------------
+\documentclass[11pt]{article}
 
-%\documentclass[pdf]{iucr}
-\documentclass[preprint,pdf]{iucr}
-
-\setlength{\footskip}{12mm}
 \usepackage{bbold}
 \usepackage{amsmath}
-\allowdisplaybreaks
 \usepackage{refstyle}
 \usepackage[version=3]{mhchem}
 \newref{eqn}{%
@@ -51,10 +41,12 @@ lsttxt={\ and~},
 refcmd=\ref{#1}
 }
 
+\usepackage{authblk}
+\usepackage[agsm,abbr]{harvard}
 \usepackage{tikz}
 \usetikzlibrary{arrows,fit}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% various notations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% various notations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % programming
 \newcommand{\code}[1]{\texttt{#1}}
@@ -93,20 +85,11 @@ refcmd=\ref{#1}
 % crystallography
 \newcommand{\uiso}{u_{\text{iso}}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\journalcode{A}           % Indicate the journal to which submitted
-                                  %   A - Acta Crystallographica Section A
-                                  %   B - Acta Crystallographica Section B
-                                  %   C - Acta Crystallographica Section C
-                                  %   D - Acta Crystallographica Section D
-                                  %   E - Acta Crystallographica Section E
-                                  %   F - Acta Crystallographica Section F
-                                  %   J - Journal of Applied Crystallography
-                                  %   S - Journal of Synchrotron Radiation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
+
+\hyphenation{crystallo-graphic}
 
 \newcommand{\olexrefine}{\emph{olex2.refine}}
 \newcommand{\Olexrefine}{\emph{Olex2.refine}}
@@ -121,50 +104,34 @@ refcmd=\ref{#1}
 \newcommand{\eltbx}{\emph{eltbx}}
 \newcommand{\uctbx}{\emph{uctbx}}
 
-\title{The Anatomy of a Comprehensive Constrained, Restrained, Refinement Program for the Modern Computing Environment -- Olex2 Dissected}
-\shorttitle{\olexrefine}  % Abbreviated title for use in running heads
-
-     % Authors' names and addresses. Use \cauthor for the main (contact) author.
-     % Use \author for all other authors. Use \aff for authors' affiliations.
-     % Use lower-case letters in square brackets to link authors to their
-     % affiliations; if there is only one affiliation address, remove the [a].
-
-\newcommand{\brukerfr}{Bruker AXS-SAS, 4 All\'ee Lorentz, 77447 Marne-la-Vall\'ee cedex 2, \country{France}}
-\newcommand{\durhamchem}{Department of Chemistry, Durham University, South Road, Durham, DH1~3LE, \country{UK}}
-\newcommand{\olexsys}{OlexSys Ltd, \durhamchem}
-\newcommand{\cci}{CCI, Lawrence Berkeley Laboratory, 1 Cyclotron Road, BLDG 64R0121, Berkeley, CA 94720-8235, \country{USA}}
-\newcommand{\diamondlight}{Diamond Light Source Ltd, Diamond House, Harwell Oxford, Didcot, Oxfordshire, OX11 0DE, \country{UK}}
-
-\cauthor[\dagger]{Luc J.}{Bourhis}{luc\_j\_bourhis@mac.com}{}
-\author[\ddagger]{Oleg V.}{Dolomanov}
-\author[\S]{Richard J.}{Gildea}
-\author[]{Judith A. K.}{Howard}
-\author[\ddagger]{Horst}{Puschmann}
-
-\aff[]{\durhamchem}
-\aff[\dagger]{\brukerfr}
-\aff[\ddagger]{\olexsys}
-\aff[\S]{\diamondlight}
-
-
-\shortauthor{Bourhis, Dolomanov, Gildea, Howard and Puschmann} % abbreviated author list for use in running heads
-
-\keyword{small molecules}\keyword{refinement}\keyword{constraints}\keyword{restraints}\keyword{least-squares}
+\newcommand{\ourEPSRCgrant}{EPSRC grant ``Age Concern: Crystallographic Software for the Future" (EP/C536274/1)}
 
 \newcommand{\latinit}[1]{\textit{#1}}
 \newcommand{\textbookref}{\citeaffixed{Giacovazzo:2011aa}{see \latinit{e.g.}}}
-\hyphenation{crystallo-graphic}
+
+
+\title{The Anatomy of a Comprehensive Constrained, Restrained, Refinement Program for the Modern Computing Environment -- Olex2 Dissected}
+
+\author[1]{Luc J. Bourhis}
+\author[2]{Oleg V. Dolomanov}
+\author[3]{Richard J. Gildea}
+\author[4]{Judith A. K. Howard}
+\author[2]{Horst Puschmann}
+
+\affil[1]{Bruker AXS-SAS, 4 All\'ee Lorentz, 77447 Marne-la-Vall\'ee cedex 2, France}
+\newcommand{\durhamchem}{Department of Chemistry, Durham University, South Road, Durham, DH1~3LE, UK}
+\affil[2]{OlexSys Ltd, \durhamchem}
+\affil[3]{Diamond Light Source Ltd, Diamond House, Harwell Oxford, Didcot, Oxfordshire, OX11 0DE, UK}
+\affil[4]{\durhamchem}
 
 \maketitle
 
-\newcommand{\ourEPSRCgrant}{EPSRC grant ``Age Concern: Crystallographic Software for the Future" (EP/C536274/1)}
-
-\begin{synopsis}
-Supply a synopsis of the paper for inclusion in the Table of Contents.
-\end{synopsis}
-
 \begin{abstract}
-This paper describes the mathematical basis for \olexrefine, the new refinement engine which is integrated within the Olex2 program. We provide precise and clear equations for every computation performed by this engine, including structure factors and their derivatives, constraints, restraints and twinning, as well as a general overview of the different components of the engine and their relations to each others. A framework for adding multiple general constraints with dependencies on a common physical parameters is described. Several new restraints on ADP's are also presented.
+\noindent This paper describes the mathematical basis for \olexrefine, the new refinement engine which is integrated within the Olex2 program. We provide precise and clear equations for every computation performed by this engine, including structure factors and their derivatives, constraints, restraints and twinning, as well as a general overview of the different components of the engine and their relations to each others. A framework for adding multiple general constraints with dependencies on a common physical parameters is described. Several new restraints on ADP's are also presented.
+
+\vspace{1em}
+\noindent Keywords: \emph{small molecules, least-squares refinement, constraints, restraints}
+
 \end{abstract}
 
 \section{Introduction}
@@ -212,7 +179,8 @@ The program Olex2 relies either on SHELX or on the \smtbx\ to refine structures.
 
 A small molecule structure refinement typically minimises the weighted least-squares (LS) function
 \begin{align}
-L = \underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\data} + \underbrace{\sum_{\text{restraint } i} w_i \left( T_{o,i} - T_{c,i} \right)^2}_{L_\restraints}
+L = \underbrace{\sum_h w_h \left( Y_{o,h} - K Y_{c,h} \right)^2}_{L_\data}
+     + \underbrace{\sum_{\text{restraint } i} w_i \left( T_{o,i} - T_{c,i} \right)^2}_{L_\restraints}
 \label{eqn:L:def}
 \end{align}
 where $Y_o$ (respectively $Y_c$) denotes either the measured amplitude $F_o$ (respectively the modulus of the calculated complex structure factor $\modulus{F_c}$) or the measured intensity $I_o = F_o^2$ (respectively the calculated intensity $I_c = \modulus{F_c}^2$) whereas $K$ is an overall, unknown, scale factor that places $Y_c$ on the same scale as $Y_o$. The first sum over $h$ runs over a set of $m$ non-equivalent reflections that have been observed. Each observation is given an appropriate weight, $w_h$, based on the reliability of the measurement. These may be pure statistical weights, $w = 1/\sigma^2(Y_o)$, where $\sigma$ is the estimated standard deviation of the $Y_o$, though more complex weighting schemes are usually used. In the most general case, $w_h$ is a function of $Y_{o,h}$, $\sigma(Y_{o,h})$, $Y_{c,h}$ and $h$ itself, whereas the most common weighting schemes exhibit only a dependence on the first three.
@@ -1141,10 +1109,10 @@ U_{11} U_{22}-U_{12}^2\\
 
 We would like to emphasise once more that our choice of ellipsoid whose volume we wish to restrain lacks physical or mathematical motivations. It is only driven by simplicity. It is interesting to contrast the thermal ellipsoid volume restraint with the $U_\text{eq}$ similarity restraint. Indeed, the former restrains the sum of the eigenvalues of $U$ whereas the latter restrains the product of those eigenvalues. They are therefore complementary.
 
-\ack{Acknowledgements}
+\section*{Acknowledgements}
 
 This work has been funded by the \ourEPSRCgrant\ from the British government. We wish to thank David Watkin with whom we shared this grant for his immense contribution to our understanding of crystallographic refinement and for suggesting many improvements and corrections to this paper. We also wish to thank all the contributors to the CCTBX library which served as a foundation and model for our work, especially its main author Ralf W. Grosse-Kunstleve whose support has been invaluable. We also wish to thanks Prof George Sheldrick for many fruitful discussions. Finally we wish to thank one of the referee for pointing out that we should handle Miller indices that do not satisfy centring conditions, a remark that lead us to change this article and our code accordingly.
 
-\referencelist[smtbx] % References using the BibTeX database smtbx.bib
+\bibliography{smtbx}
 
 \end{document}
