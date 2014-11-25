@@ -224,7 +224,7 @@ The derivatives for the remaining variables are obtained with the chain rule,
 \partialder{\tilde{Y_c}}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{C}}, \\
 \partialder{\tilde{Y_c}}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{X}}. \nonumber
 \end{align}
-We use the following compact notations for derivatives: for a column vector $x=\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}$, $\partialder{F}{x}$ will always denote the row vector $\left(\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\right)$. Given another column vector $y=\begin{pmatrix}y_1\\ y_2\\ y_3\end{pmatrix}$, $\partialder{y}{x}$ will always denote the matrix $\left(\partialder{y_i}{x_j}\right)_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.
+We use the following compact notations for derivatives: for a column vector $x=\begin{bmatrix}x_1\\ x_2\\ x_3\end{bmatrix}$, $\partialder{F}{x}$ will always denote the row vector $\begin{bmatrix}\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\end{bmatrix}$. Given another column vector $y=\begin{bmatrix}y_1\\ y_2\\ y_3\end{bmatrix}$, $\partialder{y}{x}$ will always denote the matrix $\begin{bmatrix}\partialder{y_i}{x_j}\end{bmatrix}_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.
 
 It should be noted that it is customary to work within the ``riding" approximation,
 \begin{align}
