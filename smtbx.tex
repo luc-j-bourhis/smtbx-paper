@@ -3,7 +3,7 @@
 \usepackage{bbold}
 \usepackage{amsmath}
 \usepackage{refstyle}
-\usepackage[version=3]{mhchem}
+\usepackage[version=4]{mhchem}
 \newref{eqn}{%
 name={eqn~},
 names={eqns~},
@@ -136,14 +136,14 @@ refcmd=\ref{#1}
 
 \section{Introduction}
 \label{sec:introduction}
-  
+
 During the last four decades, small molecule crystallographers have used a myriad of stand-alone routines and various comprehensive software packages, most notably those written by \citename{Sheldrick:2008aa}~\citeyear{Sheldrick:2008aa,Sheldrick:1997aa} and that designed by Bob Carruthers and John Rollett, then maintained and enhanced by David Watkin \cite{Betteridge:2003ab}. These latter two packages have dominated the citations in all publications containing crystal structure analyses for many years now.
 
-Therefore it might be claimed that the analysis of single crystal X-ray (and neutron) diffraction data has reached a certain level of maturity and that there is no need for further program development. Nonetheless there is still considerable activity in this area in various groups around the world and there has been a new release, SHELX 2013, from Sheldrick  recently. A retro-fit of new ideas to these older programs is not always possible, except perhaps by the authors themselves. 
+Therefore it might be claimed that the analysis of single crystal X-ray (and neutron) diffraction data has reached a certain level of maturity and that there is no need for further program development. Nonetheless there is still considerable activity in this area in various groups around the world and there has been a new release, SHELX 2013, from Sheldrick  recently. A retro-fit of new ideas to these older programs is not always possible, except perhaps by the authors themselves.
 
 When we first embarked on the project herein reported\footnote{\ourEPSRCgrant} we were clear about one point -- namely that we wanted to create a new and flexible refinement engine, working in a collaborative environment and to be based on trusted and mature pre-existing code. This new refinement engine would be open source and therefore available for verification and modification by others. Modern programming paradigms, unknown when the aforementioned packages were created in the 1960s, would form the basis of our development. It is hoped that such an architecture will allow extensions to the code without breaking the program or endangering the underlying functionality. It is this that we describe below in further detail and which now forms the underlying code for \olexrefine.\footnote{www.olex2.org}
 
-We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (\cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite of \citeasnoun{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \cite{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (\sgtbx) that support every space group in any setting, even rather unusual settings such as tripled cells. Another key \cctbx\ toolbox is the \eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The \cctbx\ also featured many of the restraints we needed, in the module \cctbxrestraints. 
+We decided to base the computational core of \olexrefine\ on a pre-existing project, the Computational Crystallography Toolbox (\cctbx), that provides the foundation for the macromolecular refinement facilities in the Phenix suite of \citeasnoun{Adams:2010ys}. We made that choice because it provided the solid and versatile tools \cite{Grosse-Kunstleve:2003aa} that we needed to develop our project. The most important of them is a comprehensive and robust toolbox to handle crystal symmetries (\sgtbx) that support every space group in any setting, even rather unusual settings such as tripled cells. Another key \cctbx\ toolbox is the \eltbx, which is concerned with scattering factor computations for any atom or ion and any wavelength that could be encountered in practice. The \cctbx\ also featured many of the restraints we needed, in the module \cctbxrestraints.
 
 \begin{figure}
 \begin{tikzpicture}[auto, dependency/.style=draw,-latex, border/.style=draw,rounded corners]
@@ -171,7 +171,7 @@ We decided to base the computational core of \olexrefine\ on a pre-existing proj
 
 For our project, we contributed to it a Small Molecule Toolbox (\smtbx) which features, in particular, the constraint framework presented in detail in \secref{constraints} and \appendixref{constraints}, and the computation of structure factors presented in \appendixref{structurefactorlinearisation}. We also contributed several new restraints to \cctbx, restraints which are discussed in \secref{restraints} and \appendixref{restraints}. Finally, both the \cctbx\ and the \smtbx\ use the Scientific Toolbox (\scitbx) for arrays, matrices, special functions and other purely mathematical matters. We have contributed a new least-squares toolbox (\lstbx) to the \scitbx\ which provides flexible tools to deal with generic linear and non-linear problems, with or without an unknown overall scale factor. It implements the method based on normal equations presented in \appendixref{leastsquaresminimisation}.
 
-The program Olex2 relies either on SHELX or on the \smtbx\ to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the \smtbx\ and the \cctbx\ to represent unit cell, reflections, crystal symmetry, constraints, restraints, \latinit{etc}. Once the \smtbx\ has produced the desired results they are sent back to Olex2 which converts them to its own representations, so as to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various modules and programs that have just been described.  
+The program Olex2 relies either on SHELX or on the \smtbx\ to refine structures. If using the latter, Olex2 converts its internal model of a structure into the objects used by the \smtbx\ and the \cctbx\ to represent unit cell, reflections, crystal symmetry, constraints, restraints, \latinit{etc}. Once the \smtbx\ has produced the desired results they are sent back to Olex2 which converts them to its own representations, so as to perform diverse post-processing and eventually display the results to the user of the program. \Figref{software:modules} summarises the dependencies between the various modules and programs that have just been described.
 
 \section{Least-Squares Refinement}
 \newcommand{\data}{\text{data}}
@@ -211,29 +211,29 @@ The rest of the paper is organised as follow.
 
 \subsection{Synopsis}
 
-The difference between restraints and constraints may be conceptualised mainly in two manners that we will first illustrate on a simple example: a geometrically constrained acetylenic hydrogen, \ce{X#C-H}. The position of the hydrogen must be such that the distance \ce{CH} is equal to some ideal bond length $d$ and such that the angle $\widehat{\ce{XCH}}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (\ce{CH} - d)^2 + w_2 (\cos \widehat{\ce{XCH}} - 1)^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three. 
+The difference between restraints and constraints may be conceptualised mainly in two manners that we will first illustrate on a simple example: a geometrically constrained acetylenic hydrogen, \ce{X#C-H}. The position of the hydrogen must be such that the distance \ce{CH} is equal to some ideal bond length $d$ and such that the angle $\widehat{\ce{XCH}}$ is equal to $180^\circ$. Expressed in such an implicit manner, those restrictions could be used to construct restraints by adding to the function to minimise a term $w_1 (\ce{CH} - d)^2 + w_2 (\cos \widehat{\ce{XCH}} - 1)^2$. By doing so, the number of refined parameters would not be changed but the number of observations would increase by three.
 
 It is however traditional to do the opposite, by reducing the number of parameters by 3 and keeping the number of observations unchanged. This is achieved by using the implicit form of the constraints to express the position of \ce{H} as a function of the positions of the two carbon atoms. Denoting by $x$ the triplet of coordinates of the atoms,
 \begin{align}
-x_\ce{H} = x_\ce{C} + d \frac{x_\ce{C} - x_\ce{X}}{\norm{x_\ce{C} - x_\ce{X}}},
-\end{align} 
-where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_\ce{C}$, $x_\ce{X}$ and $x_\ce{H}$ is replaced by a function $\tilde{Y}_c$ of $x_\ce{C}$ and $x_\ce{X}$ but not of $x_\ce{H}$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_\ce{C}, x_\ce{X}) = Y_c(x_\ce{C}, x_\ce{X}, x_\ce{H}(x_\ce{C}, x_\ce{X}))$ and we will say that $x_\ce{H}(x_\ce{C}, x_\ce{X})$ is a reparametrisation of $x_\ce{H}$, whose arguments are $x_\ce{C}$ and $x_\ce{X}$. 
+x_{\ce{H}} = x_{\ce{C}} + d \frac{x_{\ce{C}} - x_{\ce{X}}}{\norm{x_{\ce{C}} - x_{\ce{X}}}},
+\end{align}
+where $\norm{.}$ denotes the Euclidean norm. By using this formula, the observable $Y_c$ of the fit (either $\modulus{F_c}^2$ or $\modulus{F_c}$) that used to depend on $x_{\ce{C}}$, $x_{\ce{X}}$ and $x_{\ce{H}}$ is replaced by a function $\tilde{Y}_c$ of $x_{\ce{C}}$ and $x_{\ce{X}}$ but not of $x_{\ce{H}}$. We will call this transformation a reparametrisation: $\tilde{Y}_c(x_{\ce{C}}, x_{\ce{X}}) = Y_c(x_{\ce{C}}, x_{\ce{X}}, x_{\ce{H}}(x_{\ce{C}}, x_{\ce{X}}))$ and we will say that $x_{\ce{H}}(x_{\ce{C}}, x_{\ce{X}})$ is a reparametrisation of $x_{\ce{H}}$, whose arguments are $x_{\ce{C}}$ and $x_{\ce{X}}$.
 
 The derivatives for the remaining variables are obtained with the chain rule,
 \begin{align}
-\partialder{\tilde{Y_c}}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{C}}, \\
-\partialder{\tilde{Y_c}}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}} + \partialder{Y_c}{x_\ce{H}} \partialder{x_\ce{H}}{x_\ce{X}}. \nonumber
+\partialder{\tilde{Y_c}}{x_{\ce{C}}} &= \partialder{Y_c}{x_{\ce{C}}} + \partialder{Y_c}{x_{\ce{H}}} \partialder{x_{\ce{H}}}{x_{\ce{C}}}, \\
+\partialder{\tilde{Y_c}}{x_{\ce{X}}} &= \partialder{Y_c}{x_{\ce{X}}} + \partialder{Y_c}{x_{\ce{H}}} \partialder{x_{\ce{H}}}{x_{\ce{X}}}. \nonumber
 \end{align}
 We use the following compact notations for derivatives: for a column vector $x=\begin{bmatrix}x_1\\ x_2\\ x_3\end{bmatrix}$, $\partialder{F}{x}$ will always denote the row vector $\begin{bmatrix}\partialder{F}{x_1}, \partialder{F}{x_2}, \partialder{F}{x_3}\end{bmatrix}$. Given another column vector $y=\begin{bmatrix}y_1\\ y_2\\ y_3\end{bmatrix}$, $\partialder{y}{x}$ will always denote the matrix $\begin{bmatrix}\partialder{y_i}{x_j}\end{bmatrix}_{1 \le i,j \le 3}$ where $i$ (resp. $j$) indexes the rows (resp. the columns). The identity matrix will be denoted by $\identity$.
 
 It should be noted that it is customary to work within the ``riding" approximation,
 \begin{align}
-\partialder{x_\ce{H}}{x_\ce{X}} = 0,\ \partialder{x_\ce{H}}{x_\ce{C}} = \identity,
-\end{align} 
+\partialder{x_{\ce{H}}}{x_{\ce{X}}} = 0,\ \partialder{x_{\ce{H}}}{x_{\ce{C}}} = \identity,
+\end{align}
 which results in the much simplified chain rule
 \begin{align}
-\partialder{\tilde{Y}_c}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}}, \\
-\partialder{\tilde{Y}_c}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}}, \nonumber
+\partialder{\tilde{Y}_c}{x_{\ce{C}}} &= \partialder{Y_c}{x_{\ce{C}}} + \partialder{Y_c}{x_{\ce{H}}}, \\
+\partialder{\tilde{Y}_c}{x_{\ce{X}}} &= \partialder{Y_c}{x_{\ce{X}}}, \nonumber
 \end{align}
 implemented in all refinement programs, including Olex2.
 
@@ -306,7 +306,7 @@ v_2\\
 v_3\\
 v_4
 \end{bmatrix}
-\end{align} 
+\end{align}
 Then one would refine $(v_1, v_2, v_3, v_4)$ instead of the $U_{ij}$.
 The \cctbx\ provides an algorithm that computes this matrix $P$ for any special positions, and then reduces it to triangular form in order to determine the constraint matrix for the ADP.
 
@@ -314,7 +314,7 @@ In other cases, a reparametrisation will make some crystallographic parameters d
 \newcommand{\hydrogenphiarg}{\!\left(\phi\!+\!n \frac{2\pi}{3}\right)}
 \begin{align}
 \begin{split}
-x_\ce{H$_n$} = x_\ce{C} 
+x_{\ce{H$_n$}} = x_{\ce{C}}
 + d \Biggl[ &\sin \alpha \left\{ \cos\hydrogenphiarg e_1 + \sin\hydrogenphiarg e_2 \right\}\\
 - &\cos\alpha e_0
 \Biggr],
@@ -323,23 +323,23 @@ x_\ce{H$_n$} = x_\ce{C}
 \end{align}
 where $\alpha \approx 109.5^\circ$ and $(e_0, e_1, e_2)$ is an orthonormal basis of column vectors with $e_0$ in the direction of the bond \ce{X\bond{->}C}. The riding approximation in this case consists of neglecting the derivatives of those base vectors, leading to
 \begin{align}
-\partialder{\tilde{Y}_c}{x_\ce{C}} &= \partialder{Y_c}{x_\ce{C}} + \partialder{Y_c}{x_\ce{H}},\\
-\partialder{\tilde{Y}_c}{x_\ce{X}} &= \partialder{Y_c}{x_\ce{X}}, \nonumber \\
-\partialder{\tilde{Y}_c}{\phi} &= \partialder{Y_c}{x_\ce{H}} 
+\partialder{\tilde{Y}_c}{x_{\ce{C}}} &= \partialder{Y_c}{x_{\ce{C}}} + \partialder{Y_c}{x_{\ce{H}}},\\
+\partialder{\tilde{Y}_c}{x_{\ce{X}}} &= \partialder{Y_c}{x_{\ce{X}}}, \nonumber \\
+\partialder{\tilde{Y}_c}{\phi} &= \partialder{Y_c}{x_{\ce{H}}}
 d \sin \alpha \left\{ -\sin\hydrogenphiarg e_1 + \cos\hydrogenphiarg e_2 \right\}. \nonumber
 \end{align}
 Thus a new derivative with respect to the new refinable parameter $\phi$ is introduced by this reparametrisation.
 
-The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above. This example is not particularly common but it is a simple illustration of the concept we want to introduce. In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One type of disorder could be modelled by first applying the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_\ce{C}$ and $x_\ce{X}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, \latinit{e.g.}
+The last important concept is that of the chaining or composition of reparametrisations, that we will illustrate with a combination of the examples above. This example is not particularly common but it is a simple illustration of the concept we want to introduce. In the \ce{CH3} case, the atoms \ce{C} and \ce{X} could be on the special position studied in the next-to-last example. One type of disorder could be modelled by first applying the reparametrisation \eqnref[name=]{rotatingch3reparam} and then to reparametrise $x_{\ce{C}}$ and $x_{\ce{X}}$ using \eqnref{specialposexamplereparam}, introducing parameters $(u,v)$ for the former and $(u',v')$ for the latter. The derivatives would then be obtained by the chain rule, \latinit{e.g.}
 \begin{align}
-\partialder{x_\ce{H0}}{u} = \partialder{x_\ce{H0}}{x_\ce{C}}\partialder{x_\ce{C}}{u} = 2
+\partialder{x_{\ce{H0}}}{u} = \partialder{x_{\ce{H0}}}{x_{\ce{C}}}\partialder{x_{\ce{C}}}{u} = 2
 \end{align}
-in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_\ce{H0}$, $x_\ce{H1}$, $x_\ce{H2}$, $x_\ce{C}$, $x_\ce{X}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, \latinit{i.e.} the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_\ce{C}$ has only one argument, $u$, whereas $x_\ce{H0}$ has three arguments, $x_\ce{C}$, $x_\ce{X}$ and $\phi$. The \smtbx\ implements reparametrisations by explicitly building such a graph.
+in the riding approximation. This composition of reparametrisation may be represented as a graph: each parameter (some of them are triplets of coordinates, others are scalars), $x_{\ce{H0}}$, $x_{\ce{H1}}$, $x_{\ce{H2}}$, $x_{\ce{C}}$, $x_{\ce{X}}$, $\phi$, $u$, $v$, $u'$, and $v'$, constitutes a node of that graph, whereas edges are drawn from each node to its arguments, \latinit{i.e.} the nodes it depends upon, as shown on \figref{dependencegraphexample}. In this example, $x_{\ce{C}}$ has only one argument, $u$, whereas $x_{\ce{H0}}$ has three arguments, $x_{\ce{C}}$, $x_{\ce{X}}$ and $\phi$. The \smtbx\ implements reparametrisations by explicitly building such a graph.
 
 \begin{figure}
 \begin{tikzpicture}[grow=left, every node/.style={circle,draw}, edge from parent/.style={-latex,draw}]
-\node{$x_\ce{H0}$} child { node{$x_\ce{C}$}    child { node{$u$}  } }
-                           child { node{$x_\ce{X}$} child { node{$u'$} } }
+\node{$x_{\ce{H0}}$} child { node{$x_{\ce{C}}$}    child { node{$u$}  } }
+                           child { node{$x_{\ce{X}}$} child { node{$u'$} } }
                            child { node{$\phi$} };
 \end{tikzpicture}
 \label{fig:dependencegraphexample}
@@ -355,9 +355,9 @@ A crystallographic refinement may involve many such reparametrisations. By pieci
 
 There is a wealth of algorithms designed to minimise least-squares but crystallographic software have only implemented a few of them. The two most popular methods have historically been the full-matrix\footnote{This method is also known as the Gauss-Newton algorithm.} (all small molecule programs, including Olex2, as explained in \appendixref{leastsquaresminimisation}), and Conjugate Gradient L.S. \citeaffixed[section 7.4]{Bjorck:1996fk}{CGLS, see e.g.} which SHELXL offers as an option along with full-matrix.  The macro-molecular community later introduced the Limited-memory Broyden-Fletcher-Goldfarb-Shanno method \citeaffixed{Nocedal:1980aa}{LBFGS,}, \phenixrefine\ \cite{Afonine:2012aa}, and a sparse Gauss-Newton algorithm, REFMAC \cite[section 4 and references therein]{Murshudov:2011aa}. All methods mentioned above have in common the fact that they require only the computation of the value and the first-order derivatives of the calculated $F$ or $F^2$, that we have denoted as $Y_c$ in this paper. Since no higher-order derivatives are used the implementation of constrained least-squares is greatly simplified.
 
-Indeed, after transforming every constraint on the model into a reparametrisation (as explained and exemplified in the previous section) and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- \latinit{e.g.} a coordinate of the pivot atom on which another atom rides, and of course any parameter that is not involved in any constraint --  is also a component $x_l$ of $x$, \latinit{i.e.} 
+Indeed, after transforming every constraint on the model into a reparametrisation (as explained and exemplified in the previous section) and piecing all those reparametrisations together, we obtain a global reparametrisation of the vector of crystallographic parameters $y = (y_1, \cdots, y_p)$ as a function of the vector $x=(x_1, \cdots, x_n)$ of the parameters that are actually refined. It should be noted that any component $y_k$ of $y$ that is not reparametrised -- \latinit{e.g.} a coordinate of the pivot atom on which another atom rides, and of course any parameter that is not involved in any constraint --  is also a component $x_l$ of $x$, \latinit{i.e.}
 \begin{align}
-\partialder{y_k}{x_j} = \begin{cases} 
+\partialder{y_k}{x_j} = \begin{cases}
    1& \text{if $j=l$},\\
    0& \text{if $j \neq l$}.
    \end{cases}
@@ -389,7 +389,7 @@ which is known as the design matrix for the restraints, is very sparse. We there
 \tilde{D}_\restraints = \partialder{T_c}{x} = D_\restraints \partialder{y}{x},
 \label{eqn:constraints:applied:torestraints}
 \end{align}
-which is computed by forming the product of $D$ and the constraint matrix. Thus the restraints are initially built up without any knowledge of the constraint matrix. This greatly simplifies their implementation and it simplifies their use in a refinement program that does not use constraints. This organisation of the computation does not incur any inefficiency as the product~\eqnref[name=]{constraints:applied:torestraints} is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$. 
+which is computed by forming the product of $D$ and the constraint matrix. Thus the restraints are initially built up without any knowledge of the constraint matrix. This greatly simplifies their implementation and it simplifies their use in a refinement program that does not use constraints. This organisation of the computation does not incur any inefficiency as the product~\eqnref[name=]{constraints:applied:torestraints} is a cheap operation since both matrices are sparse, and it therefore scales as the number of non-zero elements, which is typically much smaller than the number of parameters $n$.
 
 The two terms in the normal equations~\eqnref[name=]{generalnormalequations} coming from the restraints then reads as the matrix product and matrix-vector product,
 \begin{align}
@@ -463,7 +463,7 @@ is the normal matrix for the constrained least-squares minimisation. However, we
 \intertext{and therefore, using the well-known heuristic definition of the variance matrix of $y$ as the mean value of $\delta y \delta y^T$ in the linear approximation around the minimum implicitly assumed throughout crystallographic refinement,}
 \var{y} &= J\, \var{x} J^T.
 \label{eqn:constrained:variance:matrix}
-\end{align} 
+\end{align}
 
 We would like to stress an important consequence of this formula: constrained parameters generally have non-zero standard uncertainties (s.u.). This is the case for example of the coordinates of riding atoms. For most constraints, the s.u. of hydrogen coordinates are equal to the s.u. of the atom they ride on but \latinit{e.g.} for a rotating \ce{-CH_3}, they differ because the s.u. of the azimuthal angle increases the s.u. of the hydrogen coordinates that comes from riding only.
 
@@ -476,7 +476,7 @@ We will now discuss the s.u. of derived parameters. Such a parameter is a functi
 \end{align}
 An early occurrence of this formula can be found in \citeasnoun{Sands:1966bh}.
 
-As a result of this formula and of the consequence of \eqnref{constrained:variance:matrix} stated after it, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. This correct behaviour unfortunately triggers many alerts when a structure refined with Olex2 is checked with PLATON. 
+As a result of this formula and of the consequence of \eqnref{constrained:variance:matrix} stated after it, any bond length, any bond angle and any dihedral angle involving a riding atom has a non-zero s.u. unless that geometrical quantity is fixed by the constraint. For example, in the case of \ce{(R1$,\,$ R2$,\,$ R3)-C-H}, for which the constraints does not fix the angles $\widehat{\ce{R$_i$CH}}$, those angles have a non-zero s.u. This correct behaviour unfortunately triggers many alerts when a structure refined with Olex2 is checked with PLATON.
 
 PLATON plays a very important role in detecting common flaws in the crystallographic workflow. However since PLATON does not have access either to the covariance matrix or the constraint matrix, it has to make guesses that results in estimation of esd's that may be out by up to a factor 2. This is the key problem we encounter with the way \olexrefine\ reports esd's. Specifically, most structure refined with \olexrefine\ fails checkCIF test PLAT732 (an alert C), for the reason explained in the documentation of this alert (in Note 2):\footnote{This note seems to be a recent addition and the authors would like to thank Ton Spek for this helpful consideration.} PLATON computes the s.u. of the said angle using the s.u. of the atomic coordinates as if they were independent parameters since it does not have access to the variance-covariance matrix that describes their correlations. In this case, those correlations are very significant since the position of H completely depends on the position of R1, R2 and R3. Hence the s.u. of this angle as reported by Olex2 differs from the PLATON estimate. Thus all failures of test PLAT732 for angles or distances involving constrained hydrogen atoms are spurious. As a result, if a referee were to require that all alerts C are to be addressed in a CIF submitted for publications in Acta Crystallographica, we advise authors to explain away PLAT732 for riding hydrogen atoms by quoting note 2 in the documentation for that test. \olexrefine\ will actually automatically prepare the CIF file with such explanations.
 
@@ -539,7 +539,7 @@ and
 \end{multline}
 
 \newcommand{\cell}{C}
-The derivative of the metrical matrix with respect to the unit cell parameters, 
+The derivative of the metrical matrix with respect to the unit cell parameters,
 \begin{align}
 \cell =& (a, b, c, \alpha, \beta, \gamma)\\
 \intertext{needed in order to apply equation \eqnref{df_dcell}, are given below:}
@@ -610,7 +610,7 @@ Let us consider the case of non-primitive unit cells first. The sum can be parti
 \begin{align}
  \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &=  \sum_{\sym{R}{t} \in \mathcal{S}'} \sum_{\tau \in \cal{T}} G^{(R \mid t+\tau)}(h), \nonumber\\
 \intertext{where $\cal{T}$ is the set of all centring translations, including zero, and $\mathcal{S}'$ is the set of ``primitive'' symmetries. Then with \eqnref{transformofG} we can factorise the sum as}
-\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &= 
+\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}}(h) &=
 \left( \sum_{\tau \in \cal{T}} e^{i2\pi h\tau} \right)
 \left( \sum_{\sym{R}{t} \in \mathcal{S}'} G(hR) e^{i2\pi ht} \right).
 \label{eqn:structurefactor:centring:factorisation}
@@ -624,11 +624,11 @@ Thus we are left with the computation of the second term of the right-hand side 
 \item The space group is non-centric. Then there is no further simplification.
 \item The space group is centric but the inversion $\inversion$ may not be located at the origin. Then the sum over the symmetries may be split into the sum over the set $\mathcal{S}^+$ of proper symmetries and the sum over the set of  improper symmetries. Since every improper symmetry may be written as $\inversion\sym{R}{t}$ where $\sym{R}{t}$ is a proper symmetry, we have
 \begin{align}
-\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} &= 
-\underbrace{\sum_{\sym{R}{t} \in \cal{O^+}} G^{\sym{R}{t}} }_{\Sigma} 
+\sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} &=
+\underbrace{\sum_{\sym{R}{t} \in \cal{O^+}} G^{\sym{R}{t}} }_{\Sigma}
 + \sum_{\sym{R}{t} \in \mathcal{S}^+} G^{\inversion \sym{R}{t}}, \nonumber
 \end{align}
-However the product involving the inversion simplifies as 
+However the product involving the inversion simplifies as
 $\inversion\sym{R}{t} = \sym{-R}{-t + t_{\bar{1}}}$ and therefore using \eqnref{transformofG},
 \begin{align}
 G^{\inversion\sym{R}{t}} &= G(-hR) e^{-i2\pi ht} e^{i2\pi h t_{\bar{1}}}, \nonumber \\
@@ -643,11 +643,11 @@ G^{\inversion\sym{R}{t}} &= G(-hR) e^{-i2\pi ht} e^{i2\pi h t_{\bar{1}}}, \nonum
 \begin{align}
  \sum_{\sym{R}{t} \in \mathcal{S}} G^{\sym{R}{t}} & = 2 \sum_{\sym{R}{t} \in \mathcal{S}^+}  e^{-h R U (hR)^T} \cos(hRx + t).
 \end{align}
-The total sum over symmetries is therefore real, and is its derivative, the former involving a cosine and the latter involving a sine for the derivatives with respect to $x$. 
+The total sum over symmetries is therefore real, and is its derivative, the former involving a cosine and the latter involving a sine for the derivatives with respect to $x$.
 \end{enumerate}
 
 In order to avoid redundant computations, our code distinguishes these three cases. One piece of code handles the case of centrosymmetric space groups using only real numbers to compute $\Sigma$ (an equivalent optimisation was presented in Rollet). Another piece of code handles the other two cases, first computing $\Sigma$ using complex number algebra and then using \eqnref{sumofGforcentricgroups} if the space group is centric and $h t_{\bar{1}} \neq 0$ (an optimisation not found in Rollet). Another optimisation we applied is to precompute the terms $hR$ and $e^{i2\pi t}$ appearing in \eqnref{transformofG} as well as the test for the condition $h t_{\bar{1}}=0$ before the loop over all scatterers in the asymmetric unit (an optimisation already advocated by Rollet). In all three cases, the computation of $\cos(hRx + t)$ and $\sin(hRx + t)$ is the most costly operation. This is mitigated by computing the structure factor and its derivatives together, as the cosine and sine then only need to be computed once for each reflection and scatterer.
-This optimisation is the reason why we have written our own new code into the \smtbx\ instead of reusing the original code in the \cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines being computed twice. This is rather well suited to the optimisation algorithm used in \phenixrefine\ (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares as is prevalent in small molecule crystallography.  
+This optimisation is the reason why we have written our own new code into the \smtbx\ instead of reusing the original code in the \cctbx. Indeed, in the latter, structure factors are computed separately from the derivatives, resulting in two separate loops over the reflections and the scatterers, and in sines and cosines being computed twice. This is rather well suited to the optimisation algorithm used in \phenixrefine\ (LBFGS) because it does not need the derivatives at every step. But it does not fit well with full-matrix least-squares as is prevalent in small molecule crystallography.
 
 Our code also provides two options to compute the sines and cosines: either by using the trigonometric functions of the standard \cpp\ library, or by using a \cctbx\ function that interpolates between tabulated values of sines and cosines. The latter is much faster but less precise. Olex2 uses the former as Crystals and SHELXL uses the standard FORTRAN sin and cos functions. It should be noted that Rollet used an approximation of trigonometric functions by Chebyshev polynomials, which used to be employed by Crystals.
 
@@ -712,7 +712,7 @@ Thus, the first-order derivative is exactly the same as it would have been with 
 \end{align}
 where we have neglected the term $\partialderxy{r(x, \tilde{K})}{x_i}{x_j} \dotprod r(x, \tilde{K})$ because, for a well-behaved fit, the residual $r$ and its curvature are small enough that this term can safely be neglected.
 
-Let us now build the normal equations, 
+Let us now build the normal equations,
 \begin{align}
 \label{eqn:gaussnewtoneq}
 Bs = -g,
@@ -722,7 +722,7 @@ for the shift, $s$, of the parameter vector $x$. The matrix $B$ is known as the 
 \label{eqn:gaussnewtonaslinearls}
 \min_s \norm{r(x, \tilde{K}) + \partialder{r(x, \tilde{K})}{x} s}^2.
 \end{align}
-The inverse of the normal matrix $B$ when the least-squares minimum has been reached by $L(x, \tilde{K})$ can therefore be viewed as the variance matrix of $x$, which should be contrasted to the more classic combined refinement of $x$ and $K$, for which the variance matrix is the sub-matrix of the inverse of the normal matrix obtained by removing the column and the row corresponding to $K$. 
+The inverse of the normal matrix $B$ when the least-squares minimum has been reached by $L(x, \tilde{K})$ can therefore be viewed as the variance matrix of $x$, which should be contrasted to the more classic combined refinement of $x$ and $K$, for which the variance matrix is the sub-matrix of the inverse of the normal matrix obtained by removing the column and the row corresponding to $K$.
 
 Using the definition~\eqnref[name=]{lsresidualdef} of $r$ and the expression~\eqnref[name=]{tildeK} of $\tilde{K}$, we have
 \begin{align}
@@ -731,7 +731,7 @@ Using the definition~\eqnref[name=]{lsresidualdef} of $r$ and the expression~\eq
 \end{align}
 and therefore the normal matrix $B$ and the right-hand side of the normal equations $g$ reads
 \begin{align}
-B_{ij} &= \begin{aligned}[t] \tilde{K}^2\partialder{Y_c}{x_i} \dotprod \partialder{Y_c}{x_j} 
+B_{ij} &= \begin{aligned}[t] \tilde{K}^2\partialder{Y_c}{x_i} \dotprod \partialder{Y_c}{x_j}
 &+ \tilde{K} \left( \partialder{\tilde{K}}{x_j}Y_c \dotprod \partialder{Y_c}{x_i}
 + \partialder{\tilde{K}}{x_i}Y_c \dotprod \partialder{Y_c}{x_j} \right) \nonumber\\
 &+ \partialder{\tilde{K}}{x_i}\partialder{\tilde{K}}{x_j} \norm{Y_c}
@@ -744,12 +744,12 @@ It should be noted that the first term of $B$ would appear in exactly the same f
 
 It should also be noted that we never construct and store the whole of the so-called design matrix $\left[ \partialder{Y_c(h)}{x_i} \right]_{h,i}$ that appear in those equations. Instead, we compute the vector of derivatives $\left[ \partialder{Y_c(h)}{x_i} \right]_i$ for a few reflections $h$ and then we immediately accumulate them into the normal matrix $B$ and into the right-hand side $g$, as opposed to constructing the whole design matrix and then forming the products $\partialder{Y_c}{x_i} \dotprod \partialder{Y_c}{x_j}$ appearing in \eqnref{normalmatrixwithoutscalefactor}, for example. It used to be the only efficient way to proceed a few decades ago when least-squares refinement was being developed but the fantastic increase of computer memory has made that point largely irrelevant.
 
-The traditional argument is to show that the normal matrix is typically one to two orders of magnitude smaller than the design matrix. Indeed the latter has $m n$ elements whereas the former has approximately $n^2/2$ elements for large values of $n$. Since, in a typical small molecule crystal structure determination, the data to parameter ratio, $m / n$ is typically in the range $10-30$, the normal matrix is therefore 20 to 60 times smaller than the design matrix. With the common use of constraints, particularly with respect to those on the parameters of hydrogen atoms, this contrast gets even more striking as $n$ shall then be replaced with the number of parameters actually refined, which can be as small as $n/2$ for typical organic structures. This results in another factor 2 in the comparison of the respective sizes of the design and of the normal matrix, and it makes the latter typically 40 to 120 times smaller than the former. 
+The traditional argument is to show that the normal matrix is typically one to two orders of magnitude smaller than the design matrix. Indeed the latter has $m n$ elements whereas the former has approximately $n^2/2$ elements for large values of $n$. Since, in a typical small molecule crystal structure determination, the data to parameter ratio, $m / n$ is typically in the range $10-30$, the normal matrix is therefore 20 to 60 times smaller than the design matrix. With the common use of constraints, particularly with respect to those on the parameters of hydrogen atoms, this contrast gets even more striking as $n$ shall then be replaced with the number of parameters actually refined, which can be as small as $n/2$ for typical organic structures. This results in another factor 2 in the comparison of the respective sizes of the design and of the normal matrix, and it makes the latter typically 40 to 120 times smaller than the former.
 
 However, in the extreme case of a structure with about 1000 atoms in the asymmetric unit, the design matrix stored in double precision only requires 40 to 120 Mb of memory, assuming constraints reducing the number of refinable parameters by a factor 2, as opposed to around 2 Mb for the normal matrix. They would therefore both easily fit in the main memory of a modern PC which comes with many Gigabytes of RAM.
 
 The counter-argument goes even further as the normal matrix is actually not necessary either to solve the least-square problem or to compute estimated standard deviations for geometric quantities, which are necessary to publish a structure. Indeed, there are well-known mathematical techniques based only on the design matrix to solve these two problems, c.f. for example \citeasnoun{Bjorck:1996fk}, section 2.8.3 for s.u. computations and section 2.4.3 for the solution of the least-squares.
- 
+
 However, the best of those design matrix techniques, the QR decomposition, involves about twice as many floating point operations as the method based on the normal equations. That is the actual motivation for our choosing the latter and therefore adhering to a long crystallographic tradition.
 
 It should be noted that for singular or nearly singular problems, one could solve the L.S. problem by using singular value filtering on the design matrix, which is the most robust technique. On the other hand, if one computes the normal matrix, therefore squaring the singularities, solving the L.S. problem with eigenvalue filtering is of little practical interest.
@@ -765,17 +765,17 @@ The \smtbx\ provides a generic tool to express any scalar parameter $v$ as an af
   \label{eqn:affinereparam}
 \end{align}
 where the number of arguments $s$ as well as the coefficients $a_i$ and $b$ can be freely chosen.
-The common case of two atoms whose occupancies $o$ and $o'$ shall add up to 1 is easily handle by the case $s=1$, as $o' = 1 - o$. 
+The common case of two atoms whose occupancies $o$ and $o'$ shall add up to 1 is easily handle by the case $s=1$, as $o' = 1 - o$.
 
 Higher values of $s$ are useful to model a site partially occupied by different types of atoms when the requirement of full occupancy is complemented by other constraints. The example used in the SHELXL manual to illustrate the restraint command SUMP is such a case: a site is occupied by ions \ce{Na^+}, \ce{Ca^{2+}}, \ce{Al^{3+}} and \ce{K+} with an average charge of +2, leading to the restrictions on their occupancies:
 \begin{align}
-o_\ce{Na^+} + o_\ce{Ca^{2+}} + o_\ce{Al^{3+}} + o_\ce{K+} &= 1,\\
-o_\ce{Na^+} + 2o_\ce{Ca^{2+}} + 3o_\ce{Al^{3+}} + o_\ce{K+} &= +2.
+o_{\ce{Na^+}} + o_{\ce{Ca^{2+}}} + o_{\ce{Al^{3+}}} + o_{\ce{K+}} &= 1,\\
+o_{\ce{Na^+}} + 2o_{\ce{Ca^{2+}}} + 3o_{\ce{Al^{3+}}} + o_{\ce{K+}} &= +2.
 \end{align}
 Instead of enforcing those relations as restraints, as advocated in the SHELX documentation, we can solve those equations to get the explicit dependencies
 \begin{align}
-o_\ce{Na^+} &= o_\ce{Al^{3+}} - o_\ce{K+},\\
-o_\ce{Ca^{2+}} &= 1 - 2 o_\ce{Al^{3+}},
+o_{\ce{Na^+}} &= o_{\ce{Al^{3+}}} - o_{\ce{K+}},\\
+o_{\ce{Ca^{2+}}} &= 1 - 2 o_{\ce{Al^{3+}}},
 \end{align}
 which can then readily be expressed as special cases of \eqnref{affinereparam}.
 
@@ -801,7 +801,7 @@ This constraint relates the ADP's of one atom to the ADP's of another atom as ro
 U_{B} &= RU_{A}R^{T}, \\
 \intertext{where $R$ is the rotation matrix}
 R &=
-  \begin{bmatrix} 
+  \begin{bmatrix}
     txx + c_\alpha && tyx + zs_\alpha && tzx - ys_\alpha \\
     txy - zs_\alpha && tyy + c_\alpha && tzy + xs_\alpha \\
     txz + ys_\alpha && tyz - xs_\alpha && tzz + c_\alpha \\
@@ -814,8 +814,8 @@ with $c_\alpha=\cos\alpha$, $s_\alpha=\sin\alpha$, and $t=1-c_\alpha$, and where
 \end{align}
 where $R'_\alpha$ is the derivative of $R$ by $\alpha$:
 \begin{align}
-R'_\alpha = 
-  \begin{bmatrix} 
+R'_\alpha =
+  \begin{bmatrix}
     xx s_\alpha -  s_\alpha && yx s_\alpha + z c_\alpha && zx s_\alpha - y c_\alpha \\
     xy s_\alpha - z c_\alpha && yy s_\alpha -  s_\alpha && zy s_\alpha + x c_\alpha \\
     xz s_\alpha + y c_\alpha && yz s_\alpha - x c_\alpha && zz s_\alpha - s_\alpha
@@ -829,7 +829,7 @@ This constrained is suitable for groups which can be rotated around a given dire
 \begin{align}
 r' &= sR(r-r_p) + r_{p},\\
 \intertext{and its derivatives are}
-\partialder{r'}{\alpha} &= sR'_\alpha(r - r_p),\\ 
+\partialder{r'}{\alpha} &= sR'_\alpha(r - r_p),\\
 \partialder{r'}{s} &= R(r-r_p),
 \end{align}
 where $r_p$ is the centre of the pivot atom, $s$ is the distance scale component ($s=1$ if not refined), $R$ is rotation matrix \eqnref{rotmat} and $R'$ is the derivative of the rotation matrix by the angle \eqnref{rotmatdev}. If neither the angle nor distances are refined, this constraint reduces to simple riding.
@@ -897,7 +897,7 @@ L &= \mean{r - \mean{r}}^2,\\
 \end{align}
 and where $w_i$ is therefore the weight for the $i$-th pair.
 
-The computation of the derivatives is easier with the alternate form of this variance, 
+The computation of the derivatives is easier with the alternate form of this variance,
 \begin{align}
 L &= \mean{r^2} - \mean{r}^2 = \sum_i \omega_i r_i^2 - \left(\sum_i \omega_i r_i\right)^2.\\
 \intertext{The derivative of $L$ with respect to a distance $r_i$ is then}
@@ -924,11 +924,11 @@ V_{ijkl} = \frac{a \dotprod (b \crossprod c)}{6}
 \end{align}
 and any circular permutation of $(a, b, c)$, where $a$, $b$, $c$ are any triplet of distinct edges of the tetrahedron. Choices that leads to elegant formulae are
 \begin{align}
-a &= x_i - x_j,\nonumber\\ 
-b &= x_j - x_k,\label{eqn:tetrahedron:edges:choice1}\\ 
+a &= x_i - x_j,\nonumber\\
+b &= x_j - x_k,\label{eqn:tetrahedron:edges:choice1}\\
 c &= x_k - x_l,\nonumber
 \end{align}
-and any circular permutations of $(i,j,k,l)$. 
+and any circular permutations of $(i,j,k,l)$.
 
 Therefore a straightforward restraint enforcing coplanarity is the square of this volume, with a weight $w$,
 \begin{align}
@@ -945,7 +945,7 @@ We will now consider $p$ sites with Cartesian coordinate vectors $x_1, x_2, \cdo
 L_\text{flat} = \sum_{i=1}^{p-3} L_{i,i+1,i+2,i+3}
 \label{eqn:restraint:flatness:many}
 \end{align}
-This method is identical to the FLAT restraint in SHELXL, perhaps apart from differing implementation details. 
+This method is identical to the FLAT restraint in SHELXL, perhaps apart from differing implementation details.
 
 The minimum number of degrees of freedom necessary to model $p$ points in a plane is $2p+3$: $2p$ for the coordinates in the plane, plus 2 angles for the orientation of the plane, plus one for the distance of the origin to the plane. Since this number of degrees of freedom is exactly the unconstrained and unrestrained number of degrees of freedom $3p$ minus the number of restraints in the sum of \eqnref{restraint:flatness:many}, this restraint $L_\text{flat}$ is therefore optimal.
 
@@ -974,7 +974,7 @@ Those formulae are valid whether using Cartesian or fractional coordinates, prov
 \end{align}
 in fractional coordinates, where $G$ is the metric matrix.
 
-The computation of the derivatives of L with respect to the components of $U_A$ and $U_B$ proceeds in two steps. First, since $u^T U u = \sum_i U_{ii} u_i^2 + 2\sum_{i<j} U_{ij}u_i u_j$ where $U$ is either $U_A$ or $U_B$, 
+The computation of the derivatives of L with respect to the components of $U_A$ and $U_B$ proceeds in two steps. First, since $u^T U u = \sum_i U_{ii} u_i^2 + 2\sum_{i<j} U_{ij}u_i u_j$ where $U$ is either $U_A$ or $U_B$,
 \begin{align}
 \partialder{r}{U_{A,ij}} &= \begin{cases}
  \displaystyle \frac{u_i^2}{\norm{u}^2} & \text{if $i=j$,}\\[1em]
